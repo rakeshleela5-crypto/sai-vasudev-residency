@@ -352,11 +352,11 @@ export function explainRateRecommendation(tierId, targetDateString = '2026-09-24
 export function simulateWhatIfScenario(scenarioType, inputs = {}) {
   const baseOccupancy = 68; // Baseline %
   const baseADR = 2280;     // Baseline Average Daily Rate
-  const totalRooms = 40;
+  const totalRooms = 18;
 
   if (scenarioType === 'renovation') {
     // Rooms taken offline for maintenance or remodeling
-    const offlineRooms = inputs.offlineRooms || 8; // e.g. 8 rooms on 2nd floor
+    const offlineRooms = inputs.offlineRooms || 3; // e.g. 3 rooms
     const activeRooms = totalRooms - offlineRooms;
     
     // Offline capacity concentrates demand onto remaining rooms

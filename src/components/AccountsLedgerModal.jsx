@@ -831,20 +831,20 @@ export default function AccountsLedgerModal({
     setTimeout(() => setActionSuccessMsg(''), 4000);
   };
 
-  // Night Audit Flash Report Data (Date: 20/09/2026 - Exactly matches Screenshot 16)
+  // Night Audit Flash Report Data (18-Room Authentic Inventory)
   const flashReportData = {
     auditDate: '20/09/2026',
     time: '23:59:59 IST',
     auditor: 'NIGHT AUDITOR / ADMIN',
-    totalRooms: 39,
-    maintenanceBlocked: 2, // Room 309 (AC PRBLM), Room 204 (PAINTING)
-    availableRooms: 37,
-    occupiedRooms: 18,
-    vacantRooms: 19,
-    totalGuests: 23,
-    occupancyPct: 48.65, // 18 / 37
+    totalRooms: 18,
+    maintenanceBlocked: 1, // Room 107
+    availableRooms: 17,
+    occupiedRooms: 12,
+    vacantRooms: 5,
+    totalGuests: 18,
+    occupancyPct: 70.59, // 12 / 17
     arr: 2618.00, // Average Room Rate
-    revpar: 1250.81, // Revenue per available room
+    revpar: 1848.00, // Revenue per available room
     todayRevenue: {
       roomRevenue: 46280.00,
       fbRevenue: 11967.07,

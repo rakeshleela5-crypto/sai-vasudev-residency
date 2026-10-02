@@ -31,10 +31,10 @@ export default function NightAuditModal({
   const [isAuditDateFilterActive, setIsAuditDateFilterActive] = useState(true);
   const nextBusinessDate = '2026-09-22';
 
-  // Metrics for today's audit (Matching MySoft Screenshot 16 & Owner Meeting)
-  const totalRooms = 39;
-  const occupiedRooms = 18;
-  const occupancyPct = '48.7';
+  // Metrics for today's audit (18-Room Registered Inventory)
+  const totalRooms = 18;
+  const occupiedRooms = 12;
+  const occupancyPct = '66.7';
 
   // Revenue figures (Screenshot 16 exact values)
   const roomRevenue = 46280.00;

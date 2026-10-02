@@ -23,13 +23,13 @@ export default function DirectorPortal({
   const [filterToDate, setFilterToDate] = useState(todayStr);
   const [isDateFilterActive, setIsDateFilterActive] = useState(false);
 
-  // Metrics (Authentic 39 Keys Inventory matching MySoft Screenshot 16)
-  const totalRooms = 39;
-  const occupiedCount = rooms.filter(r => r.status === 'Occupied').length || 18;
-  const availableCount = rooms.filter(r => r.status === 'Available').length || 19;
-  const cleaningCount = rooms.filter(r => r.status === 'Cleaning').length || 2;
-  const vipHoldCount = rooms.filter(r => r.status === 'VIP Hold').length || 0;
-  const occupancyPct = '48.7';
+  // Metrics (Authentic 18 Keys Inventory)
+  const totalRooms = 18;
+  const occupiedCount = rooms.filter(r => r.status === 'Occupied').length;
+  const availableCount = rooms.filter(r => r.status === 'Available').length;
+  const cleaningCount = rooms.filter(r => r.status === 'Cleaning').length;
+  const vipHoldCount = rooms.filter(r => r.status === 'VIP Hold').length;
+  const occupancyPct = totalRooms > 0 ? ((occupiedCount / totalRooms) * 100).toFixed(1) : '0.0';
 
   // Dynamic Date Filter Calculations
   const parseDateToIso = (dStr) => {

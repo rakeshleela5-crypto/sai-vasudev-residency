@@ -62,7 +62,7 @@ const puppeteer = require('puppeteer-core');
   }
 
   const text = await page.evaluate(() => document.body.innerText);
-  console.log('Has 39-Room Tape Chart Matrix?', text.includes('39-Room') || text.includes('Tape Chart'));
+  console.log('Has 18-Room Tape Chart Matrix?', text.includes('18-Room') || text.includes('Tape Chart'));
   console.log('Has The Wild Oasis / Today Activity?', text.includes('Today\'s Operational Activity') || text.includes('THE WILD OASIS') || text.includes('ARRIVING TODAY'));
   console.log('Has Operations Settings?', text.includes('Operations & Policy Settings'));
   console.log('Page Header Snippet:\n', text.slice(0, 400));

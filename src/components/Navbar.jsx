@@ -180,7 +180,7 @@ export default function Navbar({
           </span>
           <span style={{ color: 'rgba(255,255,255,0.2)' }}>|</span>
           <a 
-            href="https://wa.me/917978043585?text=Hello%20Hotel%20Sai%20International%20Front%20Desk,%20I%20would%20like%20to%20inquire%20about%20a%20booking" 
+            href={`https://wa.me/917978043585?text=Hello%20${encodeURIComponent(HOTEL_CONFIG.name)}%20Front%20Desk,%20I%20would%20like%20to%20inquire%20about%20a%20booking`} 
             target="_blank" 
             rel="noopener noreferrer"
             style={{ 
@@ -191,7 +191,7 @@ export default function Navbar({
               textDecoration: 'none',
               fontWeight: 700
             }}
-            title="Chat with Hotel Sai Front Desk on WhatsApp"
+            title="Chat with Front Desk on WhatsApp"
           >
             <MessageCircle size={13} color="#4ade80" /> WhatsApp Desk: +91 79780 43585
           </a>

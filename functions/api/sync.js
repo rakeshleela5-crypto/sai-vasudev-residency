@@ -2,14 +2,19 @@
 // Connected to Cloudflare D1 Database binding "DB"
 
 const ALLOWED_ORIGINS = [
+  "https://sai-vasudev-residency.pages.dev",
   "https://hotel-sai-international.pages.dev",
   "http://localhost:5173",
   "http://127.0.0.1:5173"
 ];
 
 function getSecurityHeaders(originHeader = null) {
-  const isAllowed = originHeader && (ALLOWED_ORIGINS.includes(originHeader) || originHeader.endsWith(".hotel-sai-international.pages.dev"));
-  const allowOrigin = isAllowed ? originHeader : "https://hotel-sai-international.pages.dev";
+  const isAllowed = originHeader && (
+    ALLOWED_ORIGINS.includes(originHeader) || 
+    originHeader.endsWith(".sai-vasudev-residency.pages.dev") || 
+    originHeader.endsWith(".hotel-sai-international.pages.dev")
+  );
+  const allowOrigin = isAllowed ? originHeader : "https://sai-vasudev-residency.pages.dev";
 
   return {
     "Content-Type": "application/json",

@@ -1259,22 +1259,22 @@ export default function ReceptionAdmin({
   // Occupancy Report State (Sheet 2 Requirement: Day / Month / Year with CSV Download)
   const [occupancyViewMode, setOccupancyViewMode] = useState('day'); // 'day', 'month', 'year'
 
-  // Daily Occupancy Historical Trend (Last 14 Days)
+  // Daily Occupancy Historical Trend (Last 14 Days - 18 Authentic Keys)
   const dailyOccupancyData = [
-    { date: '11/09/2026', day: 'Fri', totalRooms: 39, occupied: 34, vacant: 4, ooo: 1, rate: 87.2, revenue: 76466, adr: 2249 },
-    { date: '12/09/2026', day: 'Sat', totalRooms: 39, occupied: 38, vacant: 0, ooo: 1, rate: 97.4, revenue: 86450, adr: 2275 },
-    { date: '13/09/2026', day: 'Sun', totalRooms: 39, occupied: 36, vacant: 2, ooo: 1, rate: 92.3, revenue: 81900, adr: 2275 },
-    { date: '14/09/2026', day: 'Mon', totalRooms: 39, occupied: 31, vacant: 7, ooo: 1, rate: 79.5, revenue: 69750, adr: 2250 },
-    { date: '15/09/2026', day: 'Tue', totalRooms: 39, occupied: 29, vacant: 9, ooo: 1, rate: 74.4, revenue: 64960, adr: 2240 },
-    { date: '16/09/2026', day: 'Wed', totalRooms: 39, occupied: 33, vacant: 5, ooo: 1, rate: 84.6, revenue: 74250, adr: 2250 },
-    { date: '17/09/2026', day: 'Thu', totalRooms: 39, occupied: 35, vacant: 3, ooo: 1, rate: 89.7, revenue: 79100, adr: 2260 },
-    { date: '18/09/2026', day: 'Fri', totalRooms: 39, occupied: 37, vacant: 1, ooo: 1, rate: 94.9, revenue: 84360, adr: 2280 },
-    { date: '19/09/2026', day: 'Sat', totalRooms: 39, occupied: 39, vacant: 0, ooo: 0, rate: 100.0, revenue: 89500, adr: 2295 },
-    { date: '20/09/2026', day: 'Sun', totalRooms: 39, occupied: 35, vacant: 3, ooo: 1, rate: 89.7, revenue: 79450, adr: 2270 },
-    { date: '21/09/2026', day: 'Mon', totalRooms: 39, occupied: 30, vacant: 8, ooo: 1, rate: 76.9, revenue: 67200, adr: 2240 },
-    { date: '22/09/2026', day: 'Tue', totalRooms: 39, occupied: 32, vacant: 6, ooo: 1, rate: 82.1, revenue: 72320, adr: 2260 },
-    { date: '23/09/2026', day: 'Wed', totalRooms: 39, occupied: 34, vacant: 4, ooo: 1, rate: 87.2, revenue: 77180, adr: 2270 },
-    { date: '24/09/2026', day: 'Thu (Today)', totalRooms: 39, occupied: rooms.filter(r => r.status === 'Occupied').length || 33, vacant: rooms.filter(r => r.status === 'Available').length || 5, ooo: rooms.filter(r => r.status === 'Maintenance').length || 1, rate: Number((((rooms.filter(r => r.status === 'Occupied').length || 33) / 39) * 100).toFixed(1)), revenue: 74900, adr: 2269 }
+    { date: '11/09/2026', day: 'Fri', totalRooms: 18, occupied: 15, vacant: 2, ooo: 1, rate: 83.3, revenue: 33735, adr: 2249 },
+    { date: '12/09/2026', day: 'Sat', totalRooms: 18, occupied: 17, vacant: 0, ooo: 1, rate: 94.4, revenue: 38675, adr: 2275 },
+    { date: '13/09/2026', day: 'Sun', totalRooms: 18, occupied: 16, vacant: 1, ooo: 1, rate: 88.9, revenue: 36400, adr: 2275 },
+    { date: '14/09/2026', day: 'Mon', totalRooms: 18, occupied: 14, vacant: 3, ooo: 1, rate: 77.8, revenue: 31500, adr: 2250 },
+    { date: '15/09/2026', day: 'Tue', totalRooms: 18, occupied: 13, vacant: 4, ooo: 1, rate: 72.2, revenue: 29120, adr: 2240 },
+    { date: '16/09/2026', day: 'Wed', totalRooms: 18, occupied: 15, vacant: 2, ooo: 1, rate: 83.3, revenue: 33750, adr: 2250 },
+    { date: '17/09/2026', day: 'Thu', totalRooms: 18, occupied: 16, vacant: 1, ooo: 1, rate: 88.9, revenue: 36160, adr: 2260 },
+    { date: '18/09/2026', day: 'Fri', totalRooms: 18, occupied: 17, vacant: 0, ooo: 1, rate: 94.4, revenue: 38760, adr: 2280 },
+    { date: '19/09/2026', day: 'Sat', totalRooms: 18, occupied: 18, vacant: 0, ooo: 0, rate: 100.0, revenue: 41310, adr: 2295 },
+    { date: '20/09/2026', day: 'Sun', totalRooms: 18, occupied: 16, vacant: 1, ooo: 1, rate: 88.9, revenue: 36320, adr: 2270 },
+    { date: '21/09/2026', day: 'Mon', totalRooms: 18, occupied: 13, vacant: 4, ooo: 1, rate: 72.2, revenue: 29120, adr: 2240 },
+    { date: '22/09/2026', day: 'Tue', totalRooms: 18, occupied: 14, vacant: 3, ooo: 1, rate: 77.8, revenue: 31640, adr: 2260 },
+    { date: '23/09/2026', day: 'Wed', totalRooms: 18, occupied: 15, vacant: 2, ooo: 1, rate: 83.3, revenue: 34050, adr: 2270 },
+    { date: '24/09/2026', day: 'Thu (Today)', totalRooms: 18, occupied: rooms.filter(r => r.status === 'Occupied').length || 14, vacant: rooms.filter(r => r.status === 'Available').length || 3, ooo: rooms.filter(r => r.status === 'Maintenance').length || 1, rate: Number((((rooms.filter(r => r.status === 'Occupied').length || 14) / 18) * 100).toFixed(1)), revenue: 31766, adr: 2269 }
   ];
 
   // Monthly Occupancy Trend (Last 12 Months)
@@ -3053,7 +3053,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
                 </span>
               </div>
               <p style={{ margin: '0.35rem 0 0', color: 'var(--text-muted)', fontSize: '0.82rem' }}>
-                Track Room Nights Sold, Available Inventory (39 Keys), Average Daily Rate (ADR), RevPAR, and statutory capacity metrics
+                Track Room Nights Sold, Available Inventory (18 Keys), Average Daily Rate (ADR), RevPAR, and statutory capacity metrics
               </p>
             </div>
 

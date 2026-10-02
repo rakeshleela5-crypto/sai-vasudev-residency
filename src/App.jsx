@@ -153,7 +153,7 @@ export default function App() {
   ]);
   const [bookings, setBookings] = useState([
     {
-      bookingId: 'HSI-202609-0001',
+      bookingId: 'SSVR-202609-0001',
       roomNumber: '104',
       tier: 'Standard Deluxe',
       guestName: 'Santosh Patra',
@@ -180,8 +180,8 @@ export default function App() {
       isB2b: false
     },
     {
-      bookingId: 'HSI-202609-0002',
-      roomNumber: '301',
+      bookingId: 'SSVR-202609-0002',
+      roomNumber: '205',
       tier: 'Executive Room',
       guestName: 'Vikram Singhania (JK Paper)',
       guestPhone: '+91 98101 55667',
@@ -208,8 +208,8 @@ export default function App() {
       corporateGstin: '21AAACJ1288P1ZZ'
     },
     {
-      bookingId: 'HSI-202609-0004',
-      roomNumber: '402',
+      bookingId: 'SSVR-202609-0004',
+      roomNumber: '211',
       tier: 'Premium Suite',
       guestName: 'Anil Sharma (GAIL Regional Project Team)',
       guestPhone: '+91 98210 44556',
@@ -270,7 +270,7 @@ export default function App() {
 
   // IDS Next Operational Modules State
   const [folioModalOpen, setFolioModalOpen] = useState(false);
-  const [selectedFolioRoomNumber, setSelectedFolioRoomNumber] = useState('402');
+  const [selectedFolioRoomNumber, setSelectedFolioRoomNumber] = useState('211');
 
   const handleOpenMasterFolio = (roomNumber) => {
     if (roomNumber) {
@@ -313,7 +313,7 @@ export default function App() {
     },
     {
       orderId: 'KOT-8492',
-      roomNumber: '302',
+      roomNumber: '206',
       guestName: 'UTKARSH SRIVASTAVA',
       outlet: 'Cannon Kitchen',
       status: 'Received',
@@ -395,7 +395,7 @@ export default function App() {
     const kotTx = {
       transactionId: `TXN-KOT-${newOrder.roomNumber}-${Date.now().toString().slice(-4)}`,
       folioId: `FOLIO-${newOrder.roomNumber}`,
-      bookingId: bookings.find(b => b.roomNumber === newOrder.roomNumber && b.bookingStatus === 'Checked In')?.bookingId || `HSI-FOLIO-${newOrder.roomNumber}`,
+      bookingId: bookings.find(b => b.roomNumber === newOrder.roomNumber && b.bookingStatus === 'Checked In')?.bookingId || `SSVR-FOLIO-${newOrder.roomNumber}`,
       roomNumber: newOrder.roomNumber,
       transactionType: 'F&B POS',
       outlet: newOrder.outlet || 'Cannon Kitchen (Room Service)',
@@ -560,7 +560,7 @@ export default function App() {
         }
       })
       .catch(err => {
-        console.debug("Edge sync offline, initialized with 40-inventory state:", err);
+        console.debug("Edge sync offline, initialized with 18-inventory state:", err);
       });
   }, [currentView, adminPinVerified]);
 

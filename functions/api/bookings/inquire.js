@@ -2,16 +2,21 @@
 // Saves guest room inquiry to D1 and returns a reference ID
 
 const ALLOWED_ORIGINS = [
+  "https://sai-vasudev-residency.pages.dev",
   "https://hotel-sai-international.pages.dev",
   "http://localhost:5173",
   "http://127.0.0.1:5173"
 ];
 
 function getHeaders(origin) {
-  const allowed = origin && (ALLOWED_ORIGINS.includes(origin) || origin.endsWith(".hotel-sai-international.pages.dev"));
+  const allowed = origin && (
+    ALLOWED_ORIGINS.includes(origin) || 
+    origin.endsWith(".sai-vasudev-residency.pages.dev") || 
+    origin.endsWith(".hotel-sai-international.pages.dev")
+  );
   return {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": allowed ? origin : "https://hotel-sai-international.pages.dev",
+    "Access-Control-Allow-Origin": allowed ? origin : "https://sai-vasudev-residency.pages.dev",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Vary": "Origin",
@@ -50,7 +55,7 @@ export async function onRequestPost({ request, env }) {
 
   // Sanitize inputs
   const sanitize = (v) => (typeof v === "string" ? v.trim().slice(0, 500) : "");
-  const inquiryId = `HSI-INQ-${Date.now().toString(36).toUpperCase()}`;
+  const inquiryId = `SSVR-INQ-${Date.now().toString(36).toUpperCase()}`;
   const createdAt = new Date().toISOString();
 
   // Save inquiry to D1 database
@@ -83,9 +88,9 @@ export async function onRequestPost({ request, env }) {
     inquiryId,
     message: "Inquiry received! Our front desk will contact you shortly.",
     contactInfo: {
-      phone: "+919390553301",
-      whatsapp: "https://wa.me/919390553301",
-      email: "reservations@hotelsaiinternational.com"
+      phone: "+91 8895225555",
+      whatsapp: "https://wa.me/917978043585",
+      email: "saisaivasudevresidency@gmail.com"
     },
     createdAt
   }, 201, origin);
