@@ -1,0 +1,27 @@
+name = "sai-vasudev-residency"
+pages_build_output_dir = "dist"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "sai-vasudev-residency-db"
+database_id = "af8c936b-0598-4cc6-b252-b7239d7719c7"
+
+# Public environment variables (safe to commit)
+[vars]
+HOTEL_NAME  = "Sai Vasudev Residency"
+HOTEL_PHONE = "+919999999999"
+HOTEL_EMAIL = "reservations@saivasudevresidency.com"
+
+# ──────────────────────────────────────────────────────────
+# SECRET bindings — NEVER put real values here.
+# Run these ONE TIME in your terminal to save them encrypted:
+#
+#   npx wrangler secret put RAZORPAY_KEY_ID
+#   npx wrangler secret put RAZORPAY_KEY_SECRET
+#   npx wrangler secret put ADMIN_SECRET
+#
+# Find your Razorpay keys at:
+#   https://dashboard.razorpay.com/ → Settings → API Keys
+# ──────────────────────────────────────────────────────────

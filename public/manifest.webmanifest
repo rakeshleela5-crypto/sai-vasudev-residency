@@ -1,0 +1,17 @@
+{
+  "name": "Hotel Sai International Rayagada",
+  "short_name": "Sai Stay",
+  "description": "Premier 40-Room Executive & Pilgrim Hotel, Rayagada, Odisha. Direct booking and PMS portal.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060e1a",
+  "theme_color": "#060e1a",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

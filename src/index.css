@@ -1,0 +1,2019 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   HOTEL SAI INTERNATIONAL - IMPERIAL SAPPHIRE & REGAL GOLD DESIGN SYSTEM
+   Location: Sai Priya Nagar, Rayagada, Odisha - 765001
+   ========================================================================== */
+
+:root {
+  /* shadcn UI CSS variables */
+  --background: 222 47% 6%;
+  --foreground: 210 40% 98%;
+  --card: 222 47% 11%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222 47% 11%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 43 74% 49%;
+  --primary-foreground: 222 47% 6%;
+  --secondary: 217 33% 17%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217 33% 17%;
+  --muted-foreground: 215 20% 65%;
+  --accent: 217 33% 20%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217 33% 20%;
+  --input: 217 33% 20%;
+  --ring: 43 74% 49%;
+  --radius: 0.5rem;
+
+  /* Color Palette - Midnight Sapphire & Regal Gold */
+  --bg-deep: #060e1a;
+  --bg-surface: #0c182b;
+  --bg-surface-elevated: #13223d;
+  --bg-card: rgba(12, 24, 43, 0.75);
+  --bg-card-hover: rgba(19, 34, 61, 0.85);
+
+  --gold-champagne: #d4af37;
+  --gold-glow: #f3c64c;
+  --gold-muted: #997e26;
+  --gold-subtle: rgba(212, 175, 55, 0.12);
+  --gold-border: rgba(212, 175, 55, 0.35);
+  --gold-gradient: linear-gradient(135deg, #fceec5 0%, #d4af37 50%, #aa831b 100%);
+
+  --sapphire-light: #38bdf8;
+  --sapphire-primary: #1d4ed8;
+  --sapphire-glow: rgba(56, 189, 248, 0.25);
+  --sapphire-border: rgba(56, 189, 248, 0.25);
+
+  /* Status Colors */
+  --status-available: #10b981;
+  --status-available-bg: rgba(16, 185, 129, 0.15);
+  --status-occupied: #ef4444;
+  --status-occupied-bg: rgba(239, 68, 68, 0.15);
+  --status-cleaning: #f59e0b;
+  --status-cleaning-bg: rgba(245, 158, 11, 0.15);
+  --status-maintenance: #6b7280;
+  --status-maintenance-bg: rgba(107, 114, 128, 0.15);
+  --status-vip: #8b5cf6;
+  --status-vip-bg: rgba(139, 92, 246, 0.18);
+
+  /* Typography */
+  --font-serif: 'Cinzel', serif, Georgia;
+  --font-sans: 'Outfit', 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Elevation & Glassmorphism */
+  --glass-blur: blur(16px);
+  --glass-border: 1px solid rgba(212, 175, 55, 0.22);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+  --glass-card: rgba(12, 24, 43, 0.72);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-gold: #f3c64c;
+
+  --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-smooth: transform 0.2s var(--ease-luxury), opacity 0.2s var(--ease-luxury), background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  --transition-spring: transform 0.28s var(--ease-spring), opacity 0.2s ease, box-shadow 0.2s ease;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-full: 9999px;
+}
+
+/* Global Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+}
+
+body {
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+#root {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+}
+
+/* Background Atmosphere */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(29, 78, 216, 0.18) 0%, transparent 40%),
+    radial-gradient(circle at 85% 25%, rgba(212, 175, 55, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(6, 14, 26, 0.95) 0%, #060e1a 100%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Top Scroll Progress Line */
+.scroll-progress-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f3c64c, #d4af37, #38bdf8);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.7);
+  z-index: 9999;
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+/* Typography Headings */
+h1, h2, h3, h4, .font-serif {
+  font-family: var(--font-serif);
+  letter-spacing: 0.03em;
+  font-weight: 700;
+  color: #fff;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Universal Button Tactile Micro-Interactions */
+button, .btn, [role="button"] {
+  font-family: var(--font-sans);
+  cursor: pointer;
+  border: none;
+  background: none;
+  outline: none;
+  transition: transform 0.18s var(--ease-spring), box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  will-change: transform;
+}
+
+button:active:not(:disabled), .btn:active:not(:disabled), [role="button"]:active:not([aria-disabled="true"]) {
+  transform: scale(0.965) translateY(1.5px) !important;
+  transition-duration: 0.07s !important;
+}
+
+button:focus-visible, .btn:focus-visible {
+  outline: 2px solid var(--gold-glow);
+  outline-offset: 2px;
+}
+
+/* Luxury Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-champagne);
+}
+
+/* Glassmorphism Containers */
+.glass-panel {
+  background: var(--glass-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-lg);
+}
+
+.glass-panel-subtle {
+  background: rgba(12, 24, 43, 0.45);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+}
+
+/* Liquid Flowing Gold Heading Gradient */
+.gold-gradient-text {
+  background: linear-gradient(115deg, #c49b2c 0%, #fef08a 25%, #d4af37 50%, #f59e0b 75%, #c49b2c 100%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  animation: shimmerGoldText 7s linear infinite;
+  text-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
+}
+
+.sapphire-gradient-text {
+  background: linear-gradient(135deg, #93c5fd 0%, #38bdf8 50%, #1d4ed8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Luxury Buttons with 45° Light-Beam Shimmer */
+.btn-primary-gold, .btn-gold {
+  position: relative;
+  background: linear-gradient(135deg, #f3c64c 0%, #d4af37 100%);
+  color: #060e1a;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.35);
+  overflow: hidden;
+  isolation: isolate;
+  transition: var(--transition-smooth);
+}
+
+.btn-primary-gold::before, .btn-gold::before, .btn-shimmer::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -160%;
+  width: 100%;
+  height: 200%;
+  background: linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 70%, transparent 100%);
+  transform: rotate(25deg);
+  animation: shimmerBeam 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.btn-primary-gold:hover, .btn-gold:hover {
+  transform: translateY(-2px) scale(1.015);
+  box-shadow: 0 8px 30px rgba(243, 198, 76, 0.55), 0 0 15px rgba(254, 240, 138, 0.4);
+  background: linear-gradient(135deg, #fef08a 0%, #f3c64c 100%);
+}
+
+.btn-secondary-sapphire {
+  background: rgba(29, 78, 216, 0.25);
+  border: 1px solid var(--sapphire-light);
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition-smooth);
+}
+.btn-secondary-sapphire:hover {
+  background: rgba(29, 78, 216, 0.45);
+  box-shadow: 0 4px 20px var(--sapphire-glow);
+  transform: translateY(-2px);
+}
+
+.btn-outline-gold {
+  background: transparent;
+  border: 1px solid var(--gold-champagne);
+  color: var(--gold-glow);
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition-smooth);
+}
+.btn-outline-gold:hover {
+  background: var(--gold-subtle);
+  border-color: var(--gold-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.3);
+}
+
+/* Badges */
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.badge-available {
+  background: var(--status-available-bg);
+  color: var(--status-available);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.badge-occupied {
+  background: var(--status-occupied-bg);
+  color: var(--status-occupied);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.badge-cleaning {
+  background: var(--status-cleaning-bg);
+  color: var(--status-cleaning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.badge-maintenance {
+  background: var(--status-maintenance-bg);
+  color: var(--status-maintenance);
+  border: 1px solid rgba(107, 114, 128, 0.3);
+}
+.badge-vip {
+  background: var(--status-vip-bg);
+  color: var(--status-vip);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+/* Modals & Backdrop */
+.modal-backdrop, .modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(6, 14, 26, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  overflow-y: auto;
+  animation: modalBackdropFade 0.25s var(--ease-luxury) forwards;
+}
+
+.modal-content {
+  background: var(--bg-surface);
+  border: var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 35px rgba(212, 175, 55, 0.18);
+  width: 100%;
+  max-width: 850px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: modalSpringIn 0.32s var(--ease-luxury) forwards;
+}
+
+.modal-content-large {
+  max-width: 1180px;
+}
+
+@keyframes modalBackdropFade {
+  0% { opacity: 0; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
+  100% { opacity: 1; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+}
+
+@keyframes modalSpringIn {
+  0% { opacity: 0; transform: scale(0.96) translateY(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes stepFadeSlide {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.step-pane-enter {
+  animation: stepFadeSlide 0.22s var(--ease-luxury) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes sealPulse {
+  0% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.7)); }
+  100% { transform: scale(1); opacity: 0.9; }
+}
+
+.seal-pulse {
+  animation: sealPulse 1.2s ease-in-out infinite;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.75rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+  background: rgba(12, 24, 43, 0.6);
+}
+
+.modal-close-btn {
+  color: var(--text-secondary);
+  padding: 0.4rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+.modal-close-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.modal-body {
+  padding: 1.75rem;
+}
+
+/* Sliding Pill Tab System */
+.category-tabs-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  position: relative;
+  width: 100%;
+}
+
+.category-tabs-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background: rgba(10, 20, 38, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 5px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--gold-border);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.sliding-gold-pill {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #f3c64c 0%, #d4af37 100%);
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.45);
+  transition: transform 0.22s var(--ease-luxury), width 0.2s var(--ease-luxury);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tab-btn-pill {
+  position: relative;
+  z-index: 2;
+  background: transparent !important;
+  border: none !important;
+  color: var(--text-secondary);
+  padding: 8px 22px;
+  border-radius: var(--radius-full);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.25s ease;
+}
+
+.tab-btn-pill.active {
+  color: #060e1a !important;
+  font-weight: 800;
+}
+
+/* Staggered Waterfall Cascade Animations */
+@keyframes waterfallSlideUp {
+  0% { opacity: 0; transform: translateY(18px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.waterfall-item {
+  animation: waterfallSlideUp 0.42s var(--ease-luxury) both;
+}
+
+.waterfall-delay-1 { animation-delay: 0.04s; }
+.waterfall-delay-2 { animation-delay: 0.08s; }
+.waterfall-delay-3 { animation-delay: 0.12s; }
+.waterfall-delay-4 { animation-delay: 0.16s; }
+.waterfall-delay-5 { animation-delay: 0.20s; }
+.waterfall-delay-6 { animation-delay: 0.24s; }
+.waterfall-delay-7 { animation-delay: 0.28s; }
+
+/* Dynamic Keyframe Animation Suite */
+@keyframes shimmerBeam {
+  0% { left: -160%; }
+  25%, 100% { left: 200%; }
+}
+
+@keyframes shimmerGoldText {
+  0% { background-position: 0% center; }
+  100% { background-position: 250% center; }
+}
+
+@keyframes sacredBreathingAura {
+  0%, 100% { opacity: 0.45; transform: scale(1); filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.25)); }
+  50% { opacity: 0.85; transform: scale(1.06); filter: drop-shadow(0 0 50px rgba(212, 175, 55, 0.5)); }
+}
+.aura-breathing {
+  animation: sacredBreathingAura 8s ease-in-out infinite;
+  will-change: transform, opacity, filter;
+}
+
+@keyframes ripplePulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { opacity: 0.4; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+.ripple-pulse {
+  position: relative;
+}
+.ripple-pulse::after {
+  content: '';
+  position: absolute;
+  top: -2px; left: -2px; right: -2px; bottom: -2px;
+  border-radius: inherit;
+  background: inherit;
+  animation: ripplePulse 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes kenBurnsSubtle {
+  0% { transform: scale(1) translate(0); }
+  50% { transform: scale(1.05) translate(-0.8%, -0.5%); }
+  100% { transform: scale(1) translate(0); }
+}
+.ken-burns {
+  animation: kenBurnsSubtle 24s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes soundwaveDance {
+  0%, 100% { transform: scaleY(0.25); }
+  50% { transform: scaleY(1); }
+}
+.soundwave-container {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 18px;
+}
+.soundwave-bar {
+  display: inline-block;
+  width: 3px;
+  height: 100%;
+  background: var(--gold-glow);
+  border-radius: 2px;
+  animation: soundwaveDance 1.2s ease-in-out infinite;
+  transform-origin: bottom;
+}
+.soundwave-bar:nth-child(2) { animation-delay: 0.2s; }
+.soundwave-bar:nth-child(3) { animation-delay: 0.4s; }
+.soundwave-bar:nth-child(4) { animation-delay: 0.6s; }
+
+@keyframes springPop {
+  0% { transform: scale(0.8) translateY(3px); opacity: 0.6; }
+  60% { transform: scale(1.18) translateY(-2px); }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+.spring-pop {
+  animation: springPop 0.35s var(--ease-spring);
+  display: inline-block;
+  will-change: transform;
+}
+
+/* Modern CSS Grid Accordion */
+.accordion-grid {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.38s var(--ease-luxury), opacity 0.3s ease;
+  opacity: 0;
+}
+.accordion-grid.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.accordion-inner {
+  overflow: hidden;
+}
+
+/* Forms & Inputs */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.form-input, .form-select, .form-textarea {
+  background: rgba(6, 14, 26, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  transition: var(--transition-smooth);
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--gold-glow);
+  box-shadow: 0 0 15px rgba(243, 198, 76, 0.25);
+  background: rgba(6, 14, 26, 0.95);
+}
+
+/* Tape Chart (Gantt View) */
+.tape-chart-container {
+  overflow-x: auto;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+}
+
+.tape-floor-group {
+  border-bottom: 2px solid rgba(212, 175, 55, 0.25);
+}
+
+.tape-floor-header {
+  background: rgba(19, 34, 61, 0.9);
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gold-glow);
+}
+
+.tape-room-row {
+  display: grid;
+  grid-template-columns: 160px repeat(10, 1fr);
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 0.75rem;
+  transition: var(--transition-smooth);
+}
+.tape-room-row:hover {
+  background: rgba(29, 78, 216, 0.08);
+}
+
+/* ==========================================================================
+   OFFICIAL GOVERNMENT-COMPLIANT A4 GST TAX INVOICE SYSTEM
+   Standardized format for corporate reimbursements & Odisha Tax Audits
+   ========================================================================== */
+.official-invoice-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px 16px;
+  overflow-y: auto;
+  background: rgba(3, 7, 18, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.official-invoice-modal-content {
+  width: 100%;
+  max-width: 1040px;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 auto;
+}
+
+.invoice-action-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(10, 20, 38, 0.98);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  color: #fff;
+}
+
+/* Horizontal Scroll Container for A4 Documents on Mobile/Tablet */
+.invoice-sheet-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 6px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  background: #ffffff;
+  margin-bottom: 2rem;
+}
+
+.invoice-tabs-scroll-rail {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  overflow-x: auto !important;
+  white-space: nowrap !important;
+  flex-wrap: nowrap !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding: 4px 2px !important;
+  scrollbar-width: thin !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.invoice-tabs-scroll-rail > * {
+  flex-shrink: 0 !important;
+}
+
+/* ==========================================================================
+   HIGH-CONTRAST ENTERPRISE TABS & CHIPS
+   Ensures typography is crystal-clear and background NEVER dominates text.
+   ========================================================================== */
+
+/* Modern Segmented Navigation Tab */
+.enterprise-tab-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.52rem 1.05rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #f1f5f9 !important; /* Crisp luminous text - highly legible! */
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.enterprise-tab-pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.enterprise-tab-pill.active {
+  background: linear-gradient(180deg, rgba(212, 175, 55, 0.25) 0%, rgba(212, 175, 55, 0.08) 100%) !important;
+  color: #ffffff !important;
+  font-weight: 800;
+  border: 1px solid #f3c64c !important;
+  box-shadow: 0 0 14px rgba(243, 198, 76, 0.28), inset 0 -2px 0 #f3c64c !important;
+}
+
+/* Document Suite Switcher Tab */
+.doc-switcher-tab {
+  flex-shrink: 0;
+  padding: 6px 13px;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #f8fafc !important; /* Pure white readable text */
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.doc-switcher-tab:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #ffffff !important;
+}
+
+.doc-switcher-tab.active {
+  background: linear-gradient(180deg, rgba(212, 175, 55, 0.26) 0%, rgba(212, 175, 55, 0.1) 100%) !important;
+  color: #ffffff !important;
+  font-weight: 800;
+  border: 1px solid #f3c64c !important;
+  box-shadow: 0 0 14px rgba(243, 198, 76, 0.3), inset 0 -2px 0 #f3c64c !important;
+}
+
+/* ==========================================================================
+   HIGH-DENSITY ENTERPRISE SPREADSHEET GRID (Google Sheets / Excel Style)
+   Crisp, sharp 1px cell gridlines across all operational datasets & D1 tables.
+   ========================================================================== */
+
+.enterprise-data-table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #080f1a;
+  border: 1.5px solid rgba(56, 189, 248, 0.4);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 1px rgba(255, 255, 255, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.enterprise-data-table,
+.sheets-grid-table {
+  width: 100%;
+  border-collapse: collapse !important;
+  border-spacing: 0 !important;
+  font-size: 0.82rem;
+  color: #f1f5f9;
+  border: 1px solid rgba(148, 163, 184, 0.45) !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Google Sheets Column Header Row */
+.enterprise-data-table thead tr,
+.sheets-grid-table thead tr {
+  background: #0e1726 !important;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.75) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.enterprise-data-table th,
+.sheets-grid-table th {
+  padding: 0.65rem 0.85rem;
+  font-weight: 800;
+  font-size: 0.74rem;
+  color: #fbbf24;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  border: 1px solid rgba(148, 163, 184, 0.45) !important;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.75) !important;
+  text-align: left;
+  background: #0e1726;
+  position: relative;
+  user-select: none;
+}
+
+/* Header hover & sort visual */
+.enterprise-data-table th:hover,
+.sheets-grid-table th:hover {
+  background: #142036;
+}
+
+/* Dedicated Google Sheets Row Number Column (#) */
+.enterprise-data-table th.col-row-num,
+.sheets-grid-table th.col-row-num,
+.enterprise-data-table td.col-row-num,
+.sheets-grid-table td.col-row-num {
+  background: #0b1320 !important;
+  color: #94a3b8 !important;
+  font-weight: 700;
+  text-align: center !important;
+  width: 48px;
+  min-width: 48px;
+  max-width: 54px;
+  border-right: 2px solid rgba(148, 163, 184, 0.5) !important;
+  user-select: none;
+  font-size: 0.72rem;
+}
+
+/* Google Sheets Data Cells with Crisp 4-Sided Gridlines */
+.enterprise-data-table td,
+.sheets-grid-table td {
+  padding: 0.55rem 0.8rem;
+  border: 1px solid rgba(148, 163, 184, 0.38) !important;
+  vertical-align: middle;
+  transition: background 0.12s ease;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+}
+
+/* Alternating Rows (Zebra striping like Google Sheets alternate colors) */
+.enterprise-data-table tbody tr:nth-child(even),
+.sheets-grid-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.025) !important;
+}
+
+.enterprise-data-table tbody tr:nth-child(odd),
+.sheets-grid-table tbody tr:nth-child(odd) {
+  background: rgba(10, 18, 32, 0.75) !important;
+}
+
+/* Hover Row Highlight */
+.enterprise-data-table tbody tr:hover,
+.sheets-grid-table tbody tr:hover {
+  background: rgba(56, 189, 248, 0.14) !important;
+  outline: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.enterprise-data-table tbody tr:hover td,
+.sheets-grid-table tbody tr:hover td {
+  border-color: rgba(56, 189, 248, 0.45) !important;
+}
+
+/* Active Cell focus feeling */
+.enterprise-data-table td:hover,
+.sheets-grid-table td:hover {
+  background: rgba(212, 175, 55, 0.18) !important;
+  outline: 1.5px solid var(--gold-glow);
+  outline-offset: -1px;
+}
+
+/* Interactive Google Sheets Cell Behavior & Fill-Handle */
+.sheets-editable-cell {
+  position: relative !important;
+  cursor: pointer !important;
+  transition: background-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+/* Subtle corner notch showing cell is interactive like Google Sheets */
+.sheets-editable-cell::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 5px 5px 0;
+  border-color: transparent rgba(56, 189, 248, 0.35) transparent transparent;
+  pointer-events: none;
+  transition: border-color 0.15s ease;
+}
+
+.sheets-editable-cell:hover:not(.sheets-cell-editing)::after {
+  border-color: transparent #38bdf8 transparent transparent;
+}
+
+.sheets-editable-cell:hover:not(.sheets-cell-editing) {
+  background-color: rgba(56, 189, 248, 0.15) !important;
+  box-shadow: inset 0 0 0 1.5px rgba(56, 189, 248, 0.7) !important;
+}
+
+.sheets-editable-cell .sheets-cell-pencil {
+  opacity: 0.35;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.sheets-editable-cell:hover:not(.sheets-cell-editing) .sheets-cell-pencil {
+  opacity: 1 !important;
+  transform: scale(1.15);
+}
+
+.sheets-editable-cell.sheets-cell-editing {
+  background-color: #030712 !important;
+  box-shadow: inset 0 0 0 2px #38bdf8, 0 0 14px rgba(56, 189, 248, 0.45) !important;
+  z-index: 30 !important;
+}
+
+.sheets-editable-cell.sheets-cell-editing::after {
+  display: none;
+}
+
+.sheets-cell-handle {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 7px;
+  height: 7px;
+  background-color: #38bdf8;
+  border: 1px solid #ffffff;
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 35;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+}
+
+/* Google Sheets Column Header Badges */
+.sheets-hdr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  user-select: none;
+  line-height: 1.2;
+}
+
+.sheets-hdr-editable {
+  background: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.sheets-hdr-formula {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.sheets-hdr-locked {
+  background: rgba(148, 163, 184, 0.12);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.sheets-cell-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Numeric alignment in spreadsheet */
+.enterprise-data-table td.cell-num,
+.sheets-grid-table td.cell-num {
+  font-family: 'SF Mono', 'Courier New', Courier, monospace, system-ui;
+  font-weight: 700;
+  text-align: right;
+  font-size: 0.82rem;
+  color: #38bdf8;
+}
+
+/* Global Gridline rules for all tables in PMS container & Reception Admin (Google Sheets Style) */
+.pms-data-sheet-table,
+.pms-table-container table,
+.reception-data-grid table,
+.reception-admin-root table {
+  width: 100%;
+  border-collapse: collapse !important;
+  border: 1px solid rgba(148, 163, 184, 0.35) !important;
+}
+
+.pms-data-sheet-table th,
+.pms-table-container table th,
+.reception-data-grid table th,
+.reception-admin-root table th {
+  border: 1px solid rgba(148, 163, 184, 0.3) !important;
+  border-bottom: 2px solid rgba(212, 175, 55, 0.6) !important;
+  background: #0e1726 !important;
+  color: #fbbf24 !important;
+  padding: 0.65rem 0.8rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.pms-data-sheet-table td,
+.pms-table-container table td,
+.reception-data-grid table td,
+.reception-admin-root table td {
+  border: 1px solid rgba(148, 163, 184, 0.22) !important;
+  padding: 0.55rem 0.8rem;
+}
+
+.reception-admin-root table tr:hover {
+  background: rgba(56, 189, 248, 0.08) !important;
+}
+
+.reception-admin-root table tr:hover td {
+  border-color: rgba(56, 189, 248, 0.35) !important;
+}
+
+.mobile-swipe-guide {
+  display: none;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px dashed rgba(56, 189, 248, 0.4);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 820px) {
+  .official-invoice-overlay {
+    padding: 8px 4px !important;
+  }
+  
+  .mobile-swipe-guide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  .tax-invoice-sheet {
+    min-width: 760px !important; /* Preserves crisp, uncompressed statutory A4 tables */
+  }
+
+  .navbar-top-strip {
+    padding: 0.35rem 0.75rem !important;
+    font-size: 0.72rem !important;
+    gap: 0.4rem !important;
+  }
+
+  .navbar-erp-quickbar {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 0.35rem 0.75rem !important;
+    scrollbar-width: none;
+  }
+
+  .navbar-erp-quickbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navbar-erp-quickbar > div {
+    flex-wrap: nowrap !important;
+  }
+
+  #reception-admin-container {
+    padding: 0.75rem 0.5rem 3rem 0.5rem !important;
+  }
+}
+
+.invoice-action-bar .action-bar-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--gold-glow);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tax-invoice-sheet {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  padding: 24px 28px;
+  border-radius: 4px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  font-family: 'Courier New', Courier, monospace, system-ui;
+  font-size: 11px;
+  line-height: 1.35;
+  border: 1px solid #d1d5db;
+}
+
+/* Ensure inputs inherit dark text on the white invoice */
+.tax-invoice-sheet input,
+.tax-invoice-sheet textarea,
+.tax-invoice-sheet select,
+.tax-invoice-sheet [contenteditable="true"] {
+  background: transparent;
+  color: #0f172a !important;
+}
+
+.tax-invoice-sheet select option {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* ==========================================================================
+   INVOICE GRID LIGHT MODE (Overrides global dark mode sheets-grid-table)
+   ========================================================================== */
+.tax-invoice-sheet .sheets-grid-table thead tr {
+  background: #f1f5f9 !important;
+  border-bottom: 2px solid #000 !important;
+  box-shadow: none !important;
+}
+
+.tax-invoice-sheet .sheets-grid-table th {
+  background: #f1f5f9 !important;
+  color: #000 !important;
+  border: 1px solid #000 !important;
+  border-bottom: 2px solid #000 !important;
+  white-space: normal !important; /* Allow wrapping to prevent A4 overflow */
+}
+
+/* Force the inner div (which has inline white-space: nowrap) to also wrap */
+.tax-invoice-sheet .sheets-grid-table th > div {
+  white-space: normal !important;
+}
+
+.tax-invoice-sheet .sheets-grid-table th:hover {
+  background: #e2e8f0 !important;
+}
+
+.tax-invoice-sheet .sheets-grid-table td {
+  border: 1px solid #000 !important;
+  color: #000 !important;
+}
+
+.tax-invoice-sheet .sheets-grid-table tbody tr:nth-child(odd) td,
+.tax-invoice-sheet .sheets-grid-table tbody tr:nth-child(even) td {
+  background: #fff !important;
+}
+
+.tax-invoice-sheet .sheets-grid-table tbody tr:hover td {
+  background: #fff !important; /* disable tr hover in invoice */
+}
+
+/* Make toolbar legend blend into the white invoice document */
+.tax-invoice-sheet .sheets-toolbar-legend {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  border-bottom: none !important;
+  color: #334155 !important;
+}
+
+.tax-invoice-sheet .sheets-toolbar-legend strong {
+  color: #0f172a !important;
+}
+
+.tax-invoice-sheet .sheets-toolbar-legend span[style*="color:'#fff'"] {
+  color: #0f172a !important;
+}
+
+.sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid #000000;
+  padding-bottom: 10px;
+  margin-bottom: 8px;
+}
+
+.header-left .page-mark {
+  font-size: 10px;
+  color: #555555;
+  display: block;
+}
+
+.header-left .tax-invoice-title {
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin: 2px 0;
+  color: #000000;
+}
+
+.header-left .copy-type {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #333333;
+  letter-spacing: 0.5px;
+}
+
+.header-right {
+  text-align: right;
+  max-width: 500px;
+}
+
+.hotel-brand-block .hotel-trade-name {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 900;
+  color: #000000;
+  margin: 0 0 2px;
+  letter-spacing: 0.5px;
+}
+
+.hotel-brand-block .proprietor-line {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #222222;
+}
+
+.hotel-brand-block .address-line,
+.hotel-brand-block .contact-line,
+.hotel-brand-block .website-line {
+  font-size: 10px;
+  color: #333333;
+}
+
+.particulars-grid {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1.5px solid #000000;
+  padding: 8px 0;
+  margin-bottom: 8px;
+  gap: 20px;
+}
+
+.particulars-col {
+  flex: 1;
+}
+
+.field-row {
+  display: flex;
+  margin-bottom: 3px;
+  font-size: 10.5px;
+}
+
+.field-label {
+  width: 120px;
+  font-weight: 700;
+  color: #222222;
+  flex-shrink: 0;
+}
+
+.field-colon {
+  width: 12px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.field-value {
+  flex: 1;
+  word-break: break-word;
+  color: #000000;
+}
+
+.text-bold-gstin {
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+
+.ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+  font-size: 10.5px;
+}
+
+.ledger-table th {
+  border-top: 1.5px solid #000000;
+  border-bottom: 1.5px solid #000000;
+  padding: 4px 6px;
+  text-align: left;
+  font-weight: 800;
+  font-size: 10px;
+}
+
+.ledger-table th.th-amount,
+.ledger-table td.text-right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.ledger-table td {
+  padding: 4px 6px;
+  border-bottom: 0.5px dashed #cccccc;
+  color: #000000;
+}
+
+.ledger-table tfoot td {
+  border-top: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+  padding: 4px 6px;
+}
+
+.ledger-table tfoot .tfoot-round td {
+  border-bottom: 2px solid #000000;
+}
+
+.text-net-amount {
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.in-words-row {
+  border-bottom: 1.5px solid #000000;
+  padding: 5px 0;
+  font-size: 10.5px;
+  margin-bottom: 8px;
+}
+
+.in-words-label {
+  font-weight: 700;
+  margin-right: 6px;
+}
+
+.in-words-value {
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.tax-summary-block {
+  border: 1px solid #000000;
+  padding: 6px 10px;
+  margin-bottom: 10px;
+  max-width: 480px;
+}
+
+.tax-summary-title {
+  font-size: 11px;
+  font-weight: 900;
+  text-decoration: underline;
+  margin-bottom: 4px;
+}
+
+.tax-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+
+.tax-summary-table th,
+.tax-summary-table td {
+  padding: 2px 4px;
+}
+
+.tax-summary-table thead th {
+  border-bottom: 1px solid #000000;
+}
+
+.tax-summary-total-row td {
+  border-top: 1px solid #000000;
+  font-weight: 800;
+}
+
+.invoice-terms-box {
+  border: 1px solid #777777;
+  border-radius: 3px;
+  padding: 6px 10px;
+  margin-bottom: 16px;
+  background-color: #fafafa;
+}
+
+.invoice-terms-header {
+  font-size: 8.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 4px;
+  color: #111111;
+  border-bottom: 1px solid #dddddd;
+  padding-bottom: 2px;
+}
+
+.invoice-terms-list {
+  margin: 0;
+  padding-left: 14px;
+  font-size: 8px;
+  line-height: 1.35;
+  color: #222222;
+}
+
+.signature-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  margin-top: 25px;
+  margin-bottom: 12px;
+}
+
+.sig-col {
+  flex: 1;
+  text-align: center;
+}
+
+.sig-line {
+  border-top: 1.5px solid #000000;
+  margin-bottom: 4px;
+}
+
+.sig-title {
+  font-size: 10.5px;
+  font-weight: 800;
+  display: block;
+}
+
+.sig-disclaimer {
+  font-size: 8px;
+  color: #444444;
+  margin-top: 2px;
+  line-height: 1.2;
+}
+
+.sheet-footer-strip {
+  background: #060e1a;
+  color: #ffffff;
+  text-align: center;
+  font-size: 8.5px;
+  padding: 4px 8px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  margin-top: 10px;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ==========================================================================
+   UNIVERSAL HOTEL PRINT ENGINE (A4 Laser, Statutory Registers & 80mm Thermal POS)
+   ========================================================================== */
+@page {
+  margin: 8mm 10mm;
+  size: A4 portrait;
+}
+
+@page thermal-receipt {
+  size: 80mm auto;
+  margin: 1mm 2mm;
+}
+
+@media print {
+  /* Force exact color, border, and background graphics across all browsers */
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    text-shadow: none !important;
+  }
+
+  /* Hide screen chrome, navigation bars, buttons, and action panels */
+  nav,
+  aside,
+  header.no-print,
+  footer.no-print,
+  .no-print,
+  .invoice-action-bar,
+  .modal-close-btn,
+  .hsi-inline-banner,
+  .doc-switcher-tab,
+  button:not(.print-keep),
+  .btn-primary-gold,
+  .btn-outline-gold,
+  .btn-outline,
+  .chat-widget,
+  .floating-action-btn,
+  .room-quick-actions {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Base Document Reset */
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    font-size: 11pt;
+  }
+
+  /* When printing any modal, promote it out of fixed positioning */
+  .official-invoice-overlay,
+  .pos-print-overlay,
+  .modal-overlay,
+  div[style*="position: fixed"] {
+    position: static !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-shadow: none !important;
+  }
+
+  /* Universal Visibility Elevation for Printable Target Containers */
+  body:has(.tax-invoice-sheet, .printable-receipt, .printable-audit-pack, .printable-sheet, .printable-ledger, .printable-pos-slip) * {
+    visibility: hidden;
+  }
+
+  .tax-invoice-sheet,
+  .tax-invoice-sheet *,
+  .printable-receipt,
+  .printable-receipt *,
+  .printable-audit-pack,
+  .printable-audit-pack *,
+  .printable-sheet,
+  .printable-sheet *,
+  .printable-ledger,
+  .printable-ledger *,
+  .printable-pos-slip,
+  .printable-pos-slip * {
+    visibility: visible !important;
+  }
+
+  /* -------------------------------------------------------------
+     A4 DOCUMENT SHEETS (Tax Invoices, GRC, Money Receipts, Vouchers)
+     Static flow positioning enables natural multi-page pagination!
+     ------------------------------------------------------------- */
+  .tax-invoice-sheet,
+  .printable-sheet,
+  .printable-audit-pack,
+  .printable-ledger {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 210mm !important;
+    margin: 0 auto !important;
+    padding: 6mm 10mm !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border: none !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    page-break-after: auto;
+  }
+
+  /* Pre-printed stationery clearance: 48mm top clearance when header is toggled OFF */
+  .tax-invoice-sheet.preprinted-pad-mode {
+    padding-top: 48mm !important;
+  }
+
+  /* Prevent awkward page-breaks inside table rows, totals, and signatures */
+  table, tr, td, th {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .signature-block,
+  .page-break-avoid,
+  .tax-summary-box {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* -------------------------------------------------------------
+     80MM THERMAL COUNTERTOP POS RECEIPT (KOT & Customer Slip)
+     ------------------------------------------------------------- */
+  .printable-receipt,
+  .printable-pos-slip,
+  .thermal-receipt-sheet {
+    page: thermal-receipt;
+    position: static !important;
+    display: block !important;
+    width: 76mm !important;
+    max-width: 80mm !important;
+    margin: 0 !important;
+    padding: 2mm 3mm !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 9pt !important;
+    line-height: 1.25 !important;
+    box-shadow: none !important;
+    border: none !important;
+    overflow: visible !important;
+  }
+
+  .printable-receipt table,
+  .printable-pos-slip table,
+  .thermal-receipt-sheet table {
+    width: 100% !important;
+    font-size: 8.5pt !important;
+  }
+}
+
+/* ==========================================================================
+   EMIL KOWALSKI ACCESSIBILITY: PREFERS REDUCED MOTION
+   Honors user vestibular preferences by disabling spatial movement while
+   preserving instantaneous opacity transitions.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   UNIVERSAL INLINE KEYBOARD EDITING SYSTEM (CLICK-TO-TYPE WYSIWYG)
+   ========================================================================== */
+
+.hsi-live-edit-active {
+  position: relative;
+}
+
+/* Any text element inside active live edit container indicates click-to-edit */
+.hsi-live-edit-active p,
+.hsi-live-edit-active span,
+.hsi-live-edit-active h1,
+.hsi-live-edit-active h2,
+.hsi-live-edit-active h3,
+.hsi-live-edit-active h4,
+.hsi-live-edit-active h5,
+.hsi-live-edit-active h6,
+.hsi-live-edit-active td,
+.hsi-live-edit-active th,
+.hsi-live-edit-active label,
+.hsi-live-edit-active strong,
+.hsi-live-edit-active b,
+.hsi-live-edit-active small,
+.hsi-live-edit-active em,
+.hsi-inline-editable {
+  cursor: text !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+
+/* Hover Cue: subtle dashed gold outline showing the user this is click-to-type */
+.hsi-live-edit-active p:hover,
+.hsi-live-edit-active span:hover,
+.hsi-live-edit-active h1:hover,
+.hsi-live-edit-active h2:hover,
+.hsi-live-edit-active h3:hover,
+.hsi-live-edit-active h4:hover,
+.hsi-live-edit-active h5:hover,
+.hsi-live-edit-active h6:hover,
+.hsi-live-edit-active td:hover,
+.hsi-live-edit-active th:hover,
+.hsi-live-edit-active label:hover,
+.hsi-live-edit-active strong:hover,
+.hsi-live-edit-active b:hover,
+.hsi-live-edit-active small:hover,
+.hsi-inline-editable:hover {
+  outline: 1.5px dashed rgba(243, 198, 76, 0.75) !important;
+  outline-offset: 2px !important;
+  background-color: rgba(243, 198, 76, 0.12) !important;
+  border-radius: 3px !important;
+}
+
+/* Keep interactive controls pristine: buttons, inputs, links, dropdowns */
+.hsi-live-edit-active button,
+.hsi-live-edit-active button *,
+.hsi-live-edit-active input,
+.hsi-live-edit-active textarea,
+.hsi-live-edit-active select,
+.hsi-live-edit-active a,
+.hsi-live-edit-active svg,
+.hsi-live-edit-active svg *,
+.no-inline-edit,
+.no-inline-edit * {
+  cursor: pointer !important;
+  outline: none !important;
+  background-color: inherit;
+}
+
+.hsi-live-edit-active input,
+.hsi-live-edit-active textarea {
+  cursor: text !important;
+}
+
+/* Actively Focused Editing Element (Blinking Cursor + Luxury Gold Glow for Dark Themes) */
+[contenteditable="true"]:focus,
+.hsi-currently-editing,
+.hsi-inline-editable:focus {
+  outline: 2px solid var(--gold-glow, #f3c64c) !important;
+  outline-offset: 2px !important;
+  background-color: rgba(6, 14, 26, 0.98) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 16px rgba(243, 198, 76, 0.5) !important;
+  border-radius: 4px !important;
+  min-width: 1ch !important;
+  display: inline-block !important;
+  z-index: 50 !important;
+}
+
+/* ==========================================================================
+   BILL ENGINE & STATUTORY INVOICE SHEETS (WHITE PAPER CONTEXT)
+   Keeps text crystal-clear black/navy (#0f172a) on white paper during editing!
+   ========================================================================== */
+.tax-invoice-sheet [contenteditable="true"]:focus,
+.tax-invoice-sheet .hsi-currently-editing,
+.tax-invoice-sheet .hsi-inline-editable:focus,
+.official-invoice-modal-content .tax-invoice-sheet [contenteditable="true"]:focus,
+.official-invoice-modal-content .tax-invoice-sheet .hsi-currently-editing,
+.official-invoice-modal-content .tax-invoice-sheet .hsi-inline-editable:focus {
+  outline: 2px solid #2563eb !important;
+  outline-offset: 1px !important;
+  background-color: #fef08a !important; /* Soft highlighter yellow */
+  color: #0f172a !important; /* Authentic, crystal-clear dark black/navy text */
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.35) !important;
+  border-radius: 2px !important;
+}
+
+.tax-invoice-sheet [contenteditable="true"]:hover,
+.official-invoice-modal-content .tax-invoice-sheet [contenteditable="true"]:hover {
+  outline: 1.5px dashed #2563eb !important;
+  background-color: rgba(254, 240, 138, 0.35) !important;
+  color: #0f172a !important;
+}
+
+[contenteditable="true"] {
+  outline: none;
+  min-width: 1ch;
+  display: inline-block;
+  cursor: text;
+}
+
+/* Save Success Flash Animation for Dark Themes */
+@keyframes hsi-save-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.8) !important;
+    background-color: rgba(16, 185, 129, 0.35) !important;
+    color: #34d399 !important;
+  }
+  60% {
+    box-shadow: 0 0 14px 4px rgba(16, 185, 129, 0.45) !important;
+    background-color: rgba(16, 185, 129, 0.2) !important;
+  }
+  100% {
+    box-shadow: none !important;
+    background-color: transparent !important;
+  }
+}
+
+.hsi-save-success-flash {
+  animation: hsi-save-pulse 1.2s ease-out forwards !important;
+}
+
+/* Save Success Flash Animation for White Paper Invoice Sheets */
+.tax-invoice-sheet .hsi-save-success-flash,
+.official-invoice-modal-content .tax-invoice-sheet .hsi-save-success-flash {
+  animation: hsi-invoice-save-pulse 1.2s ease-out forwards !important;
+}
+
+@keyframes hsi-invoice-save-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7) !important;
+    background-color: #bbf7d0 !important;
+    color: #14532d !important;
+    outline: 2px solid #16a34a !important;
+  }
+  60% {
+    box-shadow: 0 0 10px 2px rgba(22, 163, 74, 0.3) !important;
+    background-color: #dcfce7 !important;
+    color: #166534 !important;
+  }
+  100% {
+    box-shadow: none !important;
+    background-color: transparent !important;
+    color: inherit !important;
+    outline: none !important;
+  }
+}
+
+
+/* Print Cleanliness: Never show edit outlines or edit banners on physical print */
+@media print {
+  .hsi-live-edit-active p,
+  .hsi-live-edit-active span,
+  .hsi-live-edit-active td,
+  .hsi-live-edit-active th,
+  .hsi-inline-editable,
+  [contenteditable="true"] {
+    outline: none !important;
+    background: transparent !important;
+  }
+  .no-print,
+  .hsi-inline-banner {
+    display: none !important;
+  }
+}
+
+
+
+
+
+/* ==========================================================================
+   UNIVERSAL INLINE EDIT BADGE
+   Injects EDIT badge into every <th> header across the entire project.
+   Every tab, every modal, every grid — no JSX changes needed.
+   Excluded: .sheets-grid-th (badge already in JSX via SheetsColumnHeader)
+             .th-no-edit     (system-only read-only columns)
+   ========================================================================== */
+
+th:not(.sheets-grid-th):not(.th-no-edit) {
+  position: relative;
+  /* no white-space: nowrap — let column names wrap freely */
+}
+
+th:not(.sheets-grid-th):not(.th-no-edit)::after {
+  content: "EDIT";
+  display: block;           /* sits on its OWN LINE below the column name */
+  margin-top: 4px;
+  font-size: 0.54rem;
+  font-weight: 800;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.13);
+  border: 1px solid rgba(16, 185, 129, 0.32);
+  border-radius: 3px;
+  padding: 1px 6px;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+  user-select: none;
+  text-transform: uppercase;
+  pointer-events: none;
+  width: fit-content;       /* badge only as wide as its text — never stretches */
+}
+
+th:not(.sheets-grid-th):not(.th-no-edit):hover::after {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: rgba(16, 185, 129, 0.6);
+  color: #6ee7b7;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.3);
+}
+
+@media print {
+  th::after { display: none !important; }
+}
+
+
+/* ==========================================================================
+   EDIT ENGINE v2 — Document-Centric Cell Editing States
+   Applied by editEngine.js singleton (src/editEngine.js).
+   No toggle class needed — engine is always on.
+   ========================================================================== */
+
+/*
+ * Hover state: any <td> the engine can manage gets a subtle green glow.
+ * Excludes: .sheets-editable-cell (self-managed), .no-inline-edit, disabled cells.
+ */
+td:not(.sheets-editable-cell):not(.no-inline-edit):not([data-no-edit]):not([colspan]):hover {
+  background-color: rgba(16, 185, 129, 0.06) !important;
+  cursor: text;
+  outline: 1px dashed rgba(52, 211, 153, 0.30);
+  outline-offset: -1px;
+  transition: background-color 0.12s ease, outline 0.12s ease;
+}
+
+/* Explicitly disable hover glow for ANY cell inside a locked container, merged cells, or footer totals */
+.no-inline-edit td:hover,
+td[colspan]:hover,
+tfoot td:hover {
+  background-color: inherit !important;
+  cursor: auto !important;
+  outline: none !important;
+}
+/*
+ * Active editing state — injected by engine when cell is contentEditable.
+ */
+td.hsi-editing {
+  outline: 2px solid #34d399 !important;
+  outline-offset: -2px;
+  background-color: rgba(16, 185, 129, 0.12) !important;
+  color: #f0fdf4 !important;
+  caret-color: #34d399;
+  box-shadow: inset 0 0 0 1px rgba(52, 211, 153, 0.25),
+              0 0 12px rgba(52, 211, 153, 0.15);
+  border-radius: 2px;
+  transition: none; /* instant activation, no flicker */
+}
+
+td.hsi-editing:focus {
+  outline: 2px solid #34d399 !important;
+}
+
+/*
+ * Save-success flash — green pulse after committing an edit.
+ * Used by both editEngine.js (plain td) and SheetsEditableCell.
+ */
+@keyframes hsi-flash-save {
+  0%   { background-color: rgba(52, 211, 153, 0.40); box-shadow: 0 0 10px rgba(52,211,153,0.5); }
+  60%  { background-color: rgba(52, 211, 153, 0.18); }
+  100% { background-color: transparent; box-shadow: none; }
+}
+
+.hsi-save-success-flash {
+  animation: hsi-flash-save 1.2s ease forwards !important;
+}
+
+/*
+ * InlineEditorBanner pulse animation (always-on status chip).
+ */
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 8px 32px rgba(0,0,0,0.75), 0 0 16px rgba(243,198,76,0.35); }
+  50%       { box-shadow: 0 8px 32px rgba(0,0,0,0.75), 0 0 28px rgba(243,198,76,0.60); }
+}
+
+/*
+ * InlineText editable span — subtle yellow dashed outline when active.
+ */
+.hsi-inline-editable {
+  cursor: text;
+  outline: 1px dashed rgba(243, 198, 76, 0.4);
+  outline-offset: 2px;
+  border-radius: 3px;
+  transition: outline 0.12s ease, background-color 0.12s ease;
+}
+
+.hsi-inline-editable:focus {
+  outline: 2px solid var(--gold-glow, #f3c64c) !important;
+  background-color: rgba(6, 14, 26, 0.95);
+  color: #fff;
+}
+
+/*
+ * Suppress engine hover on cells that are explicitly read-only.
+ */
+td.th-no-edit:hover,
+td[data-no-edit]:hover {
+  background-color: inherit !important;
+  outline: none !important;
+  cursor: default !important;
+}
+
+@media print {
+  td.hsi-editing,
+  td:hover,
+  .hsi-save-success-flash { outline: none !important; box-shadow: none !important; animation: none !important; }
+  .hsi-inline-banner, .sheets-toolbar-legend { display: none !important; }
+}

@@ -1,0 +1,31 @@
+# Cloudflare Pages Edge Response Headers
+# Rule 1: Never cache index.html or root document so visitors always receive the latest JS bundle instantly
+/
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# Rule 2: Web manifest & Service Worker immediate revalidation
+/manifest.webmanifest
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Rule 3: Content-hashed static assets (JS, CSS, images, fonts) are immutable for blazing speed
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Rule 4: Global security headers for all paths
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin

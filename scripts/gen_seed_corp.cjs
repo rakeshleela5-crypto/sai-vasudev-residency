@@ -1,0 +1,27 @@
+const fs = require('fs');
+
+const partners = [
+  ['CORP-01', 'JK Paper Mills Ltd.', '21AAACJ1288P1ZZ', 'Jaykaypur, Rayagada', 'Subrat Panda (Admin GM)', 'admin.jk@jkpaper.com', '+91 6856 222000', 15, 30],
+  ['CORP-02', 'GAIL (India) Limited', '07AAACG1509J1ZQ', 'Pipeline Regional Office, Rayagada', 'Rajeshwar Rao', 'travel.gail@gail.co.in', '+91 6856 228811', 15, 30],
+  ['CORP-03', 'Mahindra & Mahindra Ltd.', '27AAACM1545A1Z4', 'Automotive Logistics, Rayagada', 'Sunil K. Verma', 'verma.sunil@mahindra.com', '+91 6856 229944', 12, 30],
+  ['CORP-04', 'Hindustan Coca-Cola Beverages', '21AAACH1123P1Z9', 'South Odisha Distribution Hub', 'Amitabh Sen', 'traveldesk@hccb.co.in', '+91 6856 231122', 10, 30],
+  ['CORP-05', 'IMFA (Indian Metals & Ferro Alloys)', '21AAACI0981M1Z5', 'Therubali, Rayagada', 'D. K. Mohapatra', 'traveldesk@imfa.in', '+91 6856 233444', 15, 30],
+  ['CORP-06', 'Utkal Alumina International Ltd.', '21AABCU5544N1ZV', 'Doraguda, Rayagada', 'Manish Agrawal', 'logistics@utkalalumina.adityabirla.com', '+91 6856 244555', 20, 45],
+  ['CORP-07', 'East Coast Railway (ECoR) Rayagada Div.', '21AAAGR0022E1Z8', 'Station Road, Rayagada', 'P. K. Nayak', 'travel.rgda@ecor.railnet.gov.in', '+91 6856 223311', 12, 30],
+  ['CORP-08', 'PRADAN', '21AAATP0912K1Z3', 'J K Pur, Rayagada', 'Bijay Paswan', 'rayagada@pradan.net', '+91 7209347755', 15, 30],
+  ['CORP-09', 'Ashok Leyland Limited', '33AAACA0779M1ZT', 'Commercial Vehicle Service Division, Rayagada', 'Malay Panda', 'service.odisha@ashokleyland.com', '+91 6856 226688', 18, 45],
+  ['CORP-10', 'Easy Note Stationary Pvt Ltd', '21AABCE9876R1Z2', 'Rayagada Industrial Area', 'Mriganka Dasgupta', 'accounts@easynote.in', '+91 94370 55441', 10, 30],
+  ['CORP-11', 'Incredible Dreams Hotels & Resorts', '21AACCI7788P1Z5', 'Regional Hospitality Partner', 'Prabhu Prasad Padhy', 'travel@incredibledreams.co.in', '+91 98610 33221', 15, 30],
+  ['CORP-12', 'Linde India Ltd', '21AAACB2528H1ZA', 'J.K. Paper Mill Plant Site, Jaykaypur, Rayagada', 'P. Ashok', 'p.ashok@linde.com', '+91 6305202068', 15, 30]
+];
+
+let sql = '';
+for (const p of partners) {
+  const vals = [p[0], p[1], p[2], p[3], p[4], p[5], p[6]]
+    .map(s => `'${String(s).replace(/'/g, "''")}'`)
+    .join(', ');
+  sql += `INSERT OR REPLACE INTO corporate_partners (corporate_id, company_name, gstin, location, contact_person, contact_email, contact_phone, contracted_discount_percent, credit_days, status) VALUES (${vals}, ${p[7]}, ${p[8]}, 'Active');\n`;
+}
+
+fs.writeFileSync('seed_corp.sql', sql, 'utf8');
+console.log('Saved seed_corp.sql successfully with 12 corporate partners');

@@ -1,0 +1,55 @@
+const fs = require('fs');
+
+const badge = [
+  '',
+  '',
+  '/* ==========================================================================',
+  '   UNIVERSAL INLINE EDIT BADGE',
+  '   Injects EDIT badge into every <th> header across the entire project.',
+  '   Every tab, every modal, every grid — no JSX changes needed.',
+  '   Excluded: .sheets-grid-th (badge already in JSX via SheetsColumnHeader)',
+  '             .th-no-edit     (system-only read-only columns)',
+  '   ========================================================================== */',
+  '',
+  'th:not(.sheets-grid-th):not(.th-no-edit) {',
+  '  position: relative;',
+  '  white-space: nowrap;',
+  '}',
+  '',
+  'th:not(.sheets-grid-th):not(.th-no-edit)::after {',
+  '  content: "EDIT";',
+  '  display: inline-flex;',
+  '  align-items: center;',
+  '  margin-left: 6px;',
+  '  font-size: 0.56rem;',
+  '  font-weight: 800;',
+  '  color: #34d399;',
+  '  background: rgba(16, 185, 129, 0.13);',
+  '  border: 1px solid rgba(16, 185, 129, 0.32);',
+  '  border-radius: 3px;',
+  '  padding: 1px 5px;',
+  '  vertical-align: middle;',
+  '  letter-spacing: 0.04em;',
+  '  line-height: 1.4;',
+  '  user-select: none;',
+  '  text-transform: uppercase;',
+  '  pointer-events: none;',
+  '}',
+  '',
+  'th:not(.sheets-grid-th):not(.th-no-edit):hover::after {',
+  '  background: rgba(16, 185, 129, 0.25);',
+  '  border-color: rgba(16, 185, 129, 0.6);',
+  '  color: #6ee7b7;',
+  '  box-shadow: 0 0 6px rgba(16, 185, 129, 0.3);',
+  '}',
+  '',
+  '@media print {',
+  '  th::after { display: none !important; }',
+  '}',
+  ''
+].join('\n');
+
+let css = fs.readFileSync('src/index.css', 'utf8');
+css = css + badge;
+fs.writeFileSync('src/index.css', css, 'utf8');
+console.log('Universal EDIT badge CSS injected into index.css');
