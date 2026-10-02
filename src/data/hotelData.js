@@ -3,29 +3,41 @@
 // Switchboard: +91 6856 225555 | Landline: 06856 225 555
 
 export const HOTEL_CONFIG = {
-  name: "Hotel Sai International Pvt Ltd",
-  legalName: "Hotel Sai International Pvt Ltd",
-  tagline: "Premier 39-Room International Executive & Pilgrim Hotel",
-  address: "J.K. Road, Rayagada, Rayagada - 765001, India",
+  name: "Sri Sai Vasudev Residency",
+  tradeName: "Sri Sai Vasudev Residency",
+  legalName: "PAIDISETTY MANMADHA RAO",
+  proprietor: "Paidisetty Manmadha Rao",
+  constitution: "Proprietorship",
+  tagline: "Premier 18-Room Executive & Pilgrim Residency",
+  address: "Near Andhra Bank, New Colony, Rayagada, Odisha - 765001, India",
+  buildingName: "Sri Sai Vasudev Residency",
+  landmark: "Near Andhra Bank",
+  street: "New Colony",
+  city: "Rayagada",
+  district: "Rayagada",
   landline: "06856 225 555",
   phone: "+91 8895225555",
   altPhone: "+91 8249258377",
   phones: ["+91 8895225555", "+91 8249258377"],
-  email: "hotelsaiinternational2010@gmail.com",
-  adminEmail: "admin@hotelsaiinternational.com",
-  travelDeskEmail: "traveldesk@hotelsaiinternational.com",
-  website: "hotelsaiinternationalrayagada.com",
-  gstin: "21AABCH7663L1ZG",
+  email: "saisaivasudevresidency@gmail.com",
+  adminEmail: "admin@saisaivasudevresidency.com",
+  travelDeskEmail: "traveldesk@saisaivasudevresidency.com",
+  website: "sai-vasudev-residency.pages.dev",
+  gstin: "21AEKPP8689J1ZS",
+  pan: "AEKPP8689J",
   sacCode: "996311",
   checkInTime: "12:00 PM",
   checkOutTime: "12:00 PM",
   cycle: "24-Hour Cycle",
-  upiId: "hotelsaiinternational@sbi",
+  upiId: "saisaivasudevresidency@sbi",
   distanceStation: "1.5 km from Rayagada Railway Junction (RGDA)",
   distanceTemple: "2.0 km from sacred Maa Majhighariani Temple",
   stateCode: "21",
   state: "Odisha",
-  stateName: "Odisha"
+  stateName: "Odisha",
+  registrationDate: "05/02/2025",
+  registrationType: "Regular",
+  jurisdictionalOffice: "RAYAGADA DIVISION"
 };
 
 // 4-Tier Room Catalog
@@ -92,52 +104,29 @@ export const ROOM_TIERS = [
   }
 ];
 
-// 39 Authentic Physical Inventory Keys (MySoft Live Property Layout)
+// 18 Authentic Physical Inventory Keys (Ground Floor & 1st Floor)
 export const INITIAL_ROOMS_INVENTORY = [
-  // Floor 2 (7 Rooms: 201 - 208)
-  { roomNumber: '201', tier: 'Deluxe Room', roomType: 'EXEDEL', floor: 2, tariff: 2199, status: 'Occupied', currentGuestName: 'LAVAKANTA', balanceDue: 4410.00, pax: '1 Pax', coordinates3D: { x: -6, y: 4.5, z: -2 } },
-  { roomNumber: '202', tier: 'Deluxe Room', roomType: 'EXEDEL', floor: 2, tariff: 2199, status: 'Occupied', currentGuestName: 'SATYARANJAN', balanceDue: 39060.00, pax: '2 Pax', coordinates3D: { x: -3, y: 4.5, z: -2 } },
-  { roomNumber: '203', tier: 'Premium Suite', roomType: 'PRSUITE', floor: 2, tariff: 3999, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Suite', coordinates3D: { x: 0, y: 4.5, z: -2 } },
-  { roomNumber: '204', tier: 'Deluxe Room', roomType: 'EXEDEL', floor: 2, tariff: 2199, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: 1.5, y: 4.5, z: -2 } },
-  { roomNumber: '205', tier: 'Deluxe Room', roomType: 'EXEDEL', floor: 2, tariff: 2199, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: 3, y: 4.5, z: -2 } },
-  { roomNumber: '206', tier: 'Deluxe Room', roomType: 'EXEDEL', floor: 2, tariff: 2199, status: 'Occupied', currentGuestName: 'S S HAMEED', balanceDue: 7560.00, pax: '1 Pax', coordinates3D: { x: 6, y: 4.5, z: -2 } },
-  { roomNumber: '207', tier: 'Deluxe Room', roomType: 'EXEDEL', floor: 2, tariff: 2199, status: 'Occupied', currentGuestName: 'SAHANAWAZ', balanceDue: 35910.00, pax: '1 Pax', coordinates3D: { x: -6, y: 4.5, z: 2 } },
-  { roomNumber: '208', tier: 'Deluxe Room', roomType: 'EXEDEL', floor: 2, tariff: 2199, status: 'Occupied', currentGuestName: 'S SURESH', balanceDue: 35910.00, pax: '1 Pax', coordinates3D: { x: -3, y: 4.5, z: 2 } },
+  // Ground Floor (7 Rooms: 101 - 107)
+  { roomNumber: '101', tier: 'Deluxe Room', roomType: 'DELUXE', floor: 1, tariff: 1500, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '1 Adult', bedType: 'Queen Single', coordinates3D: { x: -9, y: 2.5, z: -2 } },
+  { roomNumber: '102', tier: 'Deluxe Room', roomType: 'DELUXE', floor: 1, tariff: 1500, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '1 Adult', bedType: 'Queen Size', coordinates3D: { x: -6, y: 2.5, z: -2 } },
+  { roomNumber: '103', tier: 'Deluxe Room', roomType: 'DELUXE', floor: 1, tariff: 2000, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: -3, y: 2.5, z: -2 } },
+  { roomNumber: '104', tier: 'Executive Room', roomType: 'EXEDEL', floor: 1, tariff: 2500, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: 0, y: 2.5, z: -2 } },
+  { roomNumber: '105', tier: 'Executive Room', roomType: 'EXEDEL', floor: 1, tariff: 2500, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: 3, y: 2.5, z: -2 } },
+  { roomNumber: '106', tier: 'Deluxe Room', roomType: 'DELUXE', floor: 1, tariff: 2000, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: 6, y: 2.5, z: -2 } },
+  { roomNumber: '107', tier: 'Executive Room', roomType: 'EXEDEL', floor: 1, tariff: 2500, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: 9, y: 2.5, z: -2 } },
 
-  // Floor 3 (15 Rooms: 301 - 316)
-  { roomNumber: '301', tier: 'Executive Room', roomType: 'EXEDEL', floor: 3, tariff: 2899, status: 'Occupied', currentGuestName: 'UTKARSH SR', balanceDue: 5670.00, pax: '1 Pax', coordinates3D: { x: -6, y: 7.5, z: -2 } },
-  { roomNumber: '302', tier: 'Executive Room', roomType: 'EXEDEL', floor: 3, tariff: 2899, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: -3, y: 7.5, z: -2 } },
-  { roomNumber: '303', tier: 'Premium Suite', roomType: 'SUITE', floor: 3, tariff: 3999, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Suite', coordinates3D: { x: 0, y: 7.5, z: -2 } },
-  { roomNumber: '304', tier: 'Executive Room', roomType: 'EXEDEL', floor: 3, tariff: 2899, status: 'Occupied', currentGuestName: 'SUPHAL CHA', balanceDue: 4410.00, pax: '2 Pax', coordinates3D: { x: 3, y: 7.5, z: -2 } },
-  { roomNumber: '305', tier: 'Executive Room', roomType: 'EXEDEL', floor: 3, tariff: 2899, status: 'Occupied', currentGuestName: 'K RAJESH K', balanceDue: 5670.00, pax: '1 Pax', coordinates3D: { x: 6, y: 7.5, z: -2 } },
-  { roomNumber: '306', tier: 'Executive Room', roomType: 'EXEDEL', floor: 3, tariff: 2899, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: -6, y: 7.5, z: 0 } },
-  { roomNumber: '307', tier: 'Executive Room', roomType: 'EXEDEL', floor: 3, tariff: 2899, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: -3, y: 7.5, z: 0 } },
-  { roomNumber: '308', tier: 'Executive Room', roomType: 'EXEDEL', floor: 3, tariff: 2899, status: 'Occupied', currentGuestName: 'JAGANNAT', balanceDue: 5670.00, pax: '1 Pax', coordinates3D: { x: 0, y: 7.5, z: 0 } },
-  { roomNumber: '309', tier: 'Executive Room', roomType: 'EXEDEL', floor: 3, tariff: 2899, status: 'Maintenance', currentGuestName: 'AC PRBLM', balanceDue: 0, pax: 'OOO', coordinates3D: { x: 3, y: 7.5, z: 0 } },
-  { roomNumber: '310', tier: 'Executive Room', roomType: 'EXEDEL', floor: 3, tariff: 2899, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: 6, y: 7.5, z: 0 } },
-  { roomNumber: '311', tier: 'Executive Room', roomType: 'EXEDEL', floor: 3, tariff: 2899, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: -6, y: 7.5, z: 2 } },
-  { roomNumber: '312', tier: 'Executive Room', roomType: 'EXEDEL', floor: 3, tariff: 2899, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: -3, y: 7.5, z: 2 } },
-  { roomNumber: '314', tier: 'Premium Suite', roomType: 'SUITE', floor: 3, tariff: 3999, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Suite', coordinates3D: { x: 0, y: 7.5, z: 2 } },
-  { roomNumber: '315', tier: 'Executive Room', roomType: 'EXEDEL', floor: 3, tariff: 2899, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: 3, y: 7.5, z: 2 } },
-  { roomNumber: '316', tier: 'Executive Room', roomType: 'EXEDEL', floor: 3, tariff: 2899, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: 6, y: 7.5, z: 2 } },
-
-  // Floor 4 (16 Rooms: 401 - 416)
-  { roomNumber: '401', tier: 'Executive Room', roomType: 'EXEDEL', floor: 4, tariff: 2899, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: -6, y: 10.5, z: -2 } },
-  { roomNumber: '402', tier: 'Executive Room', roomType: 'EXEDEL', floor: 4, tariff: 2899, status: 'Occupied', currentGuestName: 'PASHOK', balanceDue: 10084.38, pax: '1 Pax', coordinates3D: { x: -3, y: 10.5, z: -2 } },
-  { roomNumber: '403', tier: 'Premium Suite', roomType: 'SUITE', floor: 4, tariff: 3999, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Suite', coordinates3D: { x: 0, y: 10.5, z: -2 } },
-  { roomNumber: '404', tier: 'Executive Room', roomType: 'EXEDEL', floor: 4, tariff: 2899, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: 3, y: 10.5, z: -2 } },
-  { roomNumber: '405', tier: 'Executive Room', roomType: 'EXEDEL', floor: 4, tariff: 2899, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: 6, y: 10.5, z: -2 } },
-  { roomNumber: '406', tier: 'Executive Room', roomType: 'EXEDEL', floor: 4, tariff: 2899, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: -6, y: 10.5, z: 0 } },
-  { roomNumber: '407', tier: 'Executive Room', roomType: 'EXEDEL', floor: 4, tariff: 2899, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Available', coordinates3D: { x: -3, y: 10.5, z: 0 } },
-  { roomNumber: '408', tier: 'Executive Room', roomType: 'EXEDEL', floor: 4, tariff: 2899, status: 'Occupied', currentGuestName: 'SARATH CHA', balanceDue: 5670.00, pax: '1 Pax', coordinates3D: { x: 0, y: 10.5, z: 0 } },
-  { roomNumber: '409', tier: 'Executive Room', roomType: 'EXEDEL', floor: 4, tariff: 2899, status: 'Occupied', currentGuestName: 'SAILENDRA', balanceDue: 35910.00, pax: '1 Pax', coordinates3D: { x: 3, y: 10.5, z: 0 } },
-  { roomNumber: '410', tier: 'Executive Room', roomType: 'EXEDEL', floor: 4, tariff: 2899, status: 'Occupied', currentGuestName: 'BIJAY PASWAN (PRADAN)', balanceDue: 5544.00, pax: '1 Pax', coordinates3D: { x: 6, y: 10.5, z: 0 } },
-  { roomNumber: '411', tier: 'Executive Room', roomType: 'EXEDEL', floor: 4, tariff: 2899, status: 'Occupied', currentGuestName: 'AVINAV', balanceDue: 41895.00, pax: '2 Pax', coordinates3D: { x: -6, y: 10.5, z: 2 } },
-  { roomNumber: '412', tier: 'Executive Room', roomType: 'EXEDEL', floor: 4, tariff: 2899, status: 'Occupied', currentGuestName: 'RAVI VERMA', balanceDue: 23310.00, pax: '2 Pax', coordinates3D: { x: -3, y: 10.5, z: 2 } },
-  { roomNumber: '413', tier: 'Executive Room', roomType: 'EXEDEL', floor: 4, tariff: 2899, status: 'Occupied', currentGuestName: 'RITWIK BHA (PRADAN)', balanceDue: 4890.00, pax: '1 Pax', coordinates3D: { x: 0, y: 10.5, z: 2 } },
-  { roomNumber: '414', tier: 'Premium Suite', roomType: 'SUITE', floor: 4, tariff: 3999, status: 'Available', currentGuestName: null, balanceDue: 0, pax: 'Suite', coordinates3D: { x: 3, y: 10.5, z: 2 } },
-  { roomNumber: '415', tier: 'Executive Room', roomType: 'EXEDEL', floor: 4, tariff: 2899, status: 'Occupied', currentGuestName: 'VAMSHI KRL', balanceDue: 7899.00, pax: '2 Pax', coordinates3D: { x: 6, y: 10.5, z: 2 } },
-  { roomNumber: '416', tier: 'Executive Room', roomType: 'EXEDEL', floor: 4, tariff: 2899, status: 'Occupied', currentGuestName: 'SUMER KUMA', balanceDue: 41895.00, pax: '2 Pax', coordinates3D: { x: 0, y: 10.5, z: 3 } }
+  // First Floor (11 Rooms: 201 - 211)
+  { roomNumber: '201', tier: 'Premium Suite', roomType: 'PRSUITE', floor: 2, tariff: 3000, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: -9, y: 6.5, z: -2 } },
+  { roomNumber: '202', tier: 'Deluxe Room', roomType: 'DELUXE', floor: 2, tariff: 1500, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '1 Single Adult', bedType: 'Small size bed (Queen)', coordinates3D: { x: -6, y: 6.5, z: -2 } },
+  { roomNumber: '203', tier: 'Premium Suite', roomType: 'PRSUITE', floor: 2, tariff: 3000, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: -3, y: 6.5, z: -2 } },
+  { roomNumber: '204', tier: 'Executive Room', roomType: 'EXEDEL', floor: 2, tariff: 2500, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: 0, y: 6.5, z: -2 } },
+  { roomNumber: '205', tier: 'Executive Room', roomType: 'EXEDEL', floor: 2, tariff: 2500, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: 3, y: 6.5, z: -2 } },
+  { roomNumber: '206', tier: 'Executive Room', roomType: 'EXEDEL', floor: 2, tariff: 2500, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: 6, y: 6.5, z: -2 } },
+  { roomNumber: '207', tier: 'Executive Room', roomType: 'EXEDEL', floor: 2, tariff: 2500, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: 9, y: 6.5, z: -2 } },
+  { roomNumber: '208', tier: 'Standard Deluxe', roomType: 'DELUXE', floor: 2, tariff: 2000, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: -6, y: 6.5, z: 2 } },
+  { roomNumber: '209', tier: 'Standard Deluxe', roomType: 'DELUXE', floor: 2, tariff: 2000, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: -2, y: 6.5, z: 2 } },
+  { roomNumber: '210', tier: 'Standard Deluxe', roomType: 'DELUXE', floor: 2, tariff: 2000, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: 2, y: 6.5, z: 2 } },
+  { roomNumber: '211', tier: 'Premium Suite', roomType: 'PRSUITE', floor: 2, tariff: 3000, status: 'Available', currentGuestName: null, balanceDue: 0, pax: '2 Adult', bedType: 'King Size', coordinates3D: { x: 6, y: 6.5, z: 2 } }
 ];
 
 // Rayagada Corporate Partners (Anchor Accounts)

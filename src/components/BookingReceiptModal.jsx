@@ -422,13 +422,13 @@ export default function BookingReceiptModal({
     const cleanPhone = rawPhone.length === 10 ? `91${rawPhone}` : (rawPhone.length > 10 ? rawPhone : '916305202068');
     
     const msg = 
-`*HOTEL SAI INTERNATIONAL - OFFICIAL GST TAX INVOICE*
-🏛️ *Near Sai Priya Convention, Rayagada, Odisha - 765001*
-📞 Front Desk: +91 79780 43585 | GSTIN: 21AAACB2528H1ZA
+`*SRI SAI VASUDEV RESIDENCY - OFFICIAL GST TAX INVOICE*
+🏛️ *Near Andhra Bank, New Colony, Rayagada, Odisha - 765001*
+📞 Front Desk: +91 8895225555 / +91 8249258377 | GSTIN: 21AEKPP8689J1ZS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Dear *${editHeader.guestName || booking.guestName || 'Valued Guest'}*,
 
-Thank you for choosing Hotel Sai International! Here is your official GST tax folio summary:
+Thank you for choosing Sri Sai Vasudev Residency! Here is your official GST tax folio summary:
 
 📄 *Bill / Invoice No:* ${billNo}
 🚪 *Room Number:* ${editHeader.roomNumber || booking.roomNumber} (${editHeader.tier || booking.tier || 'Executive AC'})
@@ -1590,7 +1590,7 @@ ${window.location.origin}/?bill=${billNo}&room=${editHeader.roomNumber || bookin
             })()}
 
             <div className="sheet-footer-strip">
-              Hotel Sai International Pvt Ltd • J.K. Road, Rayagada - 765001 • GSTIN: 21AABCH7663L1ZG • Thank You For Staying!
+              Sri Sai Vasudev Residency • Near Andhra Bank, New Colony, Rayagada - 765001 • GSTIN: 21AEKPP8689J1ZS • Thank You For Staying!
             </div>
           </div>
         )}
@@ -1964,13 +1964,13 @@ ${window.location.origin}/?bill=${billNo}&room=${editHeader.roomNumber || bookin
                   OFFICIAL PAYMENT VOUCHER • GUEST ORIGINAL
                 </span>
                 <h1 style={{ margin: '6px 0 2px 0', fontSize: '1.45rem', fontWeight: 900, color: '#0f172a', letterSpacing: '0.5px' }}>
-                  HOTEL SAI INTERNATIONAL (PVT.) LTD.
+                  SRI SAI VASUDEV RESIDENCY
                 </h1>
                 <div style={{ fontSize: '11px', color: '#334155' }}>
-                  J.K. Road, RAYAGADA - 765 001. Odisha
+                  Near Andhra Bank, New Colony, RAYAGADA - 765 001. Odisha
                 </div>
                 <div style={{ fontSize: '10px', color: '#475569' }}>
-                  GSTIN: <strong>21AABCH7663L1ZG</strong> | State: 21 (Odisha)
+                  GSTIN: <strong>21AEKPP8689J1ZS</strong> | PAN: <strong>AEKPP8689J</strong> | State: 21 (Odisha)
                 </div>
               </div>
 

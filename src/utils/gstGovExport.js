@@ -103,7 +103,7 @@ export function validateGstin(gstin) {
  * Generates standard GSTR-1 JSON Schema (v1.7) for upload to gst.gov.in
  */
 export function generateOfficialGstr1Json({
-  hotelGstin = "21AABCH9821K1Z2",
+  hotelGstin = "21AEKPP8689J1ZS",
   hotelStateCode = "21",
   fp = "092026", // MMYYYY
   curGt = 0,

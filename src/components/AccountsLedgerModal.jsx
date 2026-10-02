@@ -5868,12 +5868,12 @@ export default function AccountsLedgerModal({
                 <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid #0f172a', paddingBottom: '1rem', marginBottom: '1rem' }}>
                   <div>
                     <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 900, color: '#0f172a', letterSpacing: '0.5px' }}>
-                      HOTEL SAI INTERNATIONAL
+                      SRI SAI VASUDEV RESIDENCY
                     </h2>
                     <div style={{ fontSize: '11px', color: '#475569', marginTop: '3px', lineHeight: 1.4 }}>
-                      Near Majhighariani Temple Road, Rayagada, Odisha - 765001<br />
-                      Phone: +91 6856 225123 / +91 94370 00000 | Email: accounts@hotelsaiinternational.com<br />
-                      <strong>GSTIN: 21AAACH2877E1Z0</strong> | State: 21 (Odisha) | PAN: AAACH2877E
+                      Near Andhra Bank, New Colony, Rayagada, Odisha - 765001<br />
+                      Proprietor: Paidisetty Manmadha Rao | Phone: +91 8895225555 / +91 8249258377<br />
+                      <strong>GSTIN: 21AEKPP8689J1ZS</strong> | State: 21 (Odisha) | PAN: AEKPP8689J
                     </div>
                   </div>
                   <div style={{ textAlign: 'right' }}>

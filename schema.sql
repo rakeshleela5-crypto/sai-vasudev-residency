@@ -661,14 +661,18 @@ CREATE TABLE IF NOT EXISTS kitchen_requisitions (
 
 -- HOTEL CONFIG
 INSERT OR IGNORE INTO hotel_config (key, value, description) VALUES
-('hotel_name', 'Hotel Sai International', 'Official Legal Hotel Name'),
-('hotel_address', 'Sai Priya Nagar, Rayagada, Odisha - 765001', 'Official Address'),
-('phone', '+91 6856 225555', 'Primary Reception Switchboard'),
+('hotel_name', 'Sri Sai Vasudev Residency', 'Official Trade Name'),
+('legal_name', 'PAIDISETTY MANMADHA RAO', 'Official Legal Entity Name'),
+('proprietor', 'Paidisetty Manmadha Rao', 'Proprietor Name'),
+('constitution', 'Proprietorship', 'Constitution of Business'),
+('hotel_address', 'Near Andhra Bank, New Colony, Rayagada, Odisha - 765001', 'Official Address'),
+('phone', '+91 8895225555', 'Primary Reception Switchboard'),
 ('landline', '06856 225 555', 'Reception Landline Desk'),
-('email', 'reservations@hotelsaiinternational.com', 'Official Reservations Email'),
-('gstin', '21AABCH9821K1Z2', 'Odisha State GST Identification Number'),
+('email', 'saisaivasudevresidency@gmail.com', 'Official Reservations Email'),
+('gstin', '21AEKPP8689J1ZS', 'Odisha State GST Identification Number'),
+('pan', 'AEKPP8689J', 'Permanent Account Number'),
 ('ownerPin', '7650', 'Back-office Admin Verification PIN'),
-('upi_id', 'hotelsaiinternational@sbi', 'Official SBI Merchant VPA'),
+('upi_id', 'saisaivasudevresidency@sbi', 'Official SBI Merchant VPA'),
 ('check_in_time', '12:00 PM', 'Standard Daily Check-in'),
 ('check_out_time', '12:00 PM', 'Standard Daily Check-out (24-Hr Cycle)');
 
@@ -1247,7 +1251,7 @@ CREATE TABLE IF NOT EXISTS tally_voucher_lines (
 CREATE TABLE IF NOT EXISTS gstr1_filings (
   filing_id TEXT PRIMARY KEY,
   return_period TEXT NOT NULL,
-  gstin TEXT NOT NULL DEFAULT '21AAACH2877E1Z0',
+  gstin TEXT NOT NULL DEFAULT '21AEKPP8689J1ZS',
   financial_year TEXT NOT NULL DEFAULT '2026-2027',
   gross_turnover REAL NOT NULL DEFAULT 0,
   b2b_invoices_count INTEGER NOT NULL DEFAULT 0,

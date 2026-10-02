@@ -30,7 +30,7 @@ const FAQS = [
     id: 'corporate-gst',
     icon: FileText,
     question: "Can we receive corporate GST tax invoices for business travel?",
-    answer: "Absolutely. We generate Rule 46 compliant B2B tax invoices carrying our Odisha GSTIN (21AABCH9821K1Z2) with statutory SAC codes (996311 for room accommodation, 996331 for dining). Corporate guests from JK Paper, IMFA, Utkal Alumina, and East Coast Railway can enter their company GSTIN during reservation to pass through 100% Input Tax Credit (ITC)."
+    answer: "Absolutely. We generate Rule 46 compliant B2B tax invoices carrying our Odisha GSTIN (21AEKPP8689J1ZS) with statutory SAC codes (996311 for room accommodation, 996331 for dining). Corporate guests from JK Paper, IMFA, Utkal Alumina, and East Coast Railway can enter their company GSTIN during reservation to pass through 100% Input Tax Credit (ITC)."
   },
   {
     id: 'refund-policy',

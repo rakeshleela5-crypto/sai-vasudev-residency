@@ -1,5 +1,5 @@
 // Statutory Rule 46 GST & Official Government GSTN GSTR-1 JSON Generator
-// Hotel Sai International - Rayagada, Odisha (GSTIN: 21AABCH9821K1Z2, SAC: 996311)
+// Sri Sai Vasudev Residency - Rayagada, Odisha (GSTIN: 21AEKPP8689J1ZS, SAC: 996311)
 
 export const SAC_CODE_ACCOMMODATION = "996311";
 export const SAC_CODE_RESTAURANT = "996331";
@@ -36,7 +36,7 @@ export function calculateRoomTax(baseAmount) {
  * - Table 12: HSN/SAC Summary
  * - Table 13: Documents Issued Register
  */
-export function generateGstr1Json({ bookings = [], month = "09", year = "2026", hotelGstin = "21AABCH9821K1Z2" }) {
+export function generateGstr1Json({ bookings = [], month = "09", year = "2026", hotelGstin = "21AEKPP8689J1ZS" }) {
   const fp = `${month}${year}`;
 
   const b2bInvoices = [];
