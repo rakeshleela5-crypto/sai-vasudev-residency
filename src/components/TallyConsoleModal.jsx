@@ -1467,7 +1467,7 @@ export default function TallyConsoleModal({
                     CHART OF ACCOUNTS (LEDGER MASTERS)
                   </h3>
                   <p style={{ margin: '0.2rem 0 0', color: '#94a3b8', fontSize: '0.78rem' }}>
-                    All 28 Primary & Secondary Ledger Accounts for Hotel Sai International
+                    All 28 Primary & Secondary Ledger Accounts for {HOTEL_CONFIG.name}
                   </p>
                 </div>
 

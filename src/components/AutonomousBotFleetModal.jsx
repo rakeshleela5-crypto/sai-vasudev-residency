@@ -3,7 +3,7 @@ import {
   Bot, X, Play, Settings, Sliders, CheckCircle2, Clock, 
   Send, RefreshCw, AlertCircle, Shield, Sparkles, Filter, ChevronRight
 } from 'lucide-react';
-import { AUTONOMOUS_BOT_FLEET } from '../data/hotelData';
+import { AUTONOMOUS_BOT_FLEET, HOTEL_CONFIG } from '../data/hotelData';
 
 export default function AutonomousBotFleetModal({ isOpen, onClose }) {
   const [bots, setBots] = useState(AUTONOMOUS_BOT_FLEET);
@@ -100,7 +100,7 @@ export default function AutonomousBotFleetModal({ isOpen, onClose }) {
             <div>
               <h3 style={{ fontSize: '1.25rem' }}>20-Bot Autonomous Hotel Fleet</h3>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                Hotel Sai International • Cloudflare Edge Cron Automations & Schedulers
+                {HOTEL_CONFIG.name} • Cloudflare Edge Cron Automations & Schedulers
               </div>
             </div>
           </div>

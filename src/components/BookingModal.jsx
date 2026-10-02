@@ -349,9 +349,9 @@ export default function BookingModal({
               <Sparkles size={20} />
             </div>
             <div>
-              <h3 style={{ fontSize: '1.25rem' }}>Reserve Room at Hotel Sai International</h3>
+              <h3 style={{ fontSize: '1.25rem' }}>Reserve Room at {HOTEL_CONFIG.name}</h3>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                Rayagada, Odisha • 24-Hr Check-In/Check-Out Cycle (12:00 PM)
+                Near Andhra Bank, New Colony, Rayagada • 24-Hr Check-In/Check-Out Cycle (12:00 PM)
               </div>
             </div>
           </div>
@@ -970,7 +970,7 @@ export default function BookingModal({
                     style={{ marginTop: '0.15rem' }}
                   />
                   <span>
-                    <strong>Statutory DPDP Act 2023 Consent</strong>: I explicitly consent to Hotel Sai International collecting and processing my identification strictly for hotel accommodation registration, Sarai Act 1867 police register compliance, and tax invoice generation. Records will be automatically scheduled for purge after 30 days.
+                    <strong>Statutory DPDP Act 2023 Consent</strong>: I explicitly consent to {HOTEL_CONFIG.name} collecting and processing my identification strictly for hotel accommodation registration, Sarai Act 1867 police register compliance, and tax invoice generation. Records will be automatically scheduled for purge after 30 days.
                   </span>
                 </label>
               </div>

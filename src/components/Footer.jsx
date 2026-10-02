@@ -40,11 +40,11 @@ export default function Footer({
                 <Hotel size={22} />
               </div>
               <h3 className="font-serif" style={{ fontSize: '1.25rem', color: '#fff', letterSpacing: '0.03em' }}>
-                HOTEL SAI INTERNATIONAL
+                {HOTEL_CONFIG.name.toUpperCase()}
               </h3>
             </div>
             <p style={{ fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '1.25rem' }}>
-              Premier 40-room executive and pilgrim destination in Rayagada, Odisha. Offering refined comfort, authentic Odia cuisine, and seamless access to sacred shrines and regional industrial hubs.
+              Premier 18-room executive and pilgrim destination in Rayagada, Odisha. Offering refined comfort, authentic Odia cuisine, and seamless access to sacred shrines and regional industrial hubs.
             </p>
             <div style={{ fontSize: '0.8rem', color: 'var(--gold-glow)' }}>
               GSTIN: {HOTEL_CONFIG.gstin} • SAC: {HOTEL_CONFIG.sacCode}
@@ -59,7 +59,7 @@ export default function Footer({
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', fontSize: '0.88rem' }}>
               <li>
                 <a href="#inventory" style={{ color: 'inherit', transition: 'color 0.2s', textDecoration: 'none' }}>
-                  40-Room Inventory Catalog
+                  18-Room Inventory Catalog
                 </a>
               </li>
               <li>
@@ -151,7 +151,7 @@ export default function Footer({
           fontSize: '0.78rem'
         }}>
           <div>
-            © {new Date().getFullYear()} Hotel Sai International. All Rights Reserved. Sai Priya Nagar, Rayagada, Odisha - 765001.
+            © {new Date().getFullYear()} {HOTEL_CONFIG.name}. All Rights Reserved. {HOTEL_CONFIG.address}.
           </div>
           <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
             <button

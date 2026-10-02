@@ -274,7 +274,7 @@ export default function FloorExplorer3DModal({ isOpen, onClose, rooms = [], onBo
             <div>
               <h3 style={{ fontSize: '1.25rem' }}>3D Architectural Floor Navigator</h3>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                Hotel Sai International • 40 Rooms across 4 Storeys (10 Keys/Floor)
+                Sri Sai Vasudev Residency • 18 Rooms across Ground &amp; 1st Floors
               </div>
             </div>
           </div>
@@ -293,9 +293,9 @@ export default function FloorExplorer3DModal({ isOpen, onClose, rooms = [], onBo
                   color: activeFloorView === 'all' ? '#060e1a' : '#fff'
                 }}
               >
-                All 4 Floors
+                All Floors
               </button>
-              {[1, 2, 3, 4].map(f => (
+              {[1, 2].map(f => (
                 <button
                   key={f}
                   onClick={() => setActiveFloorView(f)}
@@ -308,7 +308,7 @@ export default function FloorExplorer3DModal({ isOpen, onClose, rooms = [], onBo
                     color: activeFloorView === f ? '#060e1a' : '#fff'
                   }}
                 >
-                  Fl {f}
+                  {f === 1 ? 'Ground Floor (101-107)' : '1st Floor (201-211)'}
                 </button>
               ))}
             </div>

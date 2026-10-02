@@ -101,7 +101,7 @@ export async function onRequestPost({ request, env }) {
       executionResults.push({
         bot: '09:00 PM Night Audit & Cash Drawer Slip Bot',
         status: 'SUCCESS',
-        summary: `Night Audit generated. Current Occupancy: ${count}/40 rooms (${((count/40)*100).toFixed(1)}%). Cash drawer slip generated.`
+        summary: `Night Audit generated. Current Occupancy: ${count}/18 rooms (${((count/18)*100).toFixed(1)}%). Cash drawer slip generated.`
       });
     }
 

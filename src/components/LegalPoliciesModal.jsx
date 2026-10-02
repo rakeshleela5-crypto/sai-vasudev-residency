@@ -101,7 +101,7 @@ export default function LegalPoliciesModal({ isOpen, onClose, initialTab = 'priv
               <div style={{ background: 'rgba(212, 175, 55, 0.08)', border: '1px solid rgba(212, 175, 55, 0.25)', borderRadius: 8, padding: '1rem', marginBottom: '1.25rem' }}>
                 <strong style={{ color: '#d4af37' }}>Statutory Notice under Digital Personal Data Protection (DPDP) Act 2023</strong>
                 <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.8rem', color: '#e2e8f0' }}>
-                  Hotel Sai International acts as the Data Fiduciary for personal data collected during room reservations, front desk check-in, and dining orders.
+                  {HOTEL_CONFIG.name} acts as the Data Fiduciary for personal data collected during room reservations, front desk check-in, and dining orders.
                 </p>
               </div>
 
@@ -131,9 +131,9 @@ export default function LegalPoliciesModal({ isOpen, onClose, initialTab = 'priv
               <p>For any data access, correction, or erasure requests, contact our designated Data Protection Officer:</p>
               <div style={{ background: 'rgba(12, 24, 43, 0.7)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '0.85rem', borderRadius: '8px', fontSize: '0.82rem' }}>
                 <div><strong>Officer:</strong> R. K. Mohapatra (Data Grievance Officer)</div>
-                <div><strong>Address:</strong> Hotel Sai International, Sai Priya Nagar, Rayagada, Odisha - 765001</div>
-                <div><strong>Email:</strong> privacy@hotelsaiinternational.com</div>
-                <div><strong>Desk Phone:</strong> +91 6856 225555</div>
+                <div><strong>Address:</strong> {HOTEL_CONFIG.name}, {HOTEL_CONFIG.address}</div>
+                <div><strong>Email:</strong> {HOTEL_CONFIG.email}</div>
+                <div><strong>Desk Phone:</strong> {HOTEL_CONFIG.phone}</div>
               </div>
             </div>
           )}
@@ -154,7 +154,7 @@ export default function LegalPoliciesModal({ isOpen, onClose, initialTab = 'priv
 
               <h4 style={{ color: '#fff', fontSize: '1rem', marginBottom: '0.5rem' }}>3. Guest Conduct & Sanctity</h4>
               <p>
-                Hotel Sai International maintains pure vegetarian (Satvik) culinary traditions. Bringing non-vegetarian food or prohibited substances into guest rooms or dining areas is strictly prohibited.
+                {HOTEL_CONFIG.name} maintains pure vegetarian (Satvik) culinary traditions. Bringing non-vegetarian food or prohibited substances into guest rooms or dining areas is strictly prohibited.
               </p>
 
               <h4 style={{ color: '#fff', fontSize: '1rem', marginBottom: '0.5rem' }}>4. Governing Law & Jurisdiction</h4>
@@ -195,7 +195,7 @@ export default function LegalPoliciesModal({ isOpen, onClose, initialTab = 'priv
             <div>
               <h4 style={{ color: '#fff', fontSize: '1rem', marginBottom: '0.5rem' }}>1. What Cookies We Use</h4>
               <p>
-                We believe in privacy-first hospitality. Hotel Sai International uses strictly necessary cookies and local storage tokens to operate our digital reservation engine:
+                We believe in privacy-first hospitality. {HOTEL_CONFIG.name} uses strictly necessary cookies and local storage tokens to operate our digital reservation engine:
               </p>
               <ul style={{ paddingLeft: '1.25rem', marginBottom: '1rem' }}>
                 <li><strong>Essential Session Storage:</strong> Stores active room hold timer (10-minute hold lock) and booking cart items.</li>

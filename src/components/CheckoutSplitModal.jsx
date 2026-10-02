@@ -4,6 +4,7 @@ import {
   Receipt, AlertCircle, CheckCircle2, ArrowRight, Printer,
   Sparkles, Clock, User, BedDouble, Utensils, ShieldCheck
 } from 'lucide-react';
+import { HOTEL_CONFIG } from '../data/hotelData';
 
 export default function CheckoutSplitModal({
   isOpen,
@@ -215,7 +216,7 @@ export default function CheckoutSplitModal({
                 fontWeight: 700,
                 textTransform: 'uppercase'
               }}>
-                Hotel Sai International • Front Desk
+                {HOTEL_CONFIG.name} • Front Desk
               </span>
               <span style={{
                 background: 'rgba(56, 189, 248, 0.15)',

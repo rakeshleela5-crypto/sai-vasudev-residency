@@ -479,7 +479,7 @@ export default function Navbar({
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <span className="font-serif" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff', letterSpacing: '0.04em' }}>
-                  HOTEL SAI INTERNATIONAL
+                  {HOTEL_CONFIG.name.toUpperCase()}
                 </span>
                 <span style={{
                   fontSize: '0.65rem',
@@ -507,7 +507,7 @@ export default function Navbar({
                 </span>
               </div>
               <div className="hide-on-mobile" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                Premier 40-Room Executive &amp; Pilgrim Hotel • Sai Priya Nagar • Emil Kowalski UI Motion
+                Premier 18-Room Executive &amp; Pilgrim Hotel • Near Andhra Bank, New Colony • Emil Kowalski UI Motion
               </div>
             </div>
           </div>
@@ -704,7 +704,7 @@ export default function Navbar({
               )}
             </button>
             <button onClick={() => { setCurrentView('guest'); setMobileMenuOpen(false); }} style={{ textAlign: 'left', color: '#fff', padding: '0.4rem 0' }}>
-              🏨 40-Room Inventory Catalog
+              🏨 18-Room Inventory Catalog
             </button>
             <button onClick={() => { onOpen3DExplorer(); setMobileMenuOpen(false); }} style={{ textAlign: 'left', color: '#38bdf8', padding: '0.4rem 0' }}>
               🏛️ 3D Multi-Floor Explorer
@@ -745,7 +745,7 @@ export default function Navbar({
             </div>
             <div className="modal-body">
               <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
-                Access to Hotel Sai International Front Desk Management, 40-Room Tape Chart, Night Audit, and Sarai Act Police Register requires duty staff authorization.
+                Access to {HOTEL_CONFIG.name} Front Desk Management, 18-Room Tape Chart, Night Audit, and Sarai Act Police Register requires duty staff authorization.
               </p>
 
               <form onSubmit={verifyPin}>

@@ -32,7 +32,7 @@ export default function DarshanAdvisorModal({ isOpen, onClose }) {
             <div>
               <h3 style={{ fontSize: '1.25rem' }}>Temple Darshan & RGDA Train Transit Advisor</h3>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                Hotel Sai International Travel Desk • 1.5 km from RGDA Junction • 2.0 km from Maa Majhighariani
+                {HOTEL_CONFIG.name} Travel Desk • 1.5 km from RGDA Junction • 2.0 km from Maa Majhighariani
               </div>
             </div>
           </div>
@@ -117,7 +117,7 @@ export default function DarshanAdvisorModal({ isOpen, onClose }) {
               <Car size={18} /> Rayagada Railway Junction (RGDA) Key Trains & Station Transfer
             </h4>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem', lineHeight: 1.5 }}>
-              Hotel Sai International is located just 1.5 km (5-minute drive) from Rayagada Station platform exits. Free pickup is extended to all Executive Room and Suite guests.
+              {HOTEL_CONFIG.name} is located just 1.5 km (5-minute drive) from Rayagada Station platform exits. Free pickup is extended to all Executive Room and Suite guests.
             </div>
 
             <div style={{

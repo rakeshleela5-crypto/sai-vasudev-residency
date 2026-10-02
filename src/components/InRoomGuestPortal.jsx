@@ -235,7 +235,7 @@ export default function InRoomGuestPortal({
                 textTransform: 'uppercase',
                 letterSpacing: '0.5px'
               }}>
-                HOTEL SAI INTERNATIONAL
+                {HOTEL_CONFIG.name.toUpperCase()}
               </span>
             </div>
             <h1 style={{
@@ -1046,7 +1046,7 @@ export default function InRoomGuestPortal({
         marginTop: 'auto'
       }}>
         <p style={{ margin: '0 0 0.5rem', fontSize: '0.72rem', color: '#64748b' }}>
-          Hotel Sai International • J.K. Road, Rayagada • Direct In-Room Companion
+          {HOTEL_CONFIG.name} • Near Andhra Bank, New Colony, Rayagada • Direct In-Room Companion
         </p>
         {onExitToFullWebsite && (
           <button

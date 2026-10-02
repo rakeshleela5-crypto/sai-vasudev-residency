@@ -7,7 +7,7 @@
 const puppeteer = require('puppeteer-core');
 const assert = require('assert');
 
-const TARGET_URL = process.env.TEST_URL || 'https://hotel-sai-international.pages.dev';
+const TARGET_URL = process.env.TEST_URL || 'https://sai-vasudev-residency.pages.dev';
 const BROWSER_PATH = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 
 let passed = 0;

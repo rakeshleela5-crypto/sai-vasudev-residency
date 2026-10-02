@@ -844,7 +844,7 @@ export default function NightAuditModal({
               }}>
                 <div style={{ textAlign: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '1.2rem', marginBottom: '1.5rem' }}>
                   <h3 style={{ margin: 0, color: '#fff', fontSize: '1.3rem', letterSpacing: '0.04em' }}>
-                    HOTEL SAI INTERNATIONAL - RAYAGADA
+                    {HOTEL_CONFIG.name.toUpperCase()} - RAYAGADA
                   </h3>
                   <div style={{ fontSize: '0.85rem', color: 'var(--gold-glow)', marginTop: '0.2rem', fontWeight: 600 }}>
                     Official Night Audit & Revenue Management Pack

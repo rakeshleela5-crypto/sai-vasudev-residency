@@ -1810,7 +1810,7 @@ export default function ReceptionAdmin({
     const selectedRoomObj = rooms.find(r => r.roomNumber === walkInRoom);
     const tier = selectedRoomObj ? selectedRoomObj.tier : 'Standard Deluxe';
     
-    // Agreed rate is inclusive of GST (All-inclusive tariff standard for Hotel Sai International)
+    // Agreed rate is inclusive of GST (All-inclusive tariff standard for Sri Sai Vasudev Residency)
     // Example: Tariff ₹2,899 - Advance Deposit ₹1,500 = Balance Due ₹1,399
     const totalStayAmount = walkInRate * walkInNights;
     const advanceDepositNum = Number(walkInDeposit) || 0;
@@ -1886,9 +1886,9 @@ export default function ReceptionAdmin({
     const cleanPhone = rawPhone.replace(/[^0-9]/g, '');
     const formattedPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
 
-    const message = `🏨 *HOTEL SAI INTERNATIONAL - DIGITAL KEYCARD & WELCOME PASS*
+    const message = `🏨 *${HOTEL_CONFIG.name.toUpperCase()} - DIGITAL KEYCARD & WELCOME PASS*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Namaste *${guestName}*, welcome to Hotel Sai International, Rayagada!
+Namaste *${guestName}*, welcome to ${HOTEL_CONFIG.name}, Rayagada!
 
 🔑 *Assigned Room:* Room ${room.roomNumber} (${room.tier})
 📶 *High-Speed Wi-Fi:* SAI_GUEST_5G
@@ -2553,7 +2553,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
             onClick={() => setIsRoomRackPrintOpen(true)}
             className="btn-outline-gold"
             style={{ padding: '0.55rem 0.95rem', fontSize: '0.82rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
-            title="Print 40-Room Daily Tape Chart Rack & Arrivals Manifest"
+            title="Print 18-Room Daily Tape Chart Rack & Arrivals Manifest"
           >
             <Printer size={15} color="var(--gold-glow)" /> Print Room Rack
           </button>
@@ -3630,7 +3630,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
                 />
               </div>
 
-              <SheetsToolbarLegend tableName="Master Tabular Room Ledger" subtitle="Live 40-Room Direct Interactive Google Sheets Grid" />
+              <SheetsToolbarLegend tableName="Master Tabular Room Ledger" subtitle="Live 18-Room Direct Interactive Google Sheets Grid" />
               <table className="enterprise-data-table sheets-grid-table">
                 <thead>
                   <tr>
@@ -5397,7 +5397,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
                   onClick={() => setIsHousekeepingPrintOpen(true)}
                   className="btn-outline-gold"
                   style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
-                  title="Print Daily 40-Room Floor Attendant Assignment & Linen Checklist"
+                  title="Print Daily 18-Room Floor Attendant Assignment & Linen Checklist"
                 >
                   <Printer size={14} color="var(--gold-glow)" /> Print Housekeeping Work Order
                 </button>
@@ -6070,7 +6070,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
             🛡️ Digital Personal Data Protection (DPDP) Act 2023 Module
           </h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
-            Hotel Sai International enforces statutory DPDP compliance. Guest PII is strictly protected, purpose-bound, and scheduled for auto-purge 30 days after check-out.
+            {HOTEL_CONFIG.name} enforces statutory DPDP compliance. Guest PII is strictly protected, purpose-bound, and scheduled for auto-purge 30 days after check-out.
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
@@ -6771,7 +6771,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
                 </span>
               </div>
               <p style={{ margin: '0.35rem 0 0', fontSize: '0.82rem', color: 'var(--text-secondary)', maxWidth: 800 }}>
-                Synchronize 40-room inventory in real time across MakeMyTrip, Goibibo, and Booking.com. Protect direct brand rates against unauthorized OTA discount coupons and manage commission leakages.
+                Synchronize 18-room inventory in real time across MakeMyTrip, Goibibo, and Booking.com. Protect direct brand rates against unauthorized OTA discount coupons and manage commission leakages.
               </p>
             </div>
 
@@ -9063,7 +9063,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
                   DAILY GUEST ARRIVAL &amp; DEPARTURE MANIFEST (FORM C)
                 </h2>
                 <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#334155' }}>
-                  HOTEL SAI INTERNATIONAL • Near Sai Priya Convention, Rayagada - 765001 (Odisha)
+                  {HOTEL_CONFIG.name.toUpperCase()} • Near Andhra Bank, New Colony, Rayagada - 765001 (Odisha)
                 </div>
                 <div style={{ fontSize: '0.78rem', color: '#64748b' }}>
                   Jurisdiction: Rayagada Town Police Station • District: Rayagada • Sarai Registration No: RGDA-SARAI-2019/042
@@ -9120,7 +9120,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ height: '35px' }}></div>
                   <div style={{ borderTop: '1px solid #0f172a', paddingTop: '4px', fontWeight: 700 }}>
-                    Front Desk Duty Officer (Hotel Sai International)
+                    Front Desk Duty Officer ({HOTEL_CONFIG.name})
                   </div>
                 </div>
                 <div style={{ textAlign: 'center' }}>
@@ -9135,7 +9135,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
         </div>
       )}
 
-      {/* MODAL 2: 40-ROOM DAILY TAPE CHART RACK & ARRIVALS MANIFEST PRINT */}
+      {/* MODAL 2: 18-ROOM DAILY TAPE CHART RACK & ARRIVALS MANIFEST PRINT */}
       {isRoomRackPrintOpen && (
         <div style={{
           position: 'fixed',
@@ -9192,7 +9192,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid #0284c7', paddingBottom: '0.6rem', marginBottom: '1rem' }}>
                 <div>
                   <h2 style={{ margin: 0, fontSize: '1.2rem', color: '#0284c7', fontWeight: 800 }}>
-                    HOTEL SAI INTERNATIONAL • 40-ROOM TAPE CHART RACK
+                    {HOTEL_CONFIG.name.toUpperCase()} • 18-ROOM TAPE CHART RACK
                   </h2>
                   <div style={{ fontSize: '0.8rem', color: '#475569' }}>
                     Front Desk Physical Clipboard Summary • Rayagada, Odisha
@@ -9352,7 +9352,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
             <div className="printable-sheet" style={{ background: '#ffffff', color: '#0f172a', padding: '1.5rem', borderRadius: '8px', fontFamily: 'sans-serif' }}>
               <div style={{ textAlign: 'center', borderBottom: '2px solid #0f172a', paddingBottom: '0.6rem', marginBottom: '1rem' }}>
                 <h2 style={{ margin: 0, fontSize: '1.25rem', color: '#0f172a', fontWeight: 800 }}>
-                  HOTEL SAI INTERNATIONAL • HOUSEKEEPING WORK ORDER
+                  {HOTEL_CONFIG.name.toUpperCase()} • HOUSEKEEPING WORK ORDER
                 </h2>
                 <div style={{ fontSize: '0.82rem', color: '#475569' }}>
                   Daily Room Attendant Floor Allocation &amp; Inspection Manifest • Rayagada
@@ -9602,7 +9602,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
                             🖨️ Tag
                           </button>
                           <a
-                            href={`https://wa.me/91${pass.phone.replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`Hotel Sai International - Luggage Claim Pass: ${pass.id} for ${pass.guestName} (${pass.bagsCount} Bags). Stored in ${pass.lockerNo}. Pickup time: ${pass.pickupTime}. Please present this message at reception to collect your bags.`)}`}
+                            href={`https://wa.me/91${pass.phone.replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`${HOTEL_CONFIG.name} - Luggage Claim Pass: ${pass.id} for ${pass.guestName} (${pass.bagsCount} Bags). Stored in ${pass.lockerNo}. Pickup time: ${pass.pickupTime}. Please present this message at reception to collect your bags.`)}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{ padding: '0.25rem 0.5rem', fontSize: '0.72rem', background: 'rgba(34, 197, 94, 0.2)', border: '1px solid #22c55e', color: '#4ade80', borderRadius: '4px', textDecoration: 'none' }}

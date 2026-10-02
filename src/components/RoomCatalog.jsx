@@ -16,11 +16,9 @@ export default function RoomCatalog({ onSelectTier, onOpen3DExplorer, rooms = []
   const tabRefs = useRef({});
 
   const filterOptions = [
-    { id: 'all', label: 'All 40 Rooms' },
-    { id: '1', label: 'Floor 1 (Standard)' },
-    { id: '2', label: 'Floor 2 (Deluxe)' },
-    { id: '3', label: 'Floor 3 (Executive)' },
-    { id: '4', label: 'Floor 4 (Suites)' }
+    { id: 'all', label: 'All 18 Rooms' },
+    { id: '1', label: 'Ground Floor (101–107)' },
+    { id: '2', label: '1st Floor (201–211)' }
   ];
 
   // Update sliding gold pill position dynamically
@@ -383,7 +381,7 @@ export default function RoomCatalog({ onSelectTier, onOpen3DExplorer, rooms = []
             />
             <BentoCard
               name="Interactive 3D Isometric Navigation"
-              description="Tour all 4 dedicated floors and 40 room keys in real-time 3D rendered with Three.js web technology."
+              description="Tour all 18 authentic room keys across Ground and 1st Floors in real-time 3D rendered with Three.js web technology."
               Icon={Layers}
               onClick={onOpen3DExplorer}
               cta="Launch 3D Explorer"

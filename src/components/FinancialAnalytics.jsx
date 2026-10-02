@@ -62,7 +62,7 @@ export default function FinancialAnalytics({ bookings = [] }) {
           </div>
           <h2 style={{ fontSize: '2rem' }}>Financial Invoicing & Government GSTN Engine</h2>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-            Hotel Sai International • GSTIN: {HOTEL_CONFIG.gstin} • State: 21-Odisha • SAC: 996311
+            {HOTEL_CONFIG.name} • GSTIN: {HOTEL_CONFIG.gstin} • State: 21-Odisha • SAC: 996311
           </div>
         </div>
 

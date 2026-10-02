@@ -49,13 +49,13 @@ export default function BackupRestoreModal({
       const timestamp = new Date().toISOString();
       const backupPayload = {
         meta: {
-          system: "HOTEL SAI INTERNATIONAL ENTERPRISE PMS",
+          system: `${HOTEL_CONFIG.name.toUpperCase()} ENTERPRISE PMS`,
           location: "Rayagada, Odisha (PIN: 765001)",
           gstin: HOTEL_CONFIG.gstin,
           backupTimestamp: timestamp,
           schemaVersion: "2.4.0",
           totalTables: 55,
-          roomInventoryCount: 40
+          roomInventoryCount: 18
         },
         database: {
           rooms: dbSource.rooms || rooms || [],
@@ -305,7 +305,7 @@ export default function BackupRestoreModal({
                   <CheckCircle2 size={16} /> Complete Hotel State Snapshot
                 </div>
                 <p style={{ margin: 0, fontSize: '0.82rem', color: '#cbd5e1', lineHeight: 1.5 }}>
-                  This tool extracts all active operational data across all <strong>55 database tables</strong> (40 rooms, active bookings, guest CRM profiles, KOT food orders, master folios, staff attendance, linen inventory, corporate statements) into an encrypted, portable JSON file.
+                  This tool extracts all active operational data across all <strong>55 database tables</strong> (18 rooms, active bookings, guest CRM profiles, KOT food orders, master folios, staff attendance, linen inventory, corporate statements) into an encrypted, portable JSON file.
                 </p>
               </div>
 

@@ -384,9 +384,9 @@ export default function MasterFolioModal({
     const cleanPhone = rawPhone.length === 10 ? `91${rawPhone}` : rawPhone;
 
     const message = 
-`🏨 *HOTEL SAI INTERNATIONAL, RAYAGADA*
-📍 J.K. Road, Rayagada, Odisha - 765001
-📞 06856 225 555 | GSTIN: ${HOTEL_CONFIG.gstin}
+`🏨 *${HOTEL_CONFIG.name.toUpperCase()}, RAYAGADA*
+📍 ${HOTEL_CONFIG.address}
+📞 ${HOTEL_CONFIG.phone} | GSTIN: ${HOTEL_CONFIG.gstin}
 ───────────────────────────────
 📋 *TAX INVOICE & FOLIO SUMMARY*
 Room Number: *${selectedRoom}*
@@ -401,7 +401,7 @@ ${roomBooking.corporateGstin ? `Corporate GSTIN: ${roomBooking.corporateGstin}\n
 ⚖️ *Net Balance Due: ₹${balanceDue.toFixed(2)}*
 ───────────────────────────────
 ${balanceDue > 0 ? `💳 Quick UPI Pay: ${HOTEL_CONFIG.upiId}\n` : '✓ Status: FULLY SETTLED & PAID\n'}
-🙏 *Thank you for staying at Hotel Sai International, Rayagada!*
+🙏 *Thank you for staying at ${HOTEL_CONFIG.name}, Rayagada!*
 Divine blessings of sacred Maa Majhighariani.`;
 
     const encoded = encodeURIComponent(message);
@@ -596,9 +596,9 @@ Divine blessings of sacred Maa Majhighariani.`;
     const share = isFirst ? colleague1Share : colleague2Share;
     const pct = isFirst ? colleagueSplitRatio : (100 - colleagueSplitRatio);
 
-    const msg = `🏨 *HOTEL SAI INTERNATIONAL, RAYAGADA*
-📍 J.K. Road, Rayagada, Odisha - 765001
-📞 06856 225 555 | GSTIN: ${HOTEL_CONFIG.gstin}
+    const msg = `🏨 *${HOTEL_CONFIG.name.toUpperCase()}, RAYAGADA*
+📍 ${HOTEL_CONFIG.address}
+📞 ${HOTEL_CONFIG.phone} | GSTIN: ${HOTEL_CONFIG.gstin}
 ───────────────────────────────
 👥 *SHARED ROOM TAX INVOICE (COLLEAGUE SPLIT - ${pct}%)*
 Room: *${selectedRoom}* | Invoice Part: *${isFirst ? 'A' : 'B'}*
@@ -611,7 +611,7 @@ ${gstin ? `Corporate GSTIN: ${gstin}\n` : ''}Date: ${new Date().toLocaleDateStri
 Includes 12% GST on Room & 5% GST on Restaurant dining.
 ───────────────────────────────
 💳 Quick UPI Payment: ${HOTEL_CONFIG.upiId}
-🙏 Thank you for choosing Hotel Sai International!`;
+🙏 Thank you for choosing ${HOTEL_CONFIG.name}!`;
 
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
   };

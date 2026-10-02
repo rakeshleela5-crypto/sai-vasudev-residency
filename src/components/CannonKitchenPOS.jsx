@@ -415,7 +415,7 @@ export default function CannonKitchenPOS({
       : `Dine-In Table: Table ${tableNumber}`;
 
     const text = `🍽️ *CANNON KITCHEN & RESTAURANT - DINING BILL*
-Hotel Sai International, Rayagada
+${HOTEL_CONFIG.name}, Rayagada
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Date: ${new Date().toLocaleDateString('en-IN')} | Time: ${new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
 Outlet: ${selectedOutlet}
@@ -696,7 +696,7 @@ Thank you for dining at Cannon Kitchen! 🙏`;
     };
     const phone = (customPhone || guestPhoneForInvoice || '').replace(/\D/g, '');
     const itemList = data.items.map(i => `• ${i.quantity}x ${i.name} = ₹${(i.quantity * i.price).toFixed(0)}`).join('\n');
-    const msg = `*HOTEL SAI INTERNATIONAL - CANNON KITCHEN*\n` +
+    const msg = `*${HOTEL_CONFIG.name.toUpperCase()} - CANNON KITCHEN*\n` +
       `🧾 Tax Invoice: #${data.invoiceId}\n` +
       `🍽️ Table: ${data.tableNumber} | Rayagada (Odisha)\n` +
       `--------------------------------\n` +
@@ -705,7 +705,7 @@ Thank you for dining at Cannon Kitchen! 🙏`;
       `*Gross Total:* ₹${data.totalAmount.toFixed(2)}\n` +
       `(Includes 5% Restaurant GST - SAC 996331)\n` +
       `Payment Status: *PAID (${(data.paymentMode || 'UPI/Cash').toUpperCase()})*\n` +
-      `GSTIN: 21AABCS1234F1Z5\n` +
+      `GSTIN: ${HOTEL_CONFIG.gstin}\n` +
       `Thank you for dining with us! 🙏`;
     
     const url = phone ? `https://wa.me/91${phone}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`;
@@ -3004,10 +3004,10 @@ Thank you for dining at Cannon Kitchen! 🙏`;
             }}>
               {/* Header */}
               <div style={{ textAlign: 'center', borderBottom: '1px dashed #000', paddingBottom: '0.75rem', marginBottom: '0.75rem' }}>
-                <div style={{ fontSize: '0.7rem', letterSpacing: '1px', textTransform: 'uppercase' }}>Sai International Hotel</div>
+                <div style={{ fontSize: '0.7rem', letterSpacing: '1px', textTransform: 'uppercase' }}>{HOTEL_CONFIG.name}</div>
                 <h3 style={{ margin: '0.2rem 0', fontSize: '1.15rem', fontWeight: 900 }}>CANNON KITCHEN</h3>
-                <div style={{ fontSize: '0.72rem', color: '#333' }}>Near New Bus Stand, Rayagada (Odisha)</div>
-                <div style={{ fontSize: '0.72rem', color: '#333' }}>GSTIN: 21AABCS1234F1Z5</div>
+                <div style={{ fontSize: '0.72rem', color: '#333' }}>Near Andhra Bank, New Colony, Rayagada (Odisha)</div>
+                <div style={{ fontSize: '0.72rem', color: '#333' }}>GSTIN: {HOTEL_CONFIG.gstin}</div>
                 <div style={{
                   margin: '0.5rem 0 0.2rem',
                   padding: '3px 0',
@@ -3497,10 +3497,10 @@ Thank you for dining at Cannon Kitchen! 🙏`;
             }}>
               {/* Header */}
               <div style={{ textAlign: 'center', borderBottom: '1px dashed #000', paddingBottom: '0.75rem', marginBottom: '0.75rem' }}>
-                <div style={{ fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 800 }}>Hotel Sai International</div>
+                <div style={{ fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 800 }}>{HOTEL_CONFIG.name}</div>
                 <h3 style={{ margin: '0.2rem 0', fontSize: '1.25rem', fontWeight: 900 }}>CANNON KITCHEN</h3>
-                <div style={{ fontSize: '0.72rem', color: '#333' }}>Near New Bus Stand, Rayagada (Odisha)</div>
-                <div style={{ fontSize: '0.72rem', color: '#333' }}>GSTIN: 21AABCS1234F1Z5 • SAC: 996331</div>
+                <div style={{ fontSize: '0.72rem', color: '#333' }}>Near Andhra Bank, New Colony, Rayagada (Odisha)</div>
+                <div style={{ fontSize: '0.72rem', color: '#333' }}>GSTIN: {HOTEL_CONFIG.gstin} • SAC: 996331</div>
                 <div style={{
                   margin: '0.5rem 0 0.2rem',
                   padding: '3px 0',

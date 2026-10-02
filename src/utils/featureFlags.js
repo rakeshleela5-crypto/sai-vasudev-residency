@@ -1,5 +1,5 @@
 /**
- * HOTEL SAI INTERNATIONAL - PRODUCTION FEATURE FLAG & CANARY ROLLOUT ENGINE
+ * SRI SAI VASUDEV RESIDENCY - PRODUCTION FEATURE FLAG & CANARY ROLLOUT ENGINE
  * Zero-overhead, deterministic canary rollout with local fallback and D1 remote sync.
  * Evaluation time: < 0.1ms (In-Memory Bitwise / Hash Evaluation)
  */

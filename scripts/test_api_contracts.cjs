@@ -5,7 +5,7 @@
 
 const https = require('https');
 
-const TARGET_HOST = 'hotel-sai-international.pages.dev';
+const TARGET_HOST = 'sai-vasudev-residency.pages.dev';
 
 const agent = new https.Agent({ keepAlive: false });
 

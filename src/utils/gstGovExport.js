@@ -1,7 +1,7 @@
 // ============================================================================
 // OFFICIAL INDIAN GST PORTAL COMPLIANT EXPORTER & RECONCILIATION ENGINE
 // Implements GSTN Offline Tool Schema (v1.7) for GSTR-1, HSN Summary & GSTR-2B Reconciliation
-// Hotel Sai International - Rayagada, Odisha (GSTIN: 21AABCH9821K1Z2, State Code: 21)
+// Sri Sai Vasudev Residency - Rayagada, Odisha (GSTIN: 21AEKPP8689J1ZS, State Code: 21)
 // ============================================================================
 
 export const INDIAN_STATE_CODES = {

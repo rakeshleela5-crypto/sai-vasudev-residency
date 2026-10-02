@@ -91,7 +91,7 @@ async function testUrl(targetUrl) {
 }
 
 async function main() {
-  const ok = await testUrl('https://hotel-sai-international.pages.dev/');
+  const ok = await testUrl('https://sai-vasudev-residency.pages.dev/');
   console.log('\nVERIFICATION RESULT:', ok ? 'PASS (Page rendered completely and error-free)' : 'FAIL');
   process.exit(ok ? 0 : 1);
 }

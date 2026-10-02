@@ -1,5 +1,5 @@
 /**
- * UniversalInlineEditor.jsx — Hotel Sai International
+ * UniversalInlineEditor.jsx — Sri Sai Vasudev Residency
  * ─────────────────────────────────────────────────────
  * All named exports kept 100% backward-compatible.
  *

@@ -7,7 +7,7 @@ export default function AiConciergeModal({ isOpen, onClose }) {
   const [messages, setMessages] = useState([
     {
       sender: 'ai',
-      text: `Namaskar! Welcome to Hotel Sai International, Rayagada. I am your 24/7 Chief Concierge grounded with real-time hotel facts, RGDA train transit details, and sacred Maa Majhighariani Temple timings. How may I assist your stay?`
+      text: `Namaskar! Welcome to ${HOTEL_CONFIG.name}, Rayagada. I am your 24/7 Chief Concierge grounded with real-time hotel facts, RGDA train transit details, and sacred Maa Majhighariani Temple timings. How may I assist your stay?`
     }
   ]);
   const [inputQuery, setInputQuery] = useState('');
@@ -28,7 +28,7 @@ export default function AiConciergeModal({ isOpen, onClose }) {
   const quickPrompts = [
     "What time is Darshan at Maa Majhighariani Temple?",
     "How far is Rayagada Railway Station?",
-    "What are the 40-room inventory tariffs?",
+    "What are the 18-room inventory tariffs?",
     "Do you serve Jain & Satvik food without onion/garlic?",
     "How can JK Paper / IMFA book corporate accounts?"
   ];
@@ -60,7 +60,7 @@ export default function AiConciergeModal({ isOpen, onClose }) {
       playReceptionChime();
       setMessages(prev => [...prev, {
         sender: 'ai',
-        text: "Namaskar! Hotel Sai International is located in Sai Priya Nagar, Rayagada (1.5 km to RGDA Station, 2.0 km to Maa Majhighariani Temple). We feature 40 rooms from ₹1,699 to ₹3,999 with complimentary breakfast. For immediate assistance, dial +91 6856 225555."
+        text: `Namaskar! ${HOTEL_CONFIG.name} is located Near Andhra Bank, New Colony, Rayagada (1.5 km to RGDA Station, 2.0 km to Maa Majhighariani Temple). We feature 18 rooms from ₹1,000 to ₹3,000 across Ground & 1st Floor. For immediate assistance, dial ${HOTEL_CONFIG.phone}.`
       }]);
     } finally {
       setLoading(false);
@@ -84,7 +84,7 @@ export default function AiConciergeModal({ isOpen, onClose }) {
             <div>
               <h3 style={{ fontSize: '1.2rem' }}>24/7 Grounded AI Concierge</h3>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                Hotel Sai International • Rayagada Facts, Temple Sights & Room Guidance
+                {HOTEL_CONFIG.name} • Rayagada Facts, Temple Sights & Room Guidance
               </div>
             </div>
           </div>
@@ -187,7 +187,7 @@ export default function AiConciergeModal({ isOpen, onClose }) {
                   <span className="soundwave-bar"></span>
                   <span className="soundwave-bar"></span>
                 </div>
-                <span>Consulting Hotel Sai International verified facts & train schedule...</span>
+                <span>Consulting {HOTEL_CONFIG.name} verified facts & train schedule...</span>
               </div>
             </div>
           )}
@@ -207,7 +207,7 @@ export default function AiConciergeModal({ isOpen, onClose }) {
               type="text"
               className="form-input"
               style={{ flex: 1 }}
-              placeholder="Ask about 40-room tariffs, temple timings, or Rayagada trains..."
+              placeholder="Ask about 18-room tariffs, temple timings, or Rayagada trains..."
               value={inputQuery}
               onChange={(e) => setInputQuery(e.target.value.slice(0, 400))}
               maxLength={400}

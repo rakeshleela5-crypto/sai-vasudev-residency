@@ -1,6 +1,6 @@
-// Hotel Sai International - IDeaS SAS G3 RMS Algorithmic Yield Engine
+// Sri Sai Vasudev Residency - IDeaS SAS G3 RMS Algorithmic Yield Engine
 // Benchmark: IDeaS SAS G3 Platform Architecture (Taj IHCL & Accor Hospitality Standard)
-// Target Property: 40-Room Premier Hotel, Rayagada, Odisha
+// Target Property: 18-Room Premier Hotel, Rayagada, Odisha
 
 export const BASE_ROOM_CONFIG = {
   'standard-deluxe': { id: 'standard-deluxe', name: 'Standard Deluxe', baseTariff: 1699, floor: 1499, ceiling: 3200, count: 10, compWeight: 0.35 },
@@ -129,13 +129,13 @@ export function calculateObpRates(baseMicroRate, guests = 2) {
 
 /**
  * 2. UNCONSTRAINED DEMAND & WASH MODELING
- * Calculates true customer acquisition appetite without 40-room capacity constraints
+ * Calculates true customer acquisition appetite without 18-room capacity constraints
  * and determines safe overbooking authorizations
  */
 export function calculateUnconstrainedDemandAndWash(params = {}) {
   const {
-    physicalCapacity = 40,
-    currentOnTheBooks = 32,
+    physicalCapacity = 18,
+    currentOnTheBooks = 14,
     daysToArrival = 5,
     pickupPace = 3.5,
     segmentMix = { corporate: 0.40, pilgrim: 0.30, transient: 0.20, ota: 0.10 },
@@ -393,7 +393,7 @@ export function simulateWhatIfScenario(scenarioType, inputs = {}) {
       // Competitor cut prices
       marketShareDeflection = Math.round(Math.abs(competitorPriceChangePercent) * 0.45); // -9% occupancy lost if we don't respond
       projectedOccupancy = Math.max(50, baseOccupancy - marketShareDeflection);
-      recommendedStrategy = 'Hold Prestige Rate Floor! Do NOT enter a race to the bottom. Hotel Sai International offers superior hygiene, lift access, and 24-hr hot water. Counter with value packaging (Free Station Transit + Odia Thali credit) rather than rate erosion.';
+      recommendedStrategy = 'Hold Prestige Rate Floor! Do NOT enter a race to the bottom. Sri Sai Vasudev Residency offers superior hygiene, lift access, and 24-hr hot water. Counter with value packaging (Free Station Transit + Odia Thali credit) rather than rate erosion.';
     } else {
       // Competitor raised prices
       marketShareDeflection = Math.round(competitorPriceChangePercent * 0.55);

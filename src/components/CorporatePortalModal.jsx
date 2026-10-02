@@ -92,14 +92,14 @@ export default function CorporatePortalModal({ isOpen, onClose }) {
   const advanceRequired = Math.round(grandTotal * 0.30);
   const balanceOnCheckout = grandTotal - advanceRequired;
 
-  const quotationNo = `HSI/QUOT/2026-27/${selectedPartner.id.replace('CORP-', 'B2B-')}-0927`;
+  const quotationNo = `SSVR/QUOT/2026-27/${selectedPartner.id.replace('CORP-', 'B2B-')}-0927`;
 
   const handlePrintQuotation = () => {
     window.print();
   };
 
   const handleCopySummary = () => {
-    const text = `*HOTEL SAI INTERNATIONAL - B2B PROFORMA QUOTATION*\n` +
+    const text = `*${HOTEL_CONFIG.name.toUpperCase()} - B2B PROFORMA QUOTATION*\n` +
       `Quote No: ${quotationNo}\n` +
       `Client: ${selectedPartner.name} (GSTIN: ${selectedPartner.gstin})\n` +
       `Stay: ${roomCount}x ${selectedTier.name} for ${nightCount} Nights (${guestCount} Pax)\n` +
@@ -498,10 +498,10 @@ export default function CorporatePortalModal({ isOpen, onClose }) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid #8b5cf6', paddingBottom: '0.75rem', marginBottom: '0.85rem' }}>
                   <div>
                     <h4 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#4c1d95', letterSpacing: '0.5px' }}>
-                      HOTEL SAI INTERNATIONAL
+                      {HOTEL_CONFIG.name.toUpperCase()}
                     </h4>
                     <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '2px' }}>
-                      Near Collectorate, Rayagada, Odisha - 765001<br />
+                      Near Andhra Bank, New Colony, Rayagada, Odisha - 765001<br />
                       GSTIN: {HOTEL_CONFIG.gstin} | SAC: 996311 / 996331
                     </div>
                   </div>

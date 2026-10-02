@@ -457,11 +457,11 @@ export default function DirectorPortal({
             </div>
           </div>
 
-          {/* Section 3: 40-Room Visual Floor Matrix */}
+          {/* Section 3: 18-Room Visual Floor Matrix */}
           <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '1.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
               <h4 style={{ color: '#fff', margin: 0, fontSize: '1.05rem' }}>
-                40-Room Property Inventory Status
+                18-Room Property Inventory Status
               </h4>
               <div style={{ display: 'flex', gap: '1rem', fontSize: '0.75rem' }}>
                 <span style={{ color: '#38bdf8' }}>● Occupied ({occupiedCount})</span>

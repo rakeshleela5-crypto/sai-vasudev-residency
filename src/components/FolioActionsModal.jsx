@@ -341,9 +341,9 @@ export default function FolioActionsModal({
     const ratio = isC1 ? colleagueSplitRatio : (100 - colleagueSplitRatio);
 
     const message = 
-`🏨 *HOTEL SAI INTERNATIONAL, RAYAGADA*
-📍 J.K. Road, Rayagada, Odisha - 765001
-📞 06856 225 555 | GSTIN: ${HOTEL_CONFIG.gstin}
+`🏨 *${HOTEL_CONFIG.name.toUpperCase()}, RAYAGADA*
+📍 ${HOTEL_CONFIG.address}
+📞 ${HOTEL_CONFIG.phone} | GSTIN: ${HOTEL_CONFIG.gstin}
 ───────────────────────────────
 📋 *SPLIT TAX INVOICE (PART ${isC1 ? 'A' : 'B'} - ${ratio}%)*
 Room Number: *${room.roomNumber}*
@@ -358,7 +358,7 @@ ${cGstin ? `Corporate GSTIN: ${cGstin}\n` : ''}Date: ${new Date().toLocaleDateSt
 🏷️ *Net Payable Share: ₹${cShare.toFixed(2)}*
 ───────────────────────────────
 💳 Quick UPI Pay: ${HOTEL_CONFIG.upiId}
-🙏 *Thank you for staying at Hotel Sai International!*`;
+🙏 *Thank you for staying at ${HOTEL_CONFIG.name}!*`;
 
     const encoded = encodeURIComponent(message);
     const targetUrl = cleanPhone ? `https://wa.me/${cleanPhone}?text=${encoded}` : `https://wa.me/?text=${encoded}`;
@@ -657,16 +657,15 @@ ${cGstin ? `Corporate GSTIN: ${cGstin}\n` : ''}Date: ${new Date().toLocaleDateSt
     showFeedback(`✓ Transferred ₹${txToMove.debit.toFixed(2)} [${txToMove.desc}] from Room ${room.roomNumber} to Room ${transferTargetRoom} successfully!`);
     setSelectedTxToTransfer(null);
   };
-  // 40 Rooms List for Universal Quick Switcher
+  // 18 Rooms List for Universal Quick Switcher
   const allRoomsCatalog = rooms && rooms.length > 0 ? rooms : [
-    { roomNumber: '101', tier: 'Standard Deluxe', status: 'Available', tariff: 1699 },
-    { roomNumber: '102', tier: 'Standard Deluxe', status: 'Available', tariff: 1699 },
-    { roomNumber: '201', tier: 'Deluxe Room', status: 'Available', tariff: 2199 },
-    { roomNumber: '204', tier: 'Deluxe Room', status: 'Occupied', currentGuestName: 'K. RAMA MURTHY', balanceDue: 450, tariff: 2199 },
-    { roomNumber: '301', tier: 'Executive AC', status: 'Occupied', currentGuestName: 'MR. P ASHOK', balanceDue: 962, tariff: 2999 },
-    { roomNumber: '302', tier: 'Executive AC', status: 'Occupied', currentGuestName: 'M. BALARAM PRASAD', balanceDue: 1850, tariff: 2999 },
-    { roomNumber: '401', tier: 'Presidential Suite', status: 'Available', tariff: 4999 },
-    { roomNumber: '402', tier: 'Presidential Suite', status: 'Occupied', currentGuestName: 'SAHANAWAZ', balanceDue: 2199, tariff: 4999 }
+    { roomNumber: '101', tier: 'Standard Non-AC', status: 'Available', tariff: 1000 },
+    { roomNumber: '102', tier: 'Standard Non-AC', status: 'Available', tariff: 1000 },
+    { roomNumber: '201', tier: 'Executive AC', status: 'Available', tariff: 1800 },
+    { roomNumber: '204', tier: 'Executive AC', status: 'Occupied', currentGuestName: 'K. RAMA MURTHY', balanceDue: 450, tariff: 1800 },
+    { roomNumber: '206', tier: 'Executive AC', status: 'Occupied', currentGuestName: 'LAVAKANTA OJHA', balanceDue: 962, tariff: 1800 },
+    { roomNumber: '210', tier: 'Studio Room', status: 'Available', tariff: 2500 },
+    { roomNumber: '211', tier: 'Premium Suite Room', status: 'Occupied', currentGuestName: 'MR. P ASHOK', balanceDue: 2199, tariff: 3000 }
   ];
 
   const filteredRooms = allRoomsCatalog.filter(r => {
@@ -860,7 +859,7 @@ ${cGstin ? `Corporate GSTIN: ${cGstin}\n` : ''}Date: ${new Date().toLocaleDateSt
                 </button>
               ) : (
                 <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.08)', padding: '2px 5px', borderRadius: '4px', whiteSpace: 'nowrap' }}>
-                  40 Rooms
+                  18 Rooms
                 </span>
               )}
             </div>
@@ -3243,7 +3242,7 @@ ${cGstin ? `Corporate GSTIN: ${cGstin}\n` : ''}Date: ${new Date().toLocaleDateSt
                       </div>
                       <button
                         type="button"
-                        onClick={() => alert(`🖨️ CASHIER CAUTION REFUND SLIP\nHotel Sai International, Rayagada\nRoom: ${room.roomNumber}\nGuest: ${guestName}\nRefund Due: ₹${cautionRefundDue.toFixed(2)}\nTender: Front Desk Cash Drawer\nKey Return: Verified`)}
+                        onClick={() => alert(`🖨️ CASHIER CAUTION REFUND SLIP\n${HOTEL_CONFIG.name}, Rayagada\nRoom: ${room.roomNumber}\nGuest: ${guestName}\nRefund Due: ₹${cautionRefundDue.toFixed(2)}\nTender: Front Desk Cash Drawer\nKey Return: Verified`)}
                         style={{
                           padding: '6px 14px',
                           fontSize: '0.8rem',

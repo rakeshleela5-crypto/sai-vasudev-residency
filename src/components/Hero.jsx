@@ -20,13 +20,12 @@ export default function Hero({
   const getFloorAvailability = (floorNum) => {
     const floorRooms = rooms.filter(r => r.floor === floorNum);
     const available = floorRooms.filter(r => r.status === 'Available').length;
-    return { available, total: floorRooms.length || 10 };
+    const defaultTotal = floorNum === 1 ? 7 : 11;
+    return { available, total: floorRooms.length || defaultTotal };
   };
 
   const fl1 = getFloorAvailability(1);
   const fl2 = getFloorAvailability(2);
-  const fl3 = getFloorAvailability(3);
-  const fl4 = getFloorAvailability(4);
 
   return (
     <section style={{ position: 'relative', overflow: 'hidden', padding: '3.5rem 1.5rem 4rem 1.5rem' }}>
@@ -155,22 +154,22 @@ export default function Hero({
             position: 'relative',
             zIndex: 1
           }}>
-            Welcome to <strong>Hotel Sai International</strong>, Sai Priya Nagar. Featuring 40 thoughtfully curated rooms across 4 luxury tiers, in-room Satvik &amp; Odia dining, seamless RGDA train transit pickups, and sacred Maa Majhighariani Temple pilgrimage assistance.
+            Welcome to <strong>{HOTEL_CONFIG.name}</strong>, Near Andhra Bank, New Colony. Featuring 18 thoughtfully curated rooms across Ground &amp; 1st Floors, in-room Satvik &amp; Odia dining, seamless RGDA train transit pickups, and sacred Maa Majhighariani Temple pilgrimage assistance.
           </p>
         </div>
 
-        {/* Real-Time 40-Room Availability Cards Across 4 Floors (Staggered Waterfall Entry) */}
+        {/* Real-Time 18-Room Availability Cards Across 2 Floors */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: '1.25rem',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gap: '1.5rem',
           marginBottom: '2.5rem'
         }}>
-          {/* Floor 1: Standard Deluxe */}
+          {/* Ground Floor: 7 Keys (101 - 107) */}
           <div 
             className="glass-panel waterfall-item waterfall-delay-1" 
             style={{ 
-              padding: '1.35rem 1.5rem',
+              padding: '1.5rem 1.75rem',
               border: '1px solid rgba(212, 175, 55, 0.3)',
               boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)',
               transition: 'transform 0.22s var(--ease-luxury), box-shadow 0.22s ease, border-color 0.22s ease'
@@ -187,38 +186,38 @@ export default function Hero({
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
-              <span style={{ fontSize: '0.8rem', color: 'var(--gold-glow)', fontWeight: 700, letterSpacing: '0.06em' }}>
-                1ST FLOOR (101 - 110)
+              <span style={{ fontSize: '0.82rem', color: 'var(--gold-glow)', fontWeight: 800, letterSpacing: '0.06em' }}>
+                GROUND FLOOR • 7 ROOMS (101 - 107)
               </span>
               <span className={`badge-status ${fl1.available > 0 ? 'badge-available' : 'badge-occupied'}`}>
                 {fl1.available > 0 && <span className="ripple-pulse" style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: 'var(--status-available)', marginRight: 4 }}></span>}
-                {fl1.available} / 10 Free
+                {fl1.available} / {fl1.total} Available
               </span>
             </div>
-            <h4 style={{ fontSize: '1.15rem', marginBottom: '0.25rem', color: '#fff', fontWeight: 700 }}>Standard Deluxe</h4>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.85rem' }}>
-              King Bed • AC • Free Buffet Breakfast
+            <h4 style={{ fontSize: '1.25rem', marginBottom: '0.25rem', color: '#fff', fontWeight: 700 }}>Deluxe &amp; Executive Rooms</h4>
+            <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+              Rooms 101–107 • King / Queen Beds • 24/7 Hot Water • Wi-Fi &amp; Coffee Maker
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <span style={{ fontSize: '1.3rem', fontWeight: 800, color: '#fff' }}>₹1,699</span>
+                <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#fff' }}>₹1,500 – ₹2,500</span>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}> / night + GST</span>
               </div>
               <button 
-                onClick={() => onOpenBooking(ROOM_TIERS[0])}
+                onClick={() => onOpenBooking(ROOM_TIERS[1] || ROOM_TIERS[0])}
                 className="btn-primary-gold"
-                style={{ padding: '0.45rem 0.95rem', fontSize: '0.82rem' }}
+                style={{ padding: '0.55rem 1.15rem', fontSize: '0.85rem' }}
               >
-                Book Tier
+                Reserve Ground Floor
               </button>
             </div>
           </div>
 
-          {/* Floor 2: Deluxe Room */}
+          {/* First Floor: 11 Keys (201 - 211) */}
           <div 
             className="glass-panel waterfall-item waterfall-delay-2" 
             style={{ 
-              padding: '1.35rem 1.5rem',
+              padding: '1.5rem 1.75rem',
               border: '1px solid rgba(212, 175, 55, 0.3)',
               boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)',
               transition: 'transform 0.22s var(--ease-luxury), box-shadow 0.22s ease, border-color 0.22s ease'
@@ -235,125 +234,29 @@ export default function Hero({
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
-              <span style={{ fontSize: '0.8rem', color: 'var(--gold-glow)', fontWeight: 700, letterSpacing: '0.06em' }}>
-                2ND FLOOR (201 - 210)
+              <span style={{ fontSize: '0.82rem', color: 'var(--gold-glow)', fontWeight: 800, letterSpacing: '0.06em' }}>
+                1ST FLOOR • 11 ROOMS (201 - 211)
               </span>
               <span className={`badge-status ${fl2.available > 0 ? 'badge-available' : 'badge-occupied'}`}>
                 {fl2.available > 0 && <span className="ripple-pulse" style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: 'var(--status-available)', marginRight: 4 }}></span>}
-                {fl2.available} / 10 Free
+                {fl2.available} / {fl2.total} Available
               </span>
             </div>
-            <h4 style={{ fontSize: '1.15rem', marginBottom: '0.25rem', color: '#fff', fontWeight: 700 }}>Deluxe Room</h4>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.85rem' }}>
-              Balcony • Premium AC • In-Room Dining
+            <h4 style={{ fontSize: '1.25rem', marginBottom: '0.25rem', color: '#fff', fontWeight: 700 }}>Executive, Studio &amp; Premium Suites</h4>
+            <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+              Rooms 201–211 • Sofa Seating • Mini Fridge • Hair Dryer • King Size
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <span style={{ fontSize: '1.3rem', fontWeight: 800, color: '#fff' }}>₹2,199</span>
+                <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#fff' }}>₹1,500 – ₹3,000</span>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}> / night + GST</span>
               </div>
               <button 
-                onClick={() => onOpenBooking(ROOM_TIERS[1])}
+                onClick={() => onOpenBooking(ROOM_TIERS[3] || ROOM_TIERS[2] || ROOM_TIERS[0])}
                 className="btn-primary-gold"
-                style={{ padding: '0.45rem 0.95rem', fontSize: '0.82rem' }}
+                style={{ padding: '0.55rem 1.15rem', fontSize: '0.85rem' }}
               >
-                Book Tier
-              </button>
-            </div>
-          </div>
-
-          {/* Floor 3: Executive Room */}
-          <div 
-            className="glass-panel waterfall-item waterfall-delay-3" 
-            style={{ 
-              padding: '1.35rem 1.5rem',
-              border: '1px solid rgba(212, 175, 55, 0.3)',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)',
-              transition: 'transform 0.22s var(--ease-luxury), box-shadow 0.22s ease, border-color 0.22s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 16px 36px rgba(0, 0, 0, 0.7), 0 0 25px rgba(212, 175, 55, 0.2)';
-              e.currentTarget.style.borderColor = 'var(--gold-glow)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'none';
-              e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.45)';
-              e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.3)';
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
-              <span style={{ fontSize: '0.8rem', color: 'var(--gold-glow)', fontWeight: 700, letterSpacing: '0.06em' }}>
-                3RD FLOOR (301 - 310)
-              </span>
-              <span className={`badge-status ${fl3.available > 0 ? 'badge-available' : 'badge-occupied'}`}>
-                {fl3.available > 0 && <span className="ripple-pulse" style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: 'var(--status-available)', marginRight: 4 }}></span>}
-                {fl3.available} / 10 Free
-              </span>
-            </div>
-            <h4 style={{ fontSize: '1.15rem', marginBottom: '0.25rem', color: '#fff', fontWeight: 700 }}>Executive Room</h4>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.85rem' }}>
-              Workstation • Mini Bar • Station Transit
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <span style={{ fontSize: '1.3rem', fontWeight: 800, color: '#fff' }}>₹2,899</span>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}> / night + GST</span>
-              </div>
-              <button 
-                onClick={() => onOpenBooking(ROOM_TIERS[2])}
-                className="btn-primary-gold"
-                style={{ padding: '0.45rem 0.95rem', fontSize: '0.82rem' }}
-              >
-                Book Tier
-              </button>
-            </div>
-          </div>
-
-          {/* Floor 4: Premium Suite */}
-          <div 
-            className="glass-panel waterfall-item waterfall-delay-4" 
-            style={{ 
-              padding: '1.35rem 1.5rem',
-              border: '1px solid rgba(212, 175, 55, 0.3)',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)',
-              transition: 'transform 0.22s var(--ease-luxury), box-shadow 0.22s ease, border-color 0.22s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 16px 36px rgba(0, 0, 0, 0.7), 0 0 25px rgba(212, 175, 55, 0.2)';
-              e.currentTarget.style.borderColor = 'var(--gold-glow)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'none';
-              e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.45)';
-              e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.3)';
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
-              <span style={{ fontSize: '0.8rem', color: 'var(--gold-glow)', fontWeight: 700, letterSpacing: '0.06em' }}>
-                4TH FLOOR (401 - 410)
-              </span>
-              <span className={`badge-status ${fl4.available > 0 ? 'badge-available' : 'badge-occupied'}`}>
-                {fl4.available > 0 && <span className="ripple-pulse" style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: 'var(--status-available)', marginRight: 4 }}></span>}
-                {fl4.available} / 10 Free
-              </span>
-            </div>
-            <h4 style={{ fontSize: '1.15rem', marginBottom: '0.25rem', color: '#fff', fontWeight: 700 }}>Premium Suite</h4>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '0.85rem' }}>
-              Living Room • Master Suite • Local Shuttle
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <span style={{ fontSize: '1.3rem', fontWeight: 800, color: '#fff' }}>₹3,999</span>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}> / night + GST</span>
-              </div>
-              <button 
-                onClick={() => onOpenBooking(ROOM_TIERS[3])}
-                className="btn-primary-gold"
-                style={{ padding: '0.45rem 0.95rem', fontSize: '0.82rem' }}
-              >
-                Book Tier
+                Reserve 1st Floor
               </button>
             </div>
           </div>

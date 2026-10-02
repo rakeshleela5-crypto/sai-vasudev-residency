@@ -17,7 +17,7 @@ import {
   simulateWhatIfScenario, 
   calculateChannelNetRevPAR 
 } from '../utils/g3RmsEngine';
-import { CORPORATE_PARTNERS } from '../data/hotelData';
+import { CORPORATE_PARTNERS, HOTEL_CONFIG } from '../data/hotelData';
 import UniversalDateFilterBar from './UniversalDateFilterBar';
 import { SheetsColumnHeader, SheetsToolbarLegend, SheetsEditableCell } from './UniversalInlineEditor';
 
@@ -337,7 +337,7 @@ export default function RevenueManagementModal({
               </span>
             </div>
             <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8rem', color: '#94a3b8' }}>
-              Autonomous continuous dynamic micro-rate yielding, corporate RFP MAR solver, and unconstrained demand modeling for Hotel Sai International (40 Rooms).
+              Autonomous continuous dynamic micro-rate yielding, corporate RFP MAR solver, and unconstrained demand modeling for {HOTEL_CONFIG.name} (18 Rooms).
             </p>
           </div>
 
@@ -610,7 +610,7 @@ export default function RevenueManagementModal({
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '0.35rem' }}>
                       <span style={{ color: '#94a3b8' }}>Live Occupancy Rate</span>
-                      <span style={{ color: '#38bdf8', fontWeight: 800 }}>{simOccupancy}% ({Math.round((simOccupancy / 100) * 40)}/40 rooms)</span>
+                      <span style={{ color: '#38bdf8', fontWeight: 800 }}>{simOccupancy}% ({Math.round((simOccupancy / 100) * 18)}/18 rooms)</span>
                     </div>
                     <input 
                       type="range" 
@@ -1920,7 +1920,7 @@ export default function RevenueManagementModal({
                     🏨 Rayagada Primary Competitor Comp-Set (Real-Time Rate Shopper)
                   </div>
                   <div style={{ fontSize: '0.78rem', color: 'var(--gold-glow)', fontWeight: 700 }}>
-                    Active Rule: Hotel Sai International = Comp-Set Benchmark + {compSetPegPercent}%
+                    Active Rule: {HOTEL_CONFIG.name} = Comp-Set Benchmark + {compSetPegPercent}%
                   </div>
                 </div>
 

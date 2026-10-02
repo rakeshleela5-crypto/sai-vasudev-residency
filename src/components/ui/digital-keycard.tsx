@@ -16,7 +16,7 @@ export interface DigitalKeycardProps {
 
 export function DigitalKeycard({
   guestName = "Valued Guest",
-  roomNumber = "301",
+  roomNumber = "201",
   tierName = "Executive Room",
   checkInDate = "2026-09-22",
   checkOutDate = "2026-09-24",
@@ -88,7 +88,7 @@ export function DigitalKeycard({
             </div>
             <div>
               <div className="text-[11px] font-semibold tracking-wider uppercase text-[#d4af37]">
-                Hotel Sai International
+                Sri Sai Vasudev Residency
               </div>
               <div className="text-[9px] text-[#94a3b8] tracking-wider">
                 DIGITAL SMART RFID KEY

@@ -1,5 +1,5 @@
 /**
- * Hotel Sai International — Document-Centric Singleton Edit Engine v2
+ * Sri Sai Vasudev Residency — Document-Centric Singleton Edit Engine v2
  * ─────────────────────────────────────────────────────────────────────
  * ONE instance. ONE listener on document. ALWAYS on. ZERO per-component wiring.
  *

@@ -40,7 +40,7 @@ export type DayType = {
   events?: CalendarEventType[];
 };
 
-// Seed authentic Hotel Sai International bookings and Rayagada corporate conventions for September 2026
+// Seed authentic Sri Sai Vasudev Residency bookings and Rayagada corporate conventions for September 2026
 const DEFAULT_SEPTEMBER_EVENTS: CalendarEventType[] = [
   {
     id: 'EVT-SEP-01',
@@ -316,7 +316,7 @@ const DEFAULT_SEPTEMBER_EVENTS: CalendarEventType[] = [
     title: 'End of Month Revenue & Statutory Night Audit Review',
     category: 'corporate',
     venue: 'GM Executive Suite & Admin Board',
-    organizer: 'Hotel Sai International Management',
+    organizer: 'Sri Sai Vasudev Residency Management',
     contactPerson: 'General Manager & Financial Controller',
     pax: '8 Department Heads',
     setup: 'Round Executive Table',
@@ -424,7 +424,7 @@ export const InteractiveCalendar = React.forwardRef<HTMLDivElement, InteractiveC
             <div className="flex items-center gap-2 mb-1 flex-wrap">
               <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-semibold bg-[rgba(212,175,55,0.15)] text-[#f3c64c] border border-[rgba(212,175,55,0.3)]">
                 <Sparkles className="size-3.5 text-[#f3c64c]" />
-                Hotel Sai International • Rayagada
+                Sri Sai Vasudev Residency • Rayagada
               </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold bg-[rgba(16,185,129,0.18)] text-[#34d399] border border-[rgba(16,185,129,0.35)]">
                 <span className="size-2 rounded-full bg-[#10b981] animate-pulse" />
@@ -848,7 +848,7 @@ export const InteractiveCalendar = React.forwardRef<HTMLDivElement, InteractiveC
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <span className="bg-[#d4af37] text-[#060e1a] text-[10px] font-black uppercase px-2 py-0.5 rounded tracking-wider">
-                        Hotel Sai International BEO
+                        Sri Sai Vasudev Residency BEO
                       </span>
                       <span className="text-[#fceec5] font-mono text-xs">
                         BEO #{selectedBeoEvent.id}

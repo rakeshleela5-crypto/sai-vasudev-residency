@@ -8,7 +8,7 @@
 const https = require('https');
 const assert = require('assert');
 
-const TARGET_HOST = process.env.API_HOST || 'hotel-sai-international.pages.dev';
+const TARGET_HOST = process.env.API_HOST || 'sai-vasudev-residency.pages.dev';
 
 const agent = new https.Agent({ keepAlive: false });
 

@@ -1007,7 +1007,7 @@ ${window.location.origin}/?bill=${billNo}&room=${editHeader.roomNumber || bookin
               <div className="header-right">
                 <div className="hotel-brand-block">
                   <div className="hotel-trade-name" style={{ fontSize: '1.25rem', fontWeight: 900 }}>
-                    {(HOTEL_CONFIG.legalName || HOTEL_CONFIG.name || 'HOTEL SAI INTERNATIONAL PVT. LTD.').toUpperCase()}
+                    {(HOTEL_CONFIG.legalName || HOTEL_CONFIG.name || 'SRI SAI VASUDEV RESIDENCY').toUpperCase()}
                   </div>
                   <div className="address-line">{HOTEL_CONFIG.address}</div>
                   <div className="contact-line">
@@ -1609,7 +1609,7 @@ ${window.location.origin}/?bill=${billNo}&room=${editHeader.roomNumber || bookin
               <div className="header-right">
                 <div className="hotel-brand-block">
                   <div className="hotel-trade-name" style={{ fontSize: '1.2rem', fontWeight: 900 }}>
-                    {(HOTEL_CONFIG.legalName || HOTEL_CONFIG.name || 'HOTEL SAI INTERNATIONAL PVT. LTD.').toUpperCase()}
+                    {(HOTEL_CONFIG.legalName || HOTEL_CONFIG.name || 'SRI SAI VASUDEV RESIDENCY').toUpperCase()}
                   </div>
                   <div className="address-line">{HOTEL_CONFIG.address}</div>
                   <div className="contact-line">
@@ -1742,7 +1742,7 @@ ${window.location.origin}/?bill=${billNo}&room=${editHeader.roomNumber || bookin
               <div className="header-right">
                 <div className="hotel-brand-block">
                   <div className="hotel-trade-name" style={{ fontSize: '1.2rem', fontWeight: 900 }}>
-                    {(HOTEL_CONFIG.legalName || HOTEL_CONFIG.name || 'HOTEL SAI INTERNATIONAL PVT. LTD.').toUpperCase()}
+                    {(HOTEL_CONFIG.legalName || HOTEL_CONFIG.name || 'SRI SAI VASUDEV RESIDENCY').toUpperCase()}
                   </div>
                   <div className="address-line">CANNON KITCHEN RESTAURANT • Rayagada, Odisha - 765001</div>
                   <div className="contact-line">
@@ -1847,7 +1847,7 @@ ${window.location.origin}/?bill=${billNo}&room=${editHeader.roomNumber || bookin
             </div>
 
             <div style={{ marginTop: '15px', fontSize: '9px', color: '#64748b', textAlign: 'center' }}>
-              Cannon Kitchen Restaurant • Hotel Sai International Pvt Ltd • FSSAI Lic &amp; Satvik Hygiene Certified
+              Cannon Kitchen Restaurant • Sri Sai Vasudev Residency • FSSAI Lic &amp; Satvik Hygiene Certified
             </div>
           </div>
         )}
@@ -1858,16 +1858,13 @@ ${window.location.origin}/?bill=${billNo}&room=${editHeader.roomNumber || bookin
             <div style={{ borderBottom: '2px solid #0f172a', paddingBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div>
                 <h1 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 900, color: '#0f172a', letterSpacing: '0.5px' }}>
-                  HOTEL SAI INTERNATIONAL (PVT.) LTD.
+                  {HOTEL_CONFIG.name.toUpperCase()}
                 </h1>
                 <div style={{ fontSize: '11px', color: '#334155' }}>
-                  J.K. Road, RAYAGADA - 765 001. Odisha
+                  {HOTEL_CONFIG.address}
                 </div>
                 <div style={{ fontSize: '10px', color: '#334155' }}>
-                  Ph: No. 226554, 225655, Mobile: 8895225555 | Email: hotelsaiinternational2010@gmail.com
-                </div>
-                <div style={{ fontSize: '10px', color: '#334155' }}>
-                  Web: www.saiinternationalhotel.com
+                  Ph: {HOTEL_CONFIG.phone} | Email: {HOTEL_CONFIG.email}
                 </div>
               </div>
 
@@ -2086,7 +2083,7 @@ ${window.location.origin}/?bill=${billNo}&room=${editHeader.roomNumber || bookin
           }}>
             <div style={{ textAlign: 'center', borderBottom: '2px dashed #94a3b8', paddingBottom: '0.85rem', marginBottom: '1rem' }}>
               <h2 style={{ color: '#0c182b', fontSize: '1.25rem', margin: 0, fontWeight: 900 }}>
-                {(HOTEL_CONFIG.legalName || HOTEL_CONFIG.name || 'HOTEL SAI INTERNATIONAL PVT. LTD.').toUpperCase()}
+                {(HOTEL_CONFIG.legalName || HOTEL_CONFIG.name || 'SRI SAI VASUDEV RESIDENCY').toUpperCase()}
               </h2>
               <div style={{ fontSize: '0.72rem', color: '#475569', marginTop: '0.2rem' }}>
                 {HOTEL_CONFIG.address}
@@ -2145,7 +2142,7 @@ ${window.location.origin}/?bill=${billNo}&room=${editHeader.roomNumber || bookin
 
             <div style={{ borderTop: '1px solid #cbd5e1', paddingTop: '0.5rem', textAlign: 'center', fontSize: '0.65rem', color: '#64748b' }}>
               <div>* Sarai Act 1867 &amp; DPDP Act 2023 Verified *</div>
-              <div>Thank you for staying at Hotel Sai International!</div>
+              <div>Thank you for staying at {HOTEL_CONFIG.name}!</div>
             </div>
           </div>
         )}

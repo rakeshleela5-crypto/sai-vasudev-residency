@@ -8,7 +8,7 @@
 const puppeteer = require('puppeteer-core');
 const assert = require('assert');
 
-const TARGET_URL = process.env.TEST_URL || 'https://hotel-sai-international.pages.dev';
+const TARGET_URL = process.env.TEST_URL || 'https://sai-vasudev-residency.pages.dev';
 const BROWSER_PATH = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 
 let passed = 0;
@@ -149,11 +149,11 @@ async function main() {
       // Wait for PMS dashboard to render
       await waitForPredicate(page, () => {
         const text = document.body.innerText;
-        return text.includes('Tape Chart') || text.includes('39-Room') || text.includes('Rooms Available');
+        return text.includes('Tape Chart') || text.includes('18-Room') || text.includes('Rooms Available');
       });
 
       const pmsContent = await page.evaluate(() => document.body.innerText);
-      assert.ok(pmsContent.includes('39-Room') || pmsContent.includes('Rooms'), 'Tape chart inventory must load');
+      assert.ok(pmsContent.includes('18-Room') || pmsContent.includes('Rooms'), 'Tape chart inventory must load');
     });
 
     // ---------------------------------------------------------------

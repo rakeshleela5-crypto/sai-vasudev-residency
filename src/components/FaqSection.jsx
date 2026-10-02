@@ -12,7 +12,7 @@ const FAQS = [
     id: 'proximity',
     icon: MapPin,
     question: "How close is the hotel to Rayagada Railway Station & Maa Majhighariani Temple?",
-    answer: "Hotel Sai International is strategically located in Sai Priya Nagar. Rayagada Railway Junction (RGDA) is just 1.5 km away (a 5-minute drive; complimentary station pickup is included for Executive & Suite guests). The sacred Maa Majhighariani Temple is only 2.0 km away (7-minute drive) with specialized early morning darshan coordination."
+    answer: "Sri Sai Vasudev Residency is centrally located Near Andhra Bank, New Colony, Rayagada. Rayagada Railway Junction (RGDA) is just 1.5 km away (a 5-minute drive; complimentary station pickup is included for Executive & Suite guests). The sacred Maa Majhighariani Temple is only 2.0 km away (7-minute drive) with specialized early morning darshan coordination."
   },
   {
     id: 'id-proof',

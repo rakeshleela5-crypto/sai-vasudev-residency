@@ -82,7 +82,7 @@ export default function RoomQrModal({
     if (!qrDataUrl) return;
     const a = document.createElement('a');
     a.href = qrDataUrl;
-    a.download = `HotelSai_Room_${selectedRoom}_${qrType.toUpperCase()}_QR.png`;
+    a.download = `${HOTEL_CONFIG.name.replace(/\s+/g, '_')}_Room_${selectedRoom}_${qrType.toUpperCase()}_QR.png`;
     a.click();
   };
 
@@ -95,7 +95,7 @@ export default function RoomQrModal({
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Hotel Sai International - Room ${selectedRoom} QR Standee</title>
+          <title>${HOTEL_CONFIG.name} - Room ${selectedRoom} QR Standee</title>
           <style>
             @page { size: A5 portrait; margin: 12mm; }
             *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }

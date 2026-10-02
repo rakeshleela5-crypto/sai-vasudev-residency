@@ -134,8 +134,8 @@ export default function AccountsLedgerModal({
     bankName: 'State Bank of India (SBI)',
     branch: 'Rayagada Main Branch (Code: 0172)',
     accountNumber: '3891002100049281',
-    accountName: 'HOTEL SAI INTERNATIONAL',
-    pan: 'AAACB2528H',
+    accountName: HOTEL_CONFIG.tradeName.toUpperCase(),
+    pan: HOTEL_CONFIG.pan,
     denominations: { 500: 25, 200: 15, 100: 45, 50: 20, 20: 10, 10: 15 }
   });
   const [isPettyCashPrintOpen, setIsPettyCashPrintOpen] = useState(false);
@@ -291,7 +291,7 @@ export default function AccountsLedgerModal({
     document.body.removeChild(link);
   };
 
-  // CSV Generator for Item-Wise Sales (Hotel Sai International - Item Wise Report 2026-09-24 ~ 2026-09-24)
+  // CSV Generator for Item-Wise Sales (Sri Sai Vasudev Residency - Item Wise Report 2026-09-24 ~ 2026-09-24)
   const handleDownloadItemSalesCSV = () => {
     const headers = ['Item Code', 'Item Description / Name', 'Section', 'Category', 'Total Qty Sold', 'Unit Rate (INR)', 'Sales Amount (INR)', 'Est Food Cost %', 'Kitchen Margin %'];
     const rows = ITEM_WISE_SALES_REPORT_2026_09_24.map(i => {
@@ -313,7 +313,7 @@ export default function AccountsLedgerModal({
     });
 
     const csvLines = [
-      'Hotel Sai International - Rayagada',
+      `${HOTEL_CONFIG.name} - Rayagada`,
       'Item Wise Report (2026-09-24 ~ 2026-09-24)',
       'Total Food Sales: INR 64716.00 (353 Qty) | Total Beverage Sales: INR 3130.00 (150 Qty) | Grand Total: INR 67846.00 (503 Qty)',
       '',
@@ -650,7 +650,7 @@ export default function AccountsLedgerModal({
       `"${r.paymentMode}"`
     ]);
     const csvContent = "data:text/csv;charset=utf-8," + encodeURIComponent([
-      `HOTEL SAI INTERNATIONAL - RAYAGADA`,
+      `${HOTEL_CONFIG.name.toUpperCase()} - RAYAGADA`,
       `GST FOM REPORT & STATUTORY TAX REGISTER (25/09/2026)`,
       `Cashier: Sudhakar | Strictly Non-GST Room Tariff (6% & 12% Deleted) | Food 5% GST`,
       headers.join(","),
@@ -658,7 +658,7 @@ export default function AccountsLedgerModal({
     ].join("\n"));
     const link = document.createElement("a");
     link.setAttribute("href", csvContent);
-    link.setAttribute("download", `GST_FOM_REPORT_25092026_Hotel_Sai_International.csv`);
+    link.setAttribute("download", `GST_FOM_REPORT_25092026_Sri_Sai_Vasudev_Residency.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -969,7 +969,7 @@ export default function AccountsLedgerModal({
       <REQUESTDESC>
         <REPORTNAME>Vouchers</REPORTNAME>
         <STATICVARIABLES>
-          <SVCURRENTCOMPANY>HOTEL SAI INTERNATIONAL</SVCURRENTCOMPANY>
+          <SVCURRENTCOMPANY>${HOTEL_CONFIG.name.toUpperCase()}</SVCURRENTCOMPANY>
         </STATICVARIABLES>
       </REQUESTDESC>
       <REQUESTDATA>`;
@@ -986,7 +986,7 @@ export default function AccountsLedgerModal({
             <DATE>20260926</DATE>
             <VOUCHERTYPENAME>Receipt</VOUCHERTYPENAME>
             <VOUCHERNUMBER>RCP-HSI-2026-${String(idx + 1).padStart(4, '0')}</VOUCHERNUMBER>
-            <NARRATION>Hotel Sai International Daily Collection - ${col.mode}</NARRATION>
+            <NARRATION>${HOTEL_CONFIG.name} Daily Collection - ${col.mode}</NARRATION>
             <ALLLEDGERENTRIES.LIST>
               <LEDGERNAME>${col.mode.includes('Cash') ? 'Cash-in-Hand' : col.mode.includes('UPI') ? 'SBI Current A/c - UPI' : col.mode.includes('Corporate') ? 'Sundry Debtors - BTC' : 'HDFC Bank - POS Card'}</LEDGERNAME>
               <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
@@ -1792,7 +1792,7 @@ export default function AccountsLedgerModal({
               setFomToDate(to);
               setFomDateFilterActive(true);
             }}
-            title={`HOTEL SAI INTERNATIONAL - ${activeTab.replace(/-/g, ' ').toUpperCase()}`}
+            title={`${HOTEL_CONFIG.name.toUpperCase()} - ${activeTab.replace(/-/g, ' ').toUpperCase()}`}
             totalCount={
               activeTab === 'gst-fom-report' ? filteredGstRecords.length :
               activeTab === 'corp-ledger' ? (corporateLedger[selectedCorporate] || []).length :
@@ -2741,7 +2741,7 @@ export default function AccountsLedgerModal({
                 <p style={{ margin: '0.25rem 0 0', color: '#cbd5e1', fontSize: '0.8rem', lineHeight: '1.4' }}>
                   In legacy MySoft's <code style={{ color: '#fca5a5', background: 'rgba(0,0,0,0.4)', padding: '2px 5px', borderRadius: '4px' }}>sales_summary.php</code>, the <strong>Rest. F&B</strong> column reported <strong>₹0.00</strong> on checked-out room folios despite guests ordering breakfast and dinner to their rooms. When front desk settled bills, restaurant revenue was orphaned or lumped into untracked cash, causing a ₹17,000 variance with POS collections.
                   <br />
-                  <strong>The Fix:</strong> Sai International's upgraded system links Cannon POS KOTs directly to the guest folio with distinct SAC 996331 (F&B) vs SAC 996311 (Room Rent). Every rupee is audited and reconciled!
+                  <strong>The Fix:</strong> {HOTEL_CONFIG.name}'s upgraded system links Cannon POS KOTs directly to the guest folio with distinct SAC 996331 (F&B) vs SAC 996311 (Room Rent). Every rupee is audited and reconciled!
                 </p>
               </div>
             </div>
@@ -2804,7 +2804,7 @@ export default function AccountsLedgerModal({
           </div>
         )}
 
-        {/* Tab 2.5: ITEM & CATEGORY SALES REPORT (AUTHENTIC HOTEL SAI INTERNATIONAL ITEM WISE REPORT 2026-09-24) */}
+        {/* Tab 2.5: ITEM & CATEGORY SALES REPORT (AUTHENTIC SRI SAI VASUDEV RESIDENCY ITEM WISE REPORT 2026-09-24) */}
         {activeTab === 'item-sales' && (() => {
           const filteredItems = itemSalesList.filter(item => {
             const matchesCat = itemSalesCategoryFilter === 'ALL'
@@ -3131,7 +3131,7 @@ export default function AccountsLedgerModal({
                   <Calendar size={18} color="#34d399" /> Statutory Accounts Day Book &amp; Cash Reconciliation
                 </h3>
                 <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                  Hotel Sai International • Rayagada, Odisha • TallyPrime &amp; GST Compatible
+                  {HOTEL_CONFIG.name} • Rayagada, Odisha • TallyPrime &amp; GST Compatible
                 </span>
               </div>
 
@@ -4822,10 +4822,10 @@ export default function AccountsLedgerModal({
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', fontSize: '0.82rem', marginBottom: '1rem', borderBottom: '1px dashed #cbd5e1', paddingBottom: '0.75rem' }}>
-                  <div><strong>Account Title:</strong> HOTEL SAI INTERNATIONAL</div>
+                  <div><strong>Account Title:</strong> {HOTEL_CONFIG.name.toUpperCase()}</div>
                   <div style={{ textAlign: 'right' }}><strong>Date:</strong> {new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
                   <div><strong>Current A/c No:</strong> <span style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: '0.95rem' }}>3891002100049281</span></div>
-                  <div style={{ textAlign: 'right' }}><strong>PAN No:</strong> <span style={{ fontFamily: 'monospace', fontWeight: 700 }}>AAACB2528H</span></div>
+                  <div style={{ textAlign: 'right' }}><strong>PAN No:</strong> <span style={{ fontFamily: 'monospace', fontWeight: 700 }}>{HOTEL_CONFIG.pan}</span></div>
                   <div><strong>Mobile:</strong> +91 79780 43585</div>
                   <div style={{ textAlign: 'right' }}><strong>Deposit Type:</strong> Daily Counter Cash Collections</div>
                 </div>
@@ -5543,7 +5543,7 @@ export default function AccountsLedgerModal({
                       <option value="NONE">0% — Nil TDS (Exemption Certificate / B2C)</option>
                     </select>
                     <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                      PAN: <strong>AAFFH1234K</strong> (Hotel Sai International)
+                      PAN: <strong>{HOTEL_CONFIG.pan}</strong> ({HOTEL_CONFIG.name})
                     </div>
                   </div>
                 </div>
@@ -6015,7 +6015,7 @@ export default function AccountsLedgerModal({
                       Direct Bank Remittance (RTGS / NEFT)
                     </div>
                     <div style={{ color: '#334155', lineHeight: 1.4 }}>
-                      Account Name: <strong>HOTEL SAI INTERNATIONAL</strong><br />
+                      Account Name: <strong>{HOTEL_CONFIG.name.toUpperCase()}</strong><br />
                       Bank: <strong>Axis Bank Ltd, Rayagada Branch</strong><br />
                       Current A/c No: <strong>918020054718291</strong><br />
                       IFSC Code: <strong>UTIB0001053</strong>
@@ -6032,7 +6032,7 @@ export default function AccountsLedgerModal({
                   <div style={{ textAlign: 'center' }}>
                     <div style={{ borderBottom: '1px solid #0f172a', width: '160px', marginBottom: '4px' }}></div>
                     <strong>Authorized Signatory / Financial Controller</strong><br />
-                    Hotel Sai International, Rayagada
+                    {HOTEL_CONFIG.name}, Rayagada
                   </div>
                 </div>
               </div>

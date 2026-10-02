@@ -1,5 +1,5 @@
-// Hotel Sai International - Core Property Data & 40-Room Inventory Specification
-// Location: Sai Priya Nagar, Rayagada, Odisha - 765001
+// Sri Sai Vasudev Residency - Core Property Data & 18-Room Inventory Specification
+// Location: Near Andhra Bank, New Colony, Rayagada, Odisha - 765001
 // Switchboard: +91 6856 225555 | Landline: 06856 225 555
 
 export const HOTEL_CONFIG = {
@@ -315,7 +315,7 @@ export const CORPORATE_PARTNERS = [
   }
 ];
 
-// Official F&B Outlets of Hotel Sai International (Screenshot 10 of hotel_documents.pdf & Owner Video)
+// Official F&B Outlets of Sri Sai Vasudev Residency (Owner Documentation & Menu)
 export const HOTEL_OUTLETS = [
   { 
     id: 'fenugreek', 
@@ -416,7 +416,7 @@ export const MYPOS_CANNON_KITCHEN_LAYOUT = {
 
 // Multi-Outlet F&B Menu with Fast Item Codes (Cannon Kitchen, Bar, Room Service, Swiggy)
 // Multi-Outlet F&B Menu with Fast Item Codes (Cannon Kitchen, Drop In Bar, Room Service, Swiggy)
-// 85 Authentic Items with Item Codes from Hotel Sai International Live Operations
+// 85 Authentic Items with Item Codes from Sri Sai Vasudev Residency Live Operations
 export const RESTAURANT_MENU = [
   {
     id: "m-116",
@@ -1781,7 +1781,7 @@ export const RESTAURANT_MENU = [
 ];
 
 // Authentic GST FOM Register Dataset (Front Office Management Report 25/09/2026)
-// Captured from Hotel Sai International Rayagada (Cashier: Sudhakar)
+// Captured from Sri Sai Vasudev Residency Rayagada (Cashier: Sudhakar)
 // Client Requirement:
 // 1. Strictly DELETED: SGST 6%, CGST 6%, and Taxable 12% (Rooms are Non-GST / 0% Taxable)
 // 2. Only Food & Beverage carries 5% GST (SGST 2.5% + CGST 2.5%)
@@ -2019,7 +2019,7 @@ export const GST_FOM_RECORDS_2026_09_25 = [
     roomNo: "201",
     company: "SAUNA SHAKTI ENTERPRISES",
     gstin: "21BLJPD7182D1ZG",
-    billingAddress: "Main Road, Sai Priya Nagar, Rayagada",
+    billingAddress: "Near Andhra Bank, New Colony, Rayagada",
     stateCode: "21 (Odisha)",
     isB2B: true,
     taxable0: 6000.00,
@@ -2210,7 +2210,7 @@ export const AUTONOMOUS_BOT_FLEET = [
     category: "Operations & Management",
     channel: "Telegram & Management WhatsApp",
     status: "Active",
-    description: "Dispatches 40-room occupancy snapshot, VIP arrivals, expected corporate checkouts, and breakfast forecast to GM.",
+    description: "Dispatches 18-room occupancy snapshot, VIP arrivals, expected corporate checkouts, and breakfast forecast to GM.",
     defaultParams: { notifyManagers: ["GM", "FrontDeskSupervisor"], includeBreakfastCount: true }
   },
   {
