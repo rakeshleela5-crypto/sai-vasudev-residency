@@ -58,6 +58,7 @@ export default function ReceptionAdmin({
   onOpenNightAuditModal,
   onOpenDirectorPortal,
   onOpenRevenueManagement,
+  onOpenCaFilingStation,
   foodOrders: propFoodOrders,
   onUpdateOrderStatus: propUpdateOrderStatus,
   initialTab
@@ -2402,7 +2403,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
               label: '5. Housekeeping & Turnover', 
               icon: Layers, 
               color: '#facc15', 
-              desc: '39-Room Vacant Dirty Turnover',
+              desc: '18-Room Vacant Dirty Turnover',
               badge: roomServicesList.filter(r => r.status === 'Pending').length > 0 ? `${roomServicesList.filter(r => r.status === 'Pending').length} Pending` : null,
               badgeColor: '#f59e0b',
               onClick: () => {
@@ -2484,13 +2485,31 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--gold-glow)', fontSize: '0.8rem', fontWeight: 600 }}>
             <ShieldCheck size={16} /> Central PMS Operations • {HOTEL_CONFIG.legalName}
           </div>
-          <h2 style={{ fontSize: '2rem', margin: '0.2rem 0' }}>Front Desk &amp; 39-Room Operations Console</h2>
+          <h2 style={{ fontSize: '2rem', margin: '0.2rem 0' }}>Front Desk &amp; 18-Room Operations Console</h2>
           <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
             GSTIN: <strong style={{ color: '#fbbf24' }}>{HOTEL_CONFIG.gstin}</strong> • Rayagada, Odisha • Sarai Act 1867 &amp; Rule 46 Compliant
           </div>
         </div>
 
         <div style={{ display: 'flex', gap: '0.55rem', flexWrap: 'wrap', alignItems: 'center' }}>
+          <button 
+            onClick={onOpenCaFilingStation}
+            className="btn-outline-gold"
+            title="Open System #36: CA Filing Station & Financial Intelligence Engine (10 Modules)"
+            style={{ 
+              padding: '0.55rem 0.95rem', 
+              fontSize: '0.82rem', 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: '0.35rem',
+              borderColor: 'var(--gold-primary)',
+              background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(245, 158, 11, 0.15))',
+              color: 'var(--gold-glow)',
+              fontWeight: 700
+            }}
+          >
+            <Scale size={15} color="var(--gold-glow)" /> 🏛️ System #36: CA Filing
+          </button>
           <button 
             onClick={() => { setSelectedRoomForQr('101'); setRoomQrOpen(true); }}
             className="btn-outline-gold"

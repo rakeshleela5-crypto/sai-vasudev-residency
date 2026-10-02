@@ -33,6 +33,7 @@ const BookingModal = lazyWithRetry(() => import('./components/BookingModal'));
 const BookingReceiptModal = lazyWithRetry(() => import('./components/BookingReceiptModal'));
 const ReceptionAdmin = lazyWithRetry(() => import('./components/ReceptionAdmin'));
 const FinancialAnalytics = lazyWithRetry(() => import('./components/FinancialAnalytics'));
+const CaFilingStationModal = lazyWithRetry(() => import('./components/CaFilingStationModal'));
 const AutonomousBotFleetModal = lazyWithRetry(() => import('./components/AutonomousBotFleetModal'));
 const FoodOrderModal = lazyWithRetry(() => import('./components/FoodOrderModal'));
 const DarshanAdvisorModal = lazyWithRetry(() => import('./components/DarshanAdvisorModal'));
@@ -291,6 +292,7 @@ export default function App() {
   const [storeInventoryModalOpen, setStoreInventoryModalOpen] = useState(false);
   const [directorPortalOpen, setDirectorPortalOpen] = useState(false);
   const [revenueModalOpen, setRevenueModalOpen] = useState(false);
+  const [caFilingModalOpen, setCaFilingModalOpen] = useState(false);
   const [dynamicRates, setDynamicRates] = useState(() => calculateAllTierMicroRates({ occupancyRate: 68, daysToArrival: 3, pickupVelocity48h: 4 }));
 
   // Live Food Orders & KDS State shared across Front Desk & Cannon Kitchen POS
@@ -918,6 +920,7 @@ export default function App() {
         onOpenDirectorPortal={() => setDirectorPortalOpen(true)}
         onOpenRevenueManagement={() => setRevenueModalOpen(true)}
         onOpenD1Database={handleOpenD1Database}
+        onOpenCaFilingStation={() => setCaFilingModalOpen(true)}
         rooms={rooms}
         adminPinVerified={adminPinVerified}
         setAdminPinVerified={setAdminPinVerified}
@@ -988,6 +991,7 @@ export default function App() {
                 onOpenNightAuditModal={() => setNightAuditModalOpen(true)}
                 onOpenDirectorPortal={() => setDirectorPortalOpen(true)}
                 onOpenRevenueManagement={() => setRevenueModalOpen(true)}
+                onOpenCaFilingStation={() => setCaFilingModalOpen(true)}
                 foodOrders={foodOrders}
                 onUpdateOrderStatus={handleUpdateOrderStatus}
                 roomServices={roomServices}
@@ -1146,7 +1150,7 @@ export default function App() {
           <RevenueManagementModal 
             isOpen={revenueModalOpen}
             onClose={() => setRevenueModalOpen(false)}
-            currentOccupancy={Math.round((rooms.filter(r => r.status === 'Occupied').length / (rooms.length || 40)) * 100)}
+            currentOccupancy={Math.round((rooms.filter(r => r.status === 'Occupied').length / (rooms.length || 18)) * 100)}
             activeRates={dynamicRates}
           onPublishRates={(newRates) => {
             setDynamicRates(newRates);
@@ -1186,6 +1190,14 @@ export default function App() {
           isOpen={dataRightsModalOpen}
           onClose={() => setDataRightsModalOpen(false)}
         />
+
+        {/* System #36: CA Filing Station & Financial Intelligence Engine Modal */}
+        {caFilingModalOpen && (
+          <CaFilingStationModal 
+            isOpen={caFilingModalOpen}
+            onClose={() => setCaFilingModalOpen(false)}
+          />
+        )}
       </Suspense>
 
       <Footer 
@@ -1229,6 +1241,11 @@ export default function App() {
             title: "Accounts Day Book",
             icon: <Scale className="h-5 w-5" />,
             onClick: () => handleOpenAccountsWithTab('reconciliation-audit')
+          },
+          {
+            title: "System #36: CA Filing Station",
+            icon: <Scale className="h-5 w-5 text-amber-300" />,
+            onClick: () => setCaFilingModalOpen(true)
           },
           {
             title: "Cannon Kitchen POS",

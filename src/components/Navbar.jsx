@@ -23,6 +23,7 @@ export default function Navbar({
   onOpenDirectorPortal,
   onOpenRevenueManagement,
   onOpenD1Database,
+  onOpenCaFilingStation,
   cartCount = 0,
   rooms = [],
   adminPinVerified,
@@ -302,6 +303,27 @@ export default function Navbar({
             }}
           >
             📊 Accounts Day Book & B2B GST
+          </button>
+
+          <button
+            onClick={onOpenCaFilingStation}
+            style={{
+              padding: '0.3rem 0.75rem',
+              borderRadius: '6px',
+              background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.28), rgba(245, 158, 11, 0.18))',
+              border: '1.5px solid var(--gold-primary)',
+              color: 'var(--gold-glow)',
+              cursor: 'pointer',
+              fontWeight: 800,
+              fontSize: '0.78rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              boxShadow: '0 0 12px rgba(212, 175, 55, 0.25)'
+            }}
+            title="Open System #36: CA Filing Station & Financial Intelligence Engine (10 Modules)"
+          >
+            <Scale size={13} color="var(--gold-glow)" /> 🏛️ System #36: CA Filing Station
           </button>
 
           <button
