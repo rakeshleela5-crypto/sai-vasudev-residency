@@ -11,7 +11,7 @@ Whenever any changes, bug fixes, UI updates, schema modifications, or features a
 2. **Cloudflare Pages Production Build & Deploy**:
    - Run the production build: `npm run build`.
    - Deploy immediately to Cloudflare Pages:
-     `npx wrangler pages deploy dist --project-name hotel-sai-international --branch main`
+     `npx wrangler pages deploy dist --project-name sai-vasudev-residency --branch main`
 
 3. **Cloudflare D1 Remote Database Sync**:
    - If SQL migrations, table definitions, or seed scripts are altered or added, apply them directly to the remote Cloudflare D1 database:
