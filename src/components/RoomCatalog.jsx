@@ -9,7 +9,7 @@ import { calculateRoomTax } from '../utils/taxUtils';
 import { CardSpotlight } from '@/components/ui/card-spotlight';
 import { BentoGrid, BentoCard } from '@/components/ui/bento-grid';
 
-export default function RoomCatalog({ onSelectTier, onOpen3DExplorer, rooms = [], dynamicRates = null }) {
+export default function RoomCatalog({ onSelectTier, onOpen3DExplorer, onOpenVirtualTour, rooms = [], dynamicRates = null }) {
   const [selectedFloorFilter, setSelectedFloorFilter] = useState('all');
   const [pillStyle, setPillStyle] = useState({ left: 0, width: 0, opacity: 0 });
   const tabsContainerRef = useRef(null);
@@ -314,6 +314,27 @@ export default function RoomCatalog({ onSelectTier, onOpen3DExplorer, rooms = []
                       >
                         <Layers size={16} />
                       </button>
+                      {onOpenVirtualTour && (
+                        <button 
+                          onClick={() => {
+                            const tierRoom = rooms.find(r => r.tier === tier.name);
+                            const sceneId = tierRoom ? `room-${tierRoom.roomNumber}` : (tier.floor === 2 ? 'room-201' : 'room-101');
+                            onOpenVirtualTour(sceneId);
+                          }}
+                          className="btn-outline-gold"
+                          style={{ 
+                            padding: '0.75rem',
+                            borderColor: 'rgba(245, 158, 11, 0.5)',
+                            background: 'rgba(217, 119, 6, 0.15)',
+                            transition: 'transform 0.15s ease'
+                          }}
+                          onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
+                          onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                          title={`View ${tier.name} in 360° Virtual Tour`}
+                        >
+                          <Compass size={16} color="#f59e0b" />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

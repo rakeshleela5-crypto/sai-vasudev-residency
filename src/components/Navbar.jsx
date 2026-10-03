@@ -10,6 +10,7 @@ export default function Navbar({
   currentView,
   setCurrentView,
   onOpen3DExplorer,
+  onOpenVirtualTour,
   onOpenDining,
   onOpenDarshan,
   onOpenAiConcierge,
@@ -568,6 +569,25 @@ export default function Navbar({
             </button>
 
             <button 
+              onClick={onOpenVirtualTour}
+              style={{
+                color: '#fef08a',
+                fontSize: '0.9rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                background: 'linear-gradient(135deg, rgba(217, 119, 6, 0.25), rgba(245, 158, 11, 0.15))',
+                border: '1px solid rgba(245, 158, 11, 0.4)',
+                padding: '0.45rem 0.85rem',
+                borderRadius: '8px',
+                boxShadow: '0 0 12px rgba(245, 158, 11, 0.2)'
+              }}
+              title="Experience 360° Panoramic Virtual Tour"
+            >
+              <Compass size={15} color="#f59e0b" /> 360° Tour
+            </button>
+
+            <button 
               onClick={onOpenCannonKitchenPOS}
               style={{
                 color: 'var(--text-primary)',
@@ -730,6 +750,9 @@ export default function Navbar({
             </button>
             <button onClick={() => { onOpen3DExplorer(); setMobileMenuOpen(false); }} style={{ textAlign: 'left', color: '#38bdf8', padding: '0.4rem 0' }}>
               🏛️ 3D Multi-Floor Explorer
+            </button>
+            <button onClick={() => { onOpenVirtualTour?.(); setMobileMenuOpen(false); }} style={{ textAlign: 'left', color: '#f59e0b', padding: '0.4rem 0', fontWeight: 600 }}>
+              🌐 360° Panoramic Virtual Tour
             </button>
             <button onClick={() => { onOpenCannonKitchenPOS(); setMobileMenuOpen(false); }} style={{ textAlign: 'left', color: '#34d399', padding: '0.4rem 0' }}>
               🍳 Fenugreek Restaurant Multi-Outlet POS

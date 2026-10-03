@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sri Sai Vasudev Residency – 360° Campus Street View Tour</title>
+  <meta name="description" content="Explore Sri Sai Vasudev Residency in 360° interactive Google Street View style. Rayagada, Odisha.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <!-- Inter Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Three.js (r105 compatible with Panolens) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
+  <!-- Panolens.js 0.12.1 -->
+  <script src="https://cdn.jsdelivr.net/npm/panolens@0.12.1/build/panolens.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #030712;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #ffffff;
+    }
+    #viewer-container {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    /* Glass UI Elements */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Top Header */
+    .top-header {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      pointer-events: none;
+    }
+    .header-card {
+      pointer-events: auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-badge {
+      display: inline-block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+    .scene-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 2px;
+    }
+    .scene-subtitle {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .header-actions {
+      pointer-events: auto;
+      display: flex;
+      gap: 8px;
+    }
+    .btn-action {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e2e8f0;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-action:hover {
+      background: rgba(30, 41, 59, 0.95);
+      border-color: #38bdf8;
+      color: #38bdf8;
+      transform: translateY(-1px);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: #030712;
+      border: none;
+      font-weight: 700;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #b45309, #d97706);
+      color: #ffffff;
+    }
+
+    /* Bottom Track Progress Nav */
+    .bottom-nav {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      max-width: 900px;
+      width: calc(100% - 32px);
+      padding: 12px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .nav-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .step-indicator {
+      font-size: 12px;
+      font-weight: 600;
+      color: #38bdf8;
+    }
+    .step-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .step-dot {
+      width: 28px;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+    }
+    .step-dot.active {
+      background: #f59e0b;
+      width: 44px;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
+    }
+    .step-dot:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Navigation Arrows */
+    .nav-arrow-btn {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-arrow-btn:hover:not(:disabled) {
+      background: #38bdf8;
+      color: #030712;
+      border-color: #38bdf8;
+    }
+    .nav-arrow-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* Custom Toast */
+    #tour-toast {
+      position: absolute;
+      top: 85px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fef08a;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      z-index: 200;
+      display: none;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Loading overlay */
+    #loading-screen {
+      position: absolute;
+      inset: 0;
+      background: #030712;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 999;
+      transition: opacity 0.5s ease;
+    }
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid rgba(245, 158, 11, 0.2);
+      border-top-color: #f59e0b;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Three.js & Panolens Viewport Container -->
+  <div id="viewer-container"></div>
+
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="spinner"></div>
+    <div style="font-weight: 700; font-size: 18px; letter-spacing: -0.5px;">Sri Sai Vasudev Residency</div>
+    <div style="font-size: 13px; color: #94a3b8;">Initializing Panolens 360° Street View Engine...</div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="tour-toast"></div>
+
+  <!-- Top Glass Header -->
+  <div class="top-header">
+    <div class="header-card glass-panel">
+      <div>
+        <span class="brand-badge">Panolens.js • 11-Step Campus Track</span>
+        <div id="scene-title" class="scene-title">New Colony Main Road Junction</div>
+        <div id="scene-desc" class="scene-subtitle">Rayagada Arterial Approach • 1.5 km from Railway Station</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <a href="/" class="btn-action">
+        ← Return to Hotel
+      </a>
+      <button id="btn-autorotate" class="btn-action" onclick="toggleAutoRotate()">
+        ⟳ Auto-Spin
+      </button>
+      <a href="/#rooms" class="btn-action btn-primary">
+        Book Room
+      </a>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation Deck -->
+  <div class="bottom-nav glass-panel">
+    <div class="nav-controls-row">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button id="btn-prev" class="nav-arrow-btn" onclick="prevStep()">‹</button>
+        <span id="step-counter" class="step-indicator">Step 1 of 11</span>
+        <button id="btn-next" class="nav-arrow-btn" onclick="nextStep()">›</button>
+      </div>
+      <div style="font-size: 11px; color: #94a3b8; display: flex; align-items: center; gap: 6px;">
+        <span>Drag to look around</span> • <span>Scroll to zoom</span>
+      </div>
+    </div>
+
+    <!-- Step Progress Dots -->
+    <div id="step-dots-container" class="step-dots"></div>
+  </div>
+
+  <script>
+    // 11-Step Linear Street View Campus Track
+    const TRACK = [
+      {
+        step: 1,
+        title: "New Colony Main Road Junction",
+        subtitle: "Rayagada Arterial Approach (1.5 km to Station)",
+        url: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2400&q=85"
+      },
+      {
+        step: 2,
+        title: "Andhra Bank Landmark & Gateway",
+        subtitle: "Key landmark on New Colony main street",
+        url: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=2400&q=85"
+      },
+      {
+        step: 3,
+        title: "Sri Sai Vasudev Residency Grand Arch",
+        subtitle: "Primary Property Gateway & Gatehouse",
+        url: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=2400&q=85"
+      },
+      {
+        step: 4,
+        title: "Front Portico & Valet Arrival Area",
+        subtitle: "Covered car porch & 24/7 luggage desk",
+        url: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=2400&q=85"
+      },
+      {
+        step: 5,
+        title: "Glass Foyer & Security Check",
+        subtitle: "Air-conditioned entrance threshold",
+        url: "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=2400&q=85"
+      },
+      {
+        step: 6,
+        title: "Grand Reception & Pilgrim Welcome Desk",
+        subtitle: "Ground Floor Italian marble check-in lounge",
+        url: "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=2400&q=85"
+      },
+      {
+        step: 7,
+        title: "Ground Floor Executive Corridor",
+        subtitle: "Accessing Rooms 101 - 107",
+        url: "https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?auto=format&fit=crop&w=2400&q=85"
+      },
+      {
+        step: 8,
+        title: "Marble Staircase & Elevator Lobby",
+        subtitle: "High-speed guest lift & illuminated staircase",
+        url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85"
+      },
+      {
+        step: 9,
+        title: "First Floor Sky Gallery & Atrium",
+        subtitle: "Accessing Rooms 201 - 211 & Premium Suites",
+        url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2400&q=85"
+      },
+      {
+        step: 10,
+        title: "Satvik Multi-Cuisine Dining Hall",
+        subtitle: "Pure vegetarian Odia thali & Mahaprasad hall",
+        url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=2400&q=85"
+      },
+      {
+        step: 11,
+        title: "Rooftop Terrace & Temple Vista",
+        subtitle: "Maa Majhighariani sacred hill viewpoint",
+        url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2400&q=85"
+      }
+    ];
+
+    let currentStepIndex = 0;
+    let viewer = null;
+    let panoramas = [];
+    let isAutoRotating = false;
+
+    function initViewer() {
+      const container = document.getElementById('viewer-container');
+
+      // Initialize Panolens Viewer
+      viewer = new PANOLENS.Viewer({
+        container: container,
+        autoRotate: true,
+        autoRotateSpeed: 0.5,
+        autoRotateActivationDuration: 4000,
+        controlBar: true,
+        cameraFov: 75
+      });
+      isAutoRotating = true;
+
+      // Create Panolens Image Panoramas
+      panoramas = TRACK.map((stepData, idx) => {
+        const pano = new PANOLENS.ImagePanorama(stepData.url);
+        
+        // Link to next step hotspot if not last
+        if (idx < TRACK.length - 1) {
+          const nextInfospot = new PANOLENS.Infospot(350, PANOLENS.DataImage.Arrow);
+          nextInfospot.position.set(0, -100, -2500);
+          nextInfospot.addHoverText(`Advance: ${TRACK[idx + 1].title}`);
+          nextInfospot.addEventListener('click', () => {
+            goToStep(idx + 1);
+          });
+          pano.add(nextInfospot);
+        }
+
+        // Link to prev step hotspot if not first
+        if (idx > 0) {
+          const prevInfospot = new PANOLENS.Infospot(300, PANOLENS.DataImage.Arrow);
+          prevInfospot.position.set(0, -100, 2500);
+          prevInfospot.addHoverText(`Back: ${TRACK[idx - 1].title}`);
+          prevInfospot.addEventListener('click', () => {
+            goToStep(idx - 1);
+          });
+          pano.add(prevInfospot);
+        }
+
+        viewer.add(pano);
+        return pano;
+      });
+
+      // Render Dots
+      renderStepDots();
+
+      // Load initial panorama
+      viewer.setPanorama(panoramas[0]);
+      updateStepUI(0);
+
+      // Hide loading screen
+      setTimeout(() => {
+        const loader = document.getElementById('loading-screen');
+        if (loader) {
+          loader.style.opacity = '0';
+          setTimeout(() => loader.style.display = 'none', 500);
+        }
+      }, 800);
+    }
+
+    function renderStepDots() {
+      const container = document.getElementById('step-dots-container');
+      container.innerHTML = '';
+      TRACK.forEach((item, index) => {
+        const dot = document.createElement('div');
+        dot.className = `step-dot ${index === currentStepIndex ? 'active' : ''}`;
+        dot.title = `Step ${item.step}: ${item.title}`;
+        dot.onclick = () => goToStep(index);
+        container.appendChild(dot);
+      });
+    }
+
+    function updateStepUI(index) {
+      currentStepIndex = index;
+      const step = TRACK[index];
+
+      document.getElementById('scene-title').textContent = `Step ${step.step}: ${step.title}`;
+      document.getElementById('scene-desc').textContent = step.subtitle;
+      document.getElementById('step-counter').textContent = `Step ${step.step} of ${TRACK.length}`;
+
+      document.getElementById('btn-prev').disabled = index === 0;
+      document.getElementById('btn-next').disabled = index === TRACK.length - 1;
+
+      // Update dots
+      const dots = document.querySelectorAll('.step-dot');
+      dots.forEach((d, idx) => {
+        d.classList.toggle('active', idx === index);
+      });
+    }
+
+    function goToStep(index) {
+      if (index < 0 || index >= TRACK.length || !viewer || !panoramas[index]) return;
+      viewer.setPanorama(panoramas[index]);
+      updateStepUI(index);
+      showToast(`Navigated to: ${TRACK[index].title}`);
+    }
+
+    function nextStep() {
+      if (currentStepIndex < TRACK.length - 1) {
+        goToStep(currentStepIndex + 1);
+      }
+    }
+
+    function prevStep() {
+      if (currentStepIndex > 0) {
+        goToStep(currentStepIndex - 1);
+      }
+    }
+
+    function toggleAutoRotate() {
+      isAutoRotating = !isAutoRotating;
+      if (viewer && viewer.OrbitControls) {
+        viewer.OrbitControls.autoRotate = isAutoRotating;
+      }
+      showToast(isAutoRotating ? 'Auto-rotation active' : 'Auto-rotation paused');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('tour-toast');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 2500);
+    }
+
+    // Launch
+    window.addEventListener('DOMContentLoaded', () => {
+      // Check if Panolens & Three are loaded
+      if (typeof THREE !== 'undefined' && typeof PANOLENS !== 'undefined') {
+        initViewer();
+      } else {
+        console.error('Three.js or Panolens failed to load from CDN.');
+        document.getElementById('loading-screen').innerHTML = `
+          <div style="color: #ef4444; font-weight: bold; text-align: center; padding: 20px;">
+            Failed to load Panolens 360 library.<br>
+            <a href="/" style="color: #38bdf8; margin-top: 12px; display: inline-block;">Return to Main Website</a>
+          </div>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

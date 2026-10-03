@@ -13,6 +13,7 @@ export default function Hero({
   rooms = [],
   onOpenBooking,
   onOpen3DExplorer,
+  onOpenVirtualTour,
   onOpenAiConcierge,
   searchDates,
   setSearchDates
@@ -370,6 +371,21 @@ export default function Hero({
               >
                 <Layers size={18} />
               </button>
+              {onOpenVirtualTour && (
+                <button 
+                  onClick={onOpenVirtualTour}
+                  className="btn-outline-gold"
+                  style={{ 
+                    padding: '0.75rem', 
+                    justifyContent: 'center', 
+                    background: 'rgba(217, 119, 6, 0.15)',
+                    borderColor: 'rgba(245, 158, 11, 0.4)'
+                  }}
+                  title="Explore 360° Virtual Tour"
+                >
+                  <Compass size={18} color="#f59e0b" />
+                </button>
+              )}
             </div>
           </div>
         </div>

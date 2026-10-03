@@ -29,6 +29,7 @@ const lazyWithRetry = (componentImport) => {
 import ErrorBoundary from './components/ErrorBoundary';
 
 const FloorExplorer3DModal = lazyWithRetry(() => import('./components/FloorExplorer3DModal'));
+const VirtualTour360Modal = lazyWithRetry(() => import('./components/VirtualTour360Modal'));
 const BookingModal = lazyWithRetry(() => import('./components/BookingModal'));
 const BookingReceiptModal = lazyWithRetry(() => import('./components/BookingReceiptModal'));
 const ReceptionAdmin = lazyWithRetry(() => import('./components/ReceptionAdmin'));
@@ -262,6 +263,13 @@ export default function App() {
   const [currentReceiptBooking, setCurrentReceiptBooking] = useState(null);
 
   const [floorExplorerOpen, setFloorExplorerOpen] = useState(false);
+  const [virtualTourOpen, setVirtualTourOpen] = useState(false);
+  const [virtualTourSceneId, setVirtualTourSceneId] = useState('entrance-gate');
+
+  const handleOpenVirtualTour = (sceneId = 'entrance-gate') => {
+    setVirtualTourSceneId(sceneId);
+    setVirtualTourOpen(true);
+  };
   const [diningModalOpen, setDiningModalOpen] = useState(false);
   const [selectedFoodItem, setSelectedFoodItem] = useState(null);
   const [darshanModalOpen, setDarshanModalOpen] = useState(false);
@@ -907,6 +915,7 @@ export default function App() {
         currentView={currentView}
         setCurrentView={setCurrentView}
         onOpen3DExplorer={() => setFloorExplorerOpen(true)}
+        onOpenVirtualTour={() => handleOpenVirtualTour('entrance-gate')}
         onOpenDining={() => setDiningModalOpen(true)}
         onOpenDarshan={() => setDarshanModalOpen(true)}
         onOpenAiConcierge={() => setAiConciergeOpen(true)}
@@ -936,6 +945,7 @@ export default function App() {
               rooms={rooms}
               onOpenBooking={handleOpenBooking}
               onOpen3DExplorer={() => setFloorExplorerOpen(true)}
+              onOpenVirtualTour={() => handleOpenVirtualTour('entrance-gate')}
               onOpenAiConcierge={() => setAiConciergeOpen(true)}
               searchDates={searchDates}
               setSearchDates={setSearchDates}
@@ -947,6 +957,7 @@ export default function App() {
                 dynamicRates={dynamicRates}
                 onSelectTier={handleOpenBooking}
                 onOpen3DExplorer={() => setFloorExplorerOpen(true)}
+                onOpenVirtualTour={handleOpenVirtualTour}
               />
             </div>
 
@@ -1010,6 +1021,15 @@ export default function App() {
           isOpen={floorExplorerOpen}
           onClose={() => setFloorExplorerOpen(false)}
           rooms={rooms}
+          onBookRoom={(tier, roomNumber) => handleOpenBooking(tier, roomNumber)}
+          onOpen360Tour={(sceneId) => handleOpenVirtualTour(sceneId)}
+        />
+
+        <VirtualTour360Modal 
+          isOpen={virtualTourOpen}
+          onClose={() => setVirtualTourOpen(false)}
+          initialSceneId={virtualTourSceneId}
+          onOpen3DExplorer={() => setFloorExplorerOpen(true)}
           onBookRoom={(tier, roomNumber) => handleOpenBooking(tier, roomNumber)}
         />
 
@@ -1231,6 +1251,11 @@ export default function App() {
             title: "3D Isometric Tour",
             icon: <Layers className="h-5 w-5" />,
             onClick: () => setFloorExplorerOpen(true)
+          },
+          {
+            title: "360° Virtual Tour",
+            icon: <Compass className="h-5 w-5 text-amber-400" />,
+            onClick: () => handleOpenVirtualTour('entrance-gate')
           },
           {
             title: "Tally Prime ERP",

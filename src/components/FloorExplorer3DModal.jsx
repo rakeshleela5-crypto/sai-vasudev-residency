@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { ROOM_TIERS } from '../data/hotelData';
 
-export default function FloorExplorer3DModal({ isOpen, onClose, rooms = [], onBookRoom }) {
+export default function FloorExplorer3DModal({ isOpen, onClose, rooms = [], onBookRoom, onOpen360Tour }) {
   const mountRef = useRef(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [activeFloorView, setActiveFloorView] = useState('all'); // 'all', 1, 2, 3, 4
@@ -313,6 +313,29 @@ export default function FloorExplorer3DModal({ isOpen, onClose, rooms = [], onBo
               ))}
             </div>
 
+            {onOpen360Tour && (
+              <button 
+                onClick={() => {
+                  onClose();
+                  onOpen360Tour(selectedRoom ? `room-${selectedRoom.roomNumber}` : 'grand-lobby');
+                }}
+                className="btn-outline-gold"
+                style={{
+                  padding: '0.35rem 0.75rem',
+                  fontSize: '0.75rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  borderColor: '#38bdf8',
+                  color: '#38bdf8',
+                  background: 'rgba(56, 189, 248, 0.1)'
+                }}
+                title="Launch Immersive 360° Virtual Tour"
+              >
+                <Eye size={14} /> 360° Tour
+              </button>
+            )}
+
             <button onClick={onClose} className="modal-close-btn">
               <X size={20} />
             </button>
@@ -468,6 +491,27 @@ export default function FloorExplorer3DModal({ isOpen, onClose, rooms = [], onBo
                   }}>
                     Currently unavailable for online instant reservation.
                   </div>
+                )}
+                {onOpen360Tour && (
+                  <button 
+                    onClick={() => {
+                      onOpen360Tour(`room-${selectedRoom.roomNumber}`);
+                      onClose();
+                    }}
+                    className="btn-outline-gold"
+                    style={{ 
+                      justifyContent: 'center', 
+                      fontSize: '0.85rem',
+                      borderColor: '#38bdf8',
+                      color: '#38bdf8',
+                      background: 'rgba(56, 189, 248, 0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem'
+                    }}
+                  >
+                    <Eye size={16} /> View 360° Panorama
+                  </button>
                 )}
                 <button 
                   onClick={() => setSelectedRoom(null)}

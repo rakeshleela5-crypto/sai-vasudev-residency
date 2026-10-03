@@ -18,3 +18,4 @@ export { default as CorporatePortalModal } from '../../components/CorporatePorta
 export { default as CookieConsentBanner } from '../../components/CookieConsentBanner';
 export { default as DpdpDataRightsModal } from '../../components/DpdpDataRightsModal';
 export { default as LegalPoliciesModal } from '../../components/LegalPoliciesModal';
+export { VirtualTour360Modal } from '../../components/VirtualTour360Modal';
