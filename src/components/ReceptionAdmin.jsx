@@ -23,6 +23,7 @@ import LinenRoomAssetsSection from './LinenRoomAssetsSection';
 import StaffPayrollSection from './StaffPayrollSection';
 import TodayActivity from './TodayActivity';
 import CheckInReviewModal from './CheckInReviewModal';
+import { sendHousekeepingOrderWhatsApp, sendMaintenanceTicketWhatsApp } from '../utils/whatsappDispatch';
 import StayDurationAnalytics from './StayDurationAnalytics';
 import OperationsSettingsTab from './OperationsSettingsTab';
 import D1LiveDatabaseExplorer from './D1LiveDatabaseExplorer';
@@ -5421,6 +5422,26 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
                   <Printer size={14} color="var(--gold-glow)" /> Print Housekeeping Work Order
                 </button>
                 <button
+                  type="button"
+                  onClick={() => {
+                    const dirtyRoomsList = rooms.filter(r => r.status === 'Vacant Dirty' || r.status === 'Cleaning');
+                    const dirtyRoomNums = dirtyRoomsList.map(r => r.roomNumber).join(', ') || 'All 18 Rooms Clean';
+                    sendHousekeepingOrderWhatsApp({
+                      roomNumber: dirtyRoomNums,
+                      floor: '18-Room Inventory',
+                      roomStatus: `${dirtyRoomsList.length} Rooms Requiring Turnover`,
+                      priority: dirtyRoomsList.length > 2 ? 'High' : 'Standard',
+                      notes: `Current Dirty/Cleaning Rooms: ${dirtyRoomNums}. Please complete turnover & sanitization.`
+                    });
+                    showToast('✓ Housekeeping Turnover Order sent to Floor Lead WhatsApp!');
+                  }}
+                  className="btn-outline-gold"
+                  style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', borderColor: '#22c55e', color: '#4ade80' }}
+                  title="Dispatch 18-Room Turnover Work Order to Housekeeping Lead on WhatsApp"
+                >
+                  <MessageCircle size={14} color="#4ade80" /> WhatsApp Floor Lead
+                </button>
+                <button
                   onClick={() => {
                     setWorkOrderForm({
                       roomNumber: '202',
@@ -5894,23 +5915,54 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
                         </span>
                       </td>
                       <td style={{ textAlign: 'center' }}>
-                        {wo.status !== 'Resolved' ? (
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '4px', alignItems: 'center' }}>
                           <button
-                            onClick={() => handleResolveWorkOrder(wo.id, wo.roomNumber)}
-                            className="btn-outline-gold"
+                            type="button"
+                            onClick={() => {
+                              sendMaintenanceTicketWhatsApp({
+                                roomNumber: wo.roomNumber,
+                                issue: wo.issue,
+                                severity: wo.priority,
+                                technicianName: wo.technician,
+                                targetEta: '30 Mins'
+                              });
+                              showToast(`✓ Defect details sent to ${wo.technician} on WhatsApp!`);
+                            }}
                             style={{
-                              padding: '0.3rem 0.6rem',
+                              padding: '0.3rem 0.5rem',
                               borderRadius: '4px',
                               fontSize: '0.72rem',
                               fontWeight: 700,
-                              cursor: 'pointer'
+                              background: 'rgba(37, 211, 102, 0.15)',
+                              border: '1px solid #25D366',
+                              color: '#34d399',
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '2px'
                             }}
+                            title="Dispatch defect work order to assigned technician on WhatsApp"
                           >
-                            ✓ Resolve
+                            <MessageCircle size={12} /> Tech
                           </button>
-                        ) : (
-                          <span style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Closed</span>
-                        )}
+                          {wo.status !== 'Resolved' ? (
+                            <button
+                              onClick={() => handleResolveWorkOrder(wo.id, wo.roomNumber)}
+                              className="btn-outline-gold"
+                              style={{
+                                padding: '0.3rem 0.6rem',
+                                borderRadius: '4px',
+                                fontSize: '0.72rem',
+                                fontWeight: 700,
+                                cursor: 'pointer'
+                              }}
+                            >
+                              ✓ Resolve
+                            </button>
+                          ) : (
+                            <span style={{ color: '#94a3b8', fontSize: '0.72rem' }}>Closed</span>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}

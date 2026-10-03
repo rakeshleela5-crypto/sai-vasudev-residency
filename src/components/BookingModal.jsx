@@ -4,13 +4,14 @@ import confetti from 'canvas-confetti';
 import { 
   X, Calendar, Users, Shield, QrCode, CreditCard, 
   Building2, CheckCircle2, AlertCircle, Sparkles, MapPin, Lock,
-  BedDouble, UtensilsCrossed, Clock, Car, Plus, Check, Percent
+  BedDouble, UtensilsCrossed, Clock, Car, Plus, Check, Percent, MessageCircle
 } from 'lucide-react';
 import { HOTEL_CONFIG, ROOM_TIERS, CORPORATE_PARTNERS } from '../data/hotelData';
 import { calculateRoomTax } from '../utils/taxUtils';
 import { maskAadhaar, hasDateCollision } from '../utils/security';
 import BookingCalendar from '@/components/ui/v-calendar-15';
 import { AnimatedStepper } from '@/components/ui/animated-stepper';
+import { sendBookingConfirmationWhatsApp } from '../utils/whatsappDispatch';
 
 export const AVAILABLE_ADDONS = [
   {
@@ -285,6 +286,15 @@ export default function BookingModal({
           origin: { y: 0.6 }
         });
       } catch (cErr) {}
+
+      // Auto-dispatch booking confirmation via WhatsApp
+      if (finalPayload.guestPhone) {
+        try {
+          sendBookingConfirmationWhatsApp(finalPayload);
+        } catch (waErr) {
+          console.warn('WhatsApp booking dispatch error:', waErr);
+        }
+      }
 
       onBookingSuccess(finalPayload);
       onClose();
@@ -983,7 +993,7 @@ export default function BookingModal({
                 borderRadius: '6px',
                 fontSize: '0.75rem',
                 color: '#94a3b8',
-                marginBottom: '1rem',
+                marginBottom: '0.6rem',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.5rem'
@@ -992,6 +1002,23 @@ export default function BookingModal({
                 <span>
                   <strong>Age & ID Requirement:</strong> Primary guest must be 18+ years with valid original government photo ID at check-in (Sarai Act 1867).
                 </span>
+              </div>
+
+              {/* Instant WhatsApp Dispatch Indicator */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                background: 'rgba(37, 211, 102, 0.1)',
+                border: '1px solid rgba(37, 211, 102, 0.3)',
+                borderRadius: '6px',
+                padding: '0.5rem 0.75rem',
+                fontSize: '0.75rem',
+                color: '#4ade80',
+                marginBottom: '1rem'
+              }}>
+                <MessageCircle size={15} style={{ flexShrink: 0 }} />
+                <span>Instant WhatsApp booking confirmation pass &amp; Google Maps pin will open automatically upon booking.</span>
               </div>
 
               {/* Submit Buttons */}

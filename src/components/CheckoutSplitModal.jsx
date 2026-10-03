@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { 
   X, Check, DollarSign, CreditCard, Smartphone, Building2, 
   Receipt, AlertCircle, CheckCircle2, ArrowRight, Printer,
-  Sparkles, Clock, User, BedDouble, Utensils, ShieldCheck
+  Sparkles, Clock, User, BedDouble, Utensils, ShieldCheck, MessageCircle
 } from 'lucide-react';
 import { HOTEL_CONFIG } from '../data/hotelData';
+import { sendCheckoutSplitWhatsApp } from '../utils/whatsappDispatch';
 
 export default function CheckoutSplitModal({
   isOpen,
@@ -383,6 +384,22 @@ export default function CheckoutSplitModal({
                   >
                     <Printer size={15} /> Print Room Bill A
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => sendCheckoutSplitWhatsApp({
+                      billType: 'Corporate Lodging Bill A',
+                      billNo: `${matchedBooking.billNo || 'FMBIL2627'}-R`,
+                      companyOrGuest: btcCompany || 'Corporate Client',
+                      gstin: '33AAACA0779M1ZT',
+                      roomNumber: room.roomNumber,
+                      period: '3 Nights Stay',
+                      amount: (billTotal > 1500 ? billTotal - 962 : billTotal)
+                    })}
+                    style={{ flex: 1.1, padding: '0.5rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', background: 'rgba(56, 189, 248, 0.15)', borderColor: '#38bdf8', color: '#38bdf8', border: '1px solid #38bdf8', borderRadius: '6px', cursor: 'pointer', fontWeight: 600 }}
+                    title="Send official room lodging tax invoice to Corporate Accounts on WhatsApp"
+                  >
+                    <MessageCircle size={14} /> WhatsApp Bill A
+                  </button>
                 </div>
               </div>
 
@@ -447,6 +464,23 @@ export default function CheckoutSplitModal({
                     style={{ flex: 1, padding: '0.5rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', borderColor: '#34d399', color: '#34d399' }}
                   >
                     <Printer size={15} /> Print Food Bill B
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => sendCheckoutSplitWhatsApp({
+                      billType: 'Fenugreek Restaurant Food Bill B',
+                      billNo: `${matchedBooking.billNo || 'FMBIL2627'}-F`,
+                      companyOrGuest: room.currentGuestName || matchedBooking.guestName,
+                      gstin: '',
+                      roomNumber: room.roomNumber,
+                      period: 'Dining Settlement',
+                      amount: 962.00,
+                      recipientPhone: matchedBooking.guestPhone || room.guestPhone
+                    })}
+                    style={{ flex: 1.1, padding: '0.5rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.35rem', background: 'rgba(52, 211, 153, 0.15)', borderColor: '#34d399', color: '#34d399', border: '1px solid #34d399', borderRadius: '6px', cursor: 'pointer', fontWeight: 600 }}
+                    title="Send personal restaurant & room dining bill to Guest mobile on WhatsApp"
+                  >
+                    <MessageCircle size={14} /> WhatsApp Bill B
                   </button>
                 </div>
               </div>

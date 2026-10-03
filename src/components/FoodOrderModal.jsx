@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, ShoppingBag, Plus, Minus, Trash2, CheckCircle2, Utensils, AlertCircle } from 'lucide-react';
+import { X, ShoppingBag, Plus, Minus, Trash2, CheckCircle2, Utensils, AlertCircle, MessageCircle } from 'lucide-react';
 import { RESTAURANT_MENU, HOTEL_CONFIG } from '../data/hotelData';
 import { playSuccessChime } from '../utils/soundAlert';
+import { sendRoomServiceOrderWhatsApp } from '../utils/whatsappDispatch';
 
 export default function FoodOrderModal({ isOpen, onClose, initialItem = null, rooms = [], onBillToRoom }) {
   const [cart, setCart] = useState(initialItem ? [{ ...initialItem, qty: 1 }] : []);
@@ -10,6 +11,7 @@ export default function FoodOrderModal({ isOpen, onClose, initialItem = null, ro
   const [billingMode, setBillingMode] = useState('Bill to Room Folio');
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [lastPlacedOrder, setLastPlacedOrder] = useState(null);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -91,12 +93,30 @@ export default function FoodOrderModal({ isOpen, onClose, initialItem = null, ro
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'place_food_order', payload })
-        });
+        }).catch(() => {});
       }
+      const orderSummary = {
+        orderId: kotId,
+        roomNumber,
+        guestName,
+        items: cart,
+        totalAmount: total,
+        notes: `Billing: ${billingMode}. Satvik pure vegetarian kitchen preparation.`
+      };
+      setLastPlacedOrder(orderSummary);
       playSuccessChime();
       setOrderSubmitted(true);
     } catch (err) {
       console.warn("Order sync note:", err);
+      const fallbackOrder = {
+        orderId: kotId,
+        roomNumber,
+        guestName,
+        items: cart,
+        totalAmount: total,
+        notes: `Billing: ${billingMode}. Satvik pure vegetarian preparation.`
+      };
+      setLastPlacedOrder(fallbackOrder);
       playSuccessChime();
       setOrderSubmitted(true);
     } finally {
@@ -111,7 +131,7 @@ export default function FoodOrderModal({ isOpen, onClose, initialItem = null, ro
         <div className="modal-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Utensils size={20} color="var(--gold-glow)" />
-            <h3 style={{ fontSize: '1.2rem' }}>In-Room Odia & Satvik Dining Tray</h3>
+            <h3 style={{ fontSize: '1.2rem' }}>In-Room Odia &amp; Satvik Dining Tray</h3>
           </div>
           <button onClick={onClose} className="modal-close-btn">
             <X size={20} />
@@ -125,9 +145,63 @@ export default function FoodOrderModal({ isOpen, onClose, initialItem = null, ro
               <h3 style={{ fontSize: '1.4rem', color: '#fff', marginBottom: '0.5rem' }}>
                 Order Dispatched to Kitchen!
               </h3>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1.25rem', lineHeight: 1.5 }}>
                 Your order for <strong>Room {roomNumber}</strong> has been transmitted to our Satvik kitchen. Delivery estimate: 20-25 minutes.
               </p>
+
+              {/* WhatsApp KOT & Slip Dispatch Bar */}
+              <div style={{ display: 'flex', gap: '0.6rem', justifyContent: 'center', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (lastPlacedOrder) {
+                      sendRoomServiceOrderWhatsApp(lastPlacedOrder, 'kitchen');
+                    }
+                  }}
+                  style={{
+                    padding: '0.55rem 1rem',
+                    background: '#16a34a',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    boxShadow: '0 2px 8px rgba(22, 163, 74, 0.3)'
+                  }}
+                  title="Dispatch Kitchen Order Ticket directly to Chef WhatsApp"
+                >
+                  <MessageCircle size={15} /> WhatsApp KOT to Chef
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (lastPlacedOrder) {
+                      sendRoomServiceOrderWhatsApp(lastPlacedOrder, 'guest');
+                    }
+                  }}
+                  style={{
+                    padding: '0.55rem 1rem',
+                    background: 'rgba(56, 189, 248, 0.15)',
+                    color: '#38bdf8',
+                    border: '1px solid #38bdf8',
+                    borderRadius: '6px',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem'
+                  }}
+                  title="Send itemized order slip to Guest WhatsApp"
+                >
+                  <MessageCircle size={15} /> WhatsApp Order Slip
+                </button>
+              </div>
+
               <button 
                 onClick={() => {
                   setOrderSubmitted(false);
@@ -135,7 +209,7 @@ export default function FoodOrderModal({ isOpen, onClose, initialItem = null, ro
                   onClose();
                 }} 
                 className="btn-primary-gold"
-                style={{ padding: '0.6rem 1.5rem' }}
+                style={{ padding: '0.6rem 1.8rem' }}
               >
                 Done
               </button>

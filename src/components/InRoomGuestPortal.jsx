@@ -3,9 +3,10 @@ import QRCode from 'qrcode';
 import { 
   Utensils, Bell, Wifi, Phone, Clock, CheckCircle2, 
   Sparkles, Coffee, Droplets, Bed, Wrench, ShieldCheck, 
-  Plus, Minus, ShoppingBag, X, Send, Search, Check, AlertCircle
+  Plus, Minus, ShoppingBag, X, Send, Search, Check, AlertCircle, MessageCircle
 } from 'lucide-react';
 import { RESTAURANT_MENU, HOTEL_CONFIG } from '../data/hotelData';
+import { sendInRoomConciergeWhatsApp } from '../utils/whatsappDispatch';
 
 export default function InRoomGuestPortal({
   roomNumber = '204',
@@ -252,25 +253,53 @@ export default function InRoomGuestPortal({
             </h1>
           </div>
 
-          <a
-            href="tel:+918895225555"
-            style={{
-              background: 'rgba(16, 185, 129, 0.15)',
-              border: '1px solid #10b981',
-              color: '#34d399',
-              padding: '0.45rem 0.75rem',
-              borderRadius: '8px',
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.35rem'
-            }}
-          >
-            <Phone size={13} />
-            <span>Ext 9</span>
-          </a>
+          <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+            <button
+              type="button"
+              onClick={() => sendInRoomConciergeWhatsApp({
+                roomNumber,
+                guestName: `Room ${roomNumber} Guest`,
+                serviceType: 'Front Desk Concierge',
+                details: 'Guest requested direct WhatsApp Concierge chat.'
+              })}
+              style={{
+                background: 'rgba(37, 211, 102, 0.15)',
+                border: '1px solid #25D366',
+                color: '#4ade80',
+                padding: '0.45rem 0.65rem',
+                borderRadius: '8px',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem'
+              }}
+              title="Chat directly with Front Desk on WhatsApp"
+            >
+              <MessageCircle size={14} />
+              <span>WhatsApp</span>
+            </button>
+            <a
+              href="tel:+917978043585"
+              style={{
+                background: 'rgba(16, 185, 129, 0.15)',
+                border: '1px solid #10b981',
+                color: '#34d399',
+                padding: '0.45rem 0.65rem',
+                borderRadius: '8px',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem'
+              }}
+            >
+              <Phone size={13} />
+              <span>Call Desk</span>
+            </a>
+          </div>
         </div>
 
         {/* 3 Core In-Room Tabs */}
@@ -756,22 +785,49 @@ export default function InRoomGuestPortal({
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => handleSendServiceRequest(srv.type, srv.desc)}
-                    style={{
-                      background: 'rgba(56, 189, 248, 0.15)',
-                      border: '1px solid #38bdf8',
-                      color: '#38bdf8',
-                      padding: '0.45rem 0.85rem',
-                      borderRadius: '8px',
-                      fontSize: '0.78rem',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap'
-                    }}
-                  >
-                    Request
-                  </button>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'flex-end' }}>
+                    <button
+                      onClick={() => handleSendServiceRequest(srv.type, srv.desc)}
+                      style={{
+                        background: 'rgba(56, 189, 248, 0.15)',
+                        border: '1px solid #38bdf8',
+                        color: '#38bdf8',
+                        padding: '0.4rem 0.75rem',
+                        borderRadius: '8px',
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      Request
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => sendInRoomConciergeWhatsApp({
+                        roomNumber,
+                        guestName: `Room ${roomNumber} Guest`,
+                        serviceType: srv.type,
+                        details: srv.desc
+                      })}
+                      style={{
+                        background: 'rgba(37, 211, 102, 0.15)',
+                        border: '1px solid #25D366',
+                        color: '#4ade80',
+                        padding: '0.2rem 0.5rem',
+                        borderRadius: '6px',
+                        fontSize: '0.68rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '3px'
+                      }}
+                      title="Send directly to Front Desk WhatsApp"
+                    >
+                      <MessageCircle size={11} /> WhatsApp
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

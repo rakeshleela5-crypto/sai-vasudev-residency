@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { 
   Building2, ShieldCheck, CheckCircle2, FileText, Phone, Mail, 
   Printer, Copy, Calculator, Calendar, Users, DollarSign, 
-  ArrowRight, Sparkles, X, Check, Bed, Utensils, Receipt
+  ArrowRight, Sparkles, X, Check, Bed, Utensils, Receipt, MessageCircle
 } from 'lucide-react';
 import { CORPORATE_PARTNERS, HOTEL_CONFIG, ROOM_TIERS } from '../data/hotelData';
 import { SheetsEditableCell } from './UniversalInlineEditor';
+import { sendCorporateQuotationWhatsApp } from '../utils/whatsappDispatch';
 
 export default function CorporatePortalModal({ isOpen, onClose }) {
   const [activeTab, setActiveTab] = useState('quotation'); // 'quotation' | 'onboarding'
@@ -354,7 +355,7 @@ export default function CorporatePortalModal({ isOpen, onClose }) {
                       <input
                         type="number"
                         min="1"
-                        max="39"
+                        max="18"
                         value={roomCount}
                         onChange={(e) => setRoomCount(parseInt(e.target.value) || 1)}
                         style={{ width: '100%', padding: '0.5rem', background: '#1a162b', color: '#fff', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '6px', fontSize: '0.85rem' }}
@@ -649,7 +650,47 @@ export default function CorporatePortalModal({ isOpen, onClose }) {
                 </div>
 
                 {/* Action Buttons */}
-                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={() => sendCorporateQuotationWhatsApp({
+                      quoteNumber: `SSVR/QUOT/${Date.now().toString().slice(-4)}`,
+                      companyName: currentPartner?.name || customClientName || 'Corporate Partner',
+                      gstin: currentPartner?.gstin || customClientGstin || '',
+                      roomTier: selectedTier?.name || 'Executive Deluxe',
+                      roomCount,
+                      nightCount,
+                      guestCount,
+                      mealPlan,
+                      includeBanquet: includeBanquetHall,
+                      subtotal: roomSubtotal + mealTotal + banquetTotal,
+                      gstAmount,
+                      grandTotal,
+                      advanceRequired,
+                      balanceOnCheckout,
+                      clientPhone: contactPhone
+                    })}
+                    style={{
+                      flex: 1.3,
+                      padding: '0.55rem',
+                      background: '#16a34a',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '5px',
+                      boxShadow: '0 2px 8px rgba(22, 163, 74, 0.3)'
+                    }}
+                    title="Send official quotation & advance deposit escrow details to client on WhatsApp"
+                  >
+                    <MessageCircle size={14} /> WhatsApp Quote
+                  </button>
+
                   <button
                     type="button"
                     onClick={handleCopySummary}
@@ -677,7 +718,7 @@ export default function CorporatePortalModal({ isOpen, onClose }) {
                     type="button"
                     onClick={handlePrintQuotation}
                     style={{
-                      flex: 1.2,
+                      flex: 1.1,
                       padding: '0.5rem',
                       background: '#7c3aed',
                       color: '#ffffff',
@@ -692,7 +733,7 @@ export default function CorporatePortalModal({ isOpen, onClose }) {
                       gap: '4px'
                     }}
                   >
-                    <Printer size={14} /> Print / Save Estimate
+                    <Printer size={14} /> Print / Save
                   </button>
                 </div>
               </div>

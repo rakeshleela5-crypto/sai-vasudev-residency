@@ -5,7 +5,7 @@ import {
   TrendingUp, CreditCard, Clock, AlertTriangle, Search,
   Zap, PieChart, Info, Check, ArrowUpRight, Edit3, PlusCircle,
   Briefcase, Percent, Scale, UtensilsCrossed, Award, CheckCheck, FileSpreadsheet,
-  FilePlus, RefreshCw, FileCheck, Send, Mail, BookOpen, Terminal, Layers, Plus
+  FilePlus, RefreshCw, FileCheck, Send, Mail, BookOpen, Terminal, Layers, Plus, MessageCircle
 } from 'lucide-react';
 import { HOTEL_CONFIG, CORPORATE_PARTNERS, INITIAL_CORPORATE_LEDGER, ITEM_WISE_SALES_REPORT_2026_09_24, GST_FOM_RECORDS_2026_09_25 } from '../data/hotelData';
 import BookingReceiptModal from './BookingReceiptModal';
@@ -13,6 +13,7 @@ import TallyConsoleModal from './TallyConsoleModal';
 import { generateOfficialGstr1Json, reconcileGstr2bWithPurchases, validateGstin } from '../utils/gstGovExport';
 import { useUniversalInlineEdit, InlineEditorBanner, SheetsEditableCell, SheetsColumnHeader, SheetsToolbarLegend } from './UniversalInlineEditor';
 import UniversalDateFilterBar from './UniversalDateFilterBar';
+import { sendDebtorStatementWhatsApp } from '../utils/whatsappDispatch';
 
 export default function AccountsLedgerModal({
   isOpen,
@@ -6078,6 +6079,33 @@ export default function AccountsLedgerModal({
                     style={{ padding: '0.5rem 1rem', fontSize: '0.82rem', display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#38bdf8', borderColor: '#38bdf8' }}
                   >
                     <Download size={14} /> Export CSV
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => sendDebtorStatementWhatsApp({
+                      companyName: selectedSoaCorp.name,
+                      gstin: selectedSoaCorp.gstin,
+                      balanceDue: selectedSoaCorp.balance,
+                      agingDays: 15,
+                      invoices: selectedSoaCorp.invoices || [],
+                      clientPhone: selectedSoaCorp.contactPhone || selectedSoaCorp.phone || ''
+                    })}
+                    style={{
+                      padding: '0.5rem 1.1rem',
+                      fontSize: '0.82rem',
+                      fontWeight: 700,
+                      background: '#16a34a',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px'
+                    }}
+                    title="Dispatch Statement of Account &amp; Payment Reminder to Debtor on WhatsApp"
+                  >
+                    <MessageCircle size={14} /> WhatsApp SOA Reminder
                   </button>
                   <button
                     type="button"

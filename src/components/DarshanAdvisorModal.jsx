@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { X, Compass, MapPin, Clock, Car, Phone, Sparkles, Calendar, CheckCircle2 } from 'lucide-react';
+import { X, Compass, MapPin, Clock, Car, Phone, Sparkles, Calendar, CheckCircle2, MessageCircle } from 'lucide-react';
 import { SPIRITUAL_SIGHTS, HOTEL_CONFIG } from '../data/hotelData';
 import { LampContainer } from '@/components/ui/lamp';
+import { sendDarshanGuideWhatsApp } from '../utils/whatsappDispatch';
 
 export default function DarshanAdvisorModal({ isOpen, onClose }) {
   const [shuttleRequested, setShuttleRequested] = useState(false);
@@ -107,6 +108,35 @@ export default function DarshanAdvisorModal({ isOpen, onClose }) {
                   <span style={{ color: 'var(--text-muted)' }}>Hotel Shuttle:</span>
                   <span style={{ fontWeight: 600, color: 'var(--gold-glow)' }}>{sight.shuttleTariff}</span>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={() => sendDarshanGuideWhatsApp({
+                    templeName: sight.name,
+                    timings: sight.timings,
+                    distance: sight.distance,
+                    specialNotes: `${sight.highlights} Special Days: ${sight.specialDays}`
+                  })}
+                  style={{
+                    marginTop: '0.6rem',
+                    width: '100%',
+                    padding: '0.45rem',
+                    borderRadius: '6px',
+                    background: 'rgba(37, 211, 102, 0.15)',
+                    border: '1px solid #25D366',
+                    color: '#4ade80',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.35rem'
+                  }}
+                  title="Send temple timings, distance, and route guide to WhatsApp"
+                >
+                  <MessageCircle size={14} /> Send Guide &amp; Route to WhatsApp
+                </button>
               </div>
             ))}
           </div>
@@ -173,6 +203,26 @@ export default function DarshanAdvisorModal({ isOpen, onClose }) {
                 <button type="submit" className="btn-primary-gold" style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem' }}>
                   Dispatch Driver
                 </button>
+                <a
+                  href={`https://wa.me/917978043585?text=${encodeURIComponent(`Hello Sri Sai Vasudev Travel Desk, I would like to schedule a station transfer or cab for: ${selectedSight}.`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    padding: '0.5rem 1rem',
+                    fontSize: '0.85rem',
+                    background: '#16a34a',
+                    color: '#ffffff',
+                    borderRadius: '8px',
+                    textDecoration: 'none',
+                    fontWeight: 700,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem'
+                  }}
+                  title="Connect directly with Travel Desk on WhatsApp"
+                >
+                  <MessageCircle size={15} /> WhatsApp Desk
+                </a>
               </form>
             )}
           </div>

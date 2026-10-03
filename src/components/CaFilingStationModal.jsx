@@ -5,10 +5,11 @@ import {
   TrendingUp, CreditCard, Clock, AlertTriangle, Search,
   Zap, PieChart, Info, Check, ArrowUpRight, Scale, 
   UtensilsCrossed, RefreshCw, Layers, FileSpreadsheet,
-  Award, Eye, BarChart2, Table, ChevronDown, CheckCheck
+  Award, Eye, BarChart2, Table, ChevronDown, CheckCheck, MessageCircle
 } from 'lucide-react';
 import { HOTEL_CONFIG } from '../data/hotelData';
 import { SheetsEditableCell, SheetsColumnHeader, SheetsToolbarLegend } from './UniversalInlineEditor';
+import { sendCaFilingSummaryWhatsApp } from '../utils/whatsappDispatch';
 import { 
   PAYMENT_METHOD_REVENUE_SEP2026,
   TOTAL_GROSS_REVENUE_SEP2026,
@@ -420,6 +421,38 @@ For: SRI SAI VASUDEV RESIDENCY (RAYAGADA)
               title="Generate CA Statutory Audit Certificate Text Pack"
             >
               <FileText size={14} /> Audit Certificate
+            </button>
+
+            <button
+              onClick={() => sendCaFilingSummaryWhatsApp({
+                period: 'September 2026',
+                grossTurnover: (plSummary.grossLodgingRevenue + plSummary.grossRestaurantRevenue + plSummary.grossBanquetRevenue),
+                cgstCollected: plSummary.cgstOutput,
+                sgstCollected: plSummary.sgstOutput,
+                totalGstOutput: plSummary.totalGstOutput,
+                eligibleItc: plSummary.eligibleItc,
+                netGstPayable: plSummary.netGstPayable,
+                totalOpex: plSummary.totalOpex,
+                ebitdaMargin: `${plSummary.ebitdaMargin.toFixed(1)}%`,
+                ebitdaProfit: plSummary.ebitda
+              })}
+              style={{
+                background: '#16a34a',
+                color: '#fff',
+                border: 'none',
+                padding: '0.5rem 0.9rem',
+                borderRadius: '8px',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(22, 163, 74, 0.3)'
+              }}
+              title="Dispatch Monthly GSTR-1 &amp; P&amp;L Executive Summary to Proprietor &amp; CA on WhatsApp"
+            >
+              <MessageCircle size={14} /> WhatsApp CA Brief
             </button>
 
             <button

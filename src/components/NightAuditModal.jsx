@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { 
   Moon, Lock, CheckCircle2, AlertTriangle, Printer, 
   Calendar, DollarSign, Bed, UtensilsCrossed, ShieldCheck, 
-  RotateCcw, ArrowRight, X, User, FileText, Loader2
+  RotateCcw, ArrowRight, X, User, FileText, Loader2, MessageCircle
 } from 'lucide-react';
 import { HOTEL_CONFIG, INITIAL_NIGHT_AUDITS } from '../data/hotelData';
 import UniversalDateFilterBar from './UniversalDateFilterBar';
+import { sendNightAuditFlashWhatsApp } from '../utils/whatsappDispatch';
 
 export default function NightAuditModal({
   isOpen,
@@ -858,7 +859,7 @@ export default function NightAuditModal({
                   <div style={{ padding: '0.75rem', background: 'rgba(56, 189, 248, 0.05)', borderRadius: '8px', border: '1px solid rgba(56, 189, 248, 0.15)' }}>
                     <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Occupancy %</span>
                     <div style={{ fontSize: '1.35rem', fontWeight: 800, color: '#38bdf8', marginTop: '0.2rem' }}>
-                      {occupancyPct}% ({occupiedRooms}/39)
+                      {occupancyPct}% ({occupiedRooms}/18)
                     </div>
                   </div>
                   <div style={{ padding: '0.75rem', background: 'rgba(96, 165, 250, 0.05)', borderRadius: '8px', border: '1px solid rgba(96, 165, 250, 0.15)' }}>
@@ -924,7 +925,45 @@ export default function NightAuditModal({
                 </div>
               </div>
 
-              <div style={{ marginTop: '1.75rem', display: 'flex', justifyContent: 'flex-end' }}>
+              <div style={{ marginTop: '1.75rem', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  onClick={() => sendNightAuditFlashWhatsApp({
+                    businessDate,
+                    auditorName,
+                    occupancyPct,
+                    occupiedRooms,
+                    totalRooms: 18,
+                    adr,
+                    revpar,
+                    grossRevenue,
+                    roomRevenue,
+                    fnbRevenue,
+                    otherRevenue,
+                    cashCollected,
+                    upiCollected,
+                    cardCollected,
+                    companyCredit
+                  })}
+                  style={{
+                    padding: '0.7rem 1.4rem',
+                    fontSize: '0.92rem',
+                    background: '#16a34a',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    fontWeight: 700,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    boxShadow: '0 4px 14px rgba(22, 163, 74, 0.4)'
+                  }}
+                  title="Transmit Certified Night Audit Flash to Proprietor Paidisetty Manmadha Rao"
+                >
+                  <MessageCircle size={18} />
+                  <span>Dispatch Flash Report to Proprietor on WhatsApp</span>
+                </button>
                 <button 
                   onClick={onClose} 
                   className="btn-primary-gold" 
