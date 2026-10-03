@@ -17,6 +17,9 @@ export function VirtualTour360Modal({
   onBookRoom 
 }) {
   const mountRef = useRef(null);
+  const headingDisplayRef = useRef(null);
+  const currentSceneRef = useRef(null);
+
   const [currentSceneId, setCurrentSceneId] = useState(initialSceneId);
   const [activeFloorFilter, setActiveFloorFilter] = useState('all');
   const [autoRotate, setAutoRotate] = useState(true);
@@ -25,7 +28,6 @@ export function VirtualTour360Modal({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(true);
-  const [headingDegrees, setHeadingDegrees] = useState(0);
   const [hoveredHotspot, setHoveredHotspot] = useState(null);
   const [projectedHotspots, setProjectedHotspots] = useState([]);
   const [toastMessage, setToastMessage] = useState('');
@@ -38,6 +40,7 @@ export function VirtualTour360Modal({
   const fadeMeshRef = useRef(null);
   const textureLoaderRef = useRef(null);
   const animationFrameIdRef = useRef(null);
+  const resizeObserverRef = useRef(null);
 
   // Interaction & Damping Refs
   const isUserInteractingRef = useRef(false);
@@ -52,6 +55,7 @@ export function VirtualTour360Modal({
   const targetLonRef = useRef(0);
   const targetLatRef = useRef(0);
   const targetFovRef = useRef(75);
+  const lastHotspotCheckTimeRef = useRef(0);
 
   // Gyroscope tracking
   const gyroRef = useRef({ alpha: 0, beta: 0, gamma: 0, active: false });
@@ -61,8 +65,9 @@ export function VirtualTour360Modal({
   const audioNodesRef = useRef([]);
 
   const currentScene = getTourScene(currentSceneId);
+  currentSceneRef.current = currentScene;
 
-  // Sync initialSceneId when modal opens
+  // Sync initialSceneId when modal opens or prop changes
   useEffect(() => {
     if (isOpen && initialSceneId) {
       setCurrentSceneId(initialSceneId);
@@ -74,7 +79,7 @@ export function VirtualTour360Modal({
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         if (isFullscreen) {
-          if (document.exitFullscreen) document.exitFullscreen();
+          if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
         } else {
           onClose();
         }
@@ -214,7 +219,7 @@ export function VirtualTour360Modal({
 
   const showToast = (msg) => {
     setToastMessage(msg);
-    setTimeout(() => setToastMessage(''), 2600);
+    setTimeout(() => setToastMessage(''), 2800);
   };
 
   // Helper to load Three.js Texture with Procedural Fallback
@@ -250,8 +255,8 @@ export function VirtualTour360Modal({
     if (!isOpen || !mountRef.current) return;
 
     const container = mountRef.current;
-    const width = container.clientWidth;
-    const height = container.clientHeight || window.innerHeight;
+    const width = container.clientWidth || window.innerWidth || 1200;
+    const height = container.clientHeight || window.innerHeight || 800;
 
     // 1. Scene
     const scene = new THREE.Scene();
@@ -263,9 +268,14 @@ export function VirtualTour360Modal({
     cameraRef.current = camera;
 
     // 3. WebGL Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
+    const renderer = new THREE.WebGLRenderer({ 
+      antialias: true, 
+      alpha: false, 
+      powerPreference: 'high-performance',
+      preserveDrawingBuffer: true 
+    });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     container.replaceChildren(renderer.domElement);
     rendererRef.current = renderer;
@@ -317,16 +327,17 @@ export function VirtualTour360Modal({
     latRef.current = targetLatRef.current;
     targetFovRef.current = currentScene.initialFov || 75;
 
-    // 5. Render Loop with Hotspot 3D->2D Projection
+    // 5. Render Loop
     let crossFadeStartTime = 0;
-    const crossFadeDuration = 700; // ms
+    const crossFadeDuration = 650; // ms
+    let lastHeadingDeg = -1;
 
     const animate = (timestamp) => {
       animationFrameIdRef.current = requestAnimationFrame(animate);
 
       // Auto-rotation when idle
       if (autoRotate && !isUserInteractingRef.current && !gyroRef.current.active) {
-        targetLonRef.current += 0.08;
+        targetLonRef.current += 0.06;
       }
 
       // Gyroscope blending if enabled
@@ -346,7 +357,7 @@ export function VirtualTour360Modal({
       phiRef.current = THREE.MathUtils.degToRad(90 - latRef.current);
       thetaRef.current = THREE.MathUtils.degToRad(lonRef.current);
 
-      // Look direction vector
+      // Look direction vector matching standard equirectangular sphere
       const target = new THREE.Vector3(
         500 * Math.sin(phiRef.current) * Math.cos(thetaRef.current),
         500 * Math.cos(phiRef.current),
@@ -354,9 +365,14 @@ export function VirtualTour360Modal({
       );
       camera.lookAt(target);
 
-      // Update heading compass degrees
-      const normalizedLon = ((lonRef.current % 360) + 360) % 360;
-      setHeadingDegrees(Math.round(normalizedLon));
+      // Update heading compass degrees directly in DOM ref for zero React re-render lag
+      const normalizedLon = Math.round(((lonRef.current % 360) + 360) % 360);
+      if (normalizedLon !== lastHeadingDeg) {
+        lastHeadingDeg = normalizedLon;
+        if (headingDisplayRef.current) {
+          headingDisplayRef.current.textContent = `${normalizedLon}° Heading`;
+        }
+      }
 
       // Handle Crossfade Transition if active
       if (fadeMeshRef.current && fadeMeshRef.current.visible) {
@@ -378,44 +394,53 @@ export function VirtualTour360Modal({
       }
 
       // Project Current Scene Hotspots from Spherical 3D to 2D Screen Space
-      const currentHotspots = currentScene.hotspots || [];
-      if (currentHotspots.length > 0 && container) {
-        const cWidth = container.clientWidth;
-        const cHeight = container.clientHeight;
-        const projected = [];
+      // Throttle calculation to every 30ms (~33fps) to keep CPU low
+      if (timestamp - lastHotspotCheckTimeRef.current > 30) {
+        lastHotspotCheckTimeRef.current = timestamp;
+        const activeScene = currentSceneRef.current || currentScene;
+        const currentHotspots = activeScene.hotspots || [];
 
-        currentHotspots.forEach((hs) => {
-          // Hotspot spherical coordinates (r=480)
-          const hsPitch = hs.pitch || 0;
-          const hsYaw = hs.yaw || 0;
-          const hsPhi = THREE.MathUtils.degToRad(90 - hsPitch);
-          const hsTheta = THREE.MathUtils.degToRad(hsYaw);
+        if (currentHotspots.length > 0 && container) {
+          const cWidth = container.clientWidth || window.innerWidth;
+          const cHeight = container.clientHeight || window.innerHeight;
+          const projected = [];
 
-          // World coordinates
-          const hsPos = new THREE.Vector3(
-            -480 * Math.sin(hsPhi) * Math.sin(hsTheta),
-            480 * Math.cos(hsPhi),
-            -480 * Math.sin(hsPhi) * Math.cos(hsTheta)
-          );
+          // Camera world direction for frustum visibility dot product
+          const camDir = new THREE.Vector3();
+          camera.getWorldDirection(camDir);
 
-          // Project to Normalized Device Coordinates (-1 to +1)
-          const pVec = hsPos.clone().project(camera);
+          currentHotspots.forEach((hs) => {
+            const hsPitch = hs.pitch || 0;
+            const hsYaw = hs.yaw || 0;
+            const hsPhi = THREE.MathUtils.degToRad(90 - hsPitch);
+            const hsTheta = THREE.MathUtils.degToRad(hsYaw);
 
-          // Check if hotspot is in front of the camera (z < 1)
-          if (pVec.z < 1) {
-            const x = (pVec.x * 0.5 + 0.5) * cWidth;
-            const y = (-(pVec.y * 0.5) + 0.5) * cHeight;
-            projected.push({
-              ...hs,
-              screenX: x,
-              screenY: y,
-              isVisible: true
-            });
-          }
-        });
-        setProjectedHotspots(projected);
-      } else {
-        setProjectedHotspots([]);
+            // World coordinates matching camera lookAt
+            const hsPos = new THREE.Vector3(
+              500 * Math.sin(hsPhi) * Math.cos(hsTheta),
+              500 * Math.cos(hsPhi),
+              500 * Math.sin(hsPhi) * Math.sin(hsTheta)
+            );
+
+            // Check if hotspot is in front of camera
+            const dot = camDir.dot(hsPos.clone().normalize());
+            if (dot > 0.1) {
+              const pVec = hsPos.clone().project(camera);
+              const x = (pVec.x * 0.5 + 0.5) * cWidth;
+              const y = (-(pVec.y * 0.5) + 0.5) * cHeight;
+
+              projected.push({
+                ...hs,
+                screenX: Math.round(x),
+                screenY: Math.round(y),
+                isVisible: true
+              });
+            }
+          });
+          setProjectedHotspots(projected);
+        } else if (projectedHotspots.length > 0) {
+          setProjectedHotspots([]);
+        }
       }
 
       renderer.render(scene, camera);
@@ -423,19 +448,44 @@ export function VirtualTour360Modal({
 
     animationFrameIdRef.current = requestAnimationFrame(animate);
 
-    // 6. Resize Observer
+    // 6. Responsive Resize Handling with ResizeObserver
     const handleResize = () => {
       if (!container || !camera || !renderer) return;
-      const w = container.clientWidth;
+      const w = container.clientWidth || window.innerWidth;
       const h = container.clientHeight || window.innerHeight;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
+      if (w > 0 && h > 0) {
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      }
     };
+
     window.addEventListener('resize', handleResize);
 
+    if (window.ResizeObserver) {
+      const ro = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const cr = entry.contentRect;
+          if (cr.width > 0 && cr.height > 0) {
+            camera.aspect = cr.width / cr.height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(cr.width, cr.height);
+          }
+        }
+      });
+      ro.observe(container);
+      resizeObserverRef.current = ro;
+    }
+
+    // Force layout recalculation after mounting
+    const tId = setTimeout(handleResize, 60);
+
     return () => {
+      clearTimeout(tId);
       window.removeEventListener('resize', handleResize);
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect();
+      }
       if (animationFrameIdRef.current) {
         cancelAnimationFrame(animationFrameIdRef.current);
       }
@@ -454,6 +504,7 @@ export function VirtualTour360Modal({
 
     setIsTransitioning(true);
     setCurrentSceneId(sceneId);
+    currentSceneRef.current = targetScene;
 
     // Smoothly turn camera towards initial direction of new scene
     targetLonRef.current = targetScene.initialYaw || 0;
@@ -489,7 +540,7 @@ export function VirtualTour360Modal({
     const clientX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
     const clientY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
     
-    // Sensitivity factor
+    // Sensitivity factor adjusted by FOV
     const factor = (cameraRef.current ? cameraRef.current.fov / 75 : 1) * 0.18;
     targetLonRef.current = (onPointerDownPointerXRef.current - clientX) * factor + onPointerDownLonRef.current;
     targetLatRef.current = (clientY - onPointerDownPointerYRef.current) * factor + onPointerDownLatRef.current;
@@ -517,11 +568,16 @@ export function VirtualTour360Modal({
   // Fullscreen
   const toggleFullscreen = () => {
     if (!mountRef.current) return;
+    const modalEl = mountRef.current.parentElement;
     if (!document.fullscreenElement) {
-      mountRef.current.parentElement.requestFullscreen().catch(() => {});
+      if (modalEl?.requestFullscreen) {
+        modalEl.requestFullscreen().catch(() => {});
+      }
       setIsFullscreen(true);
     } else {
-      document.exitFullscreen().catch(() => {});
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
       setIsFullscreen(false);
     }
   };
@@ -546,29 +602,75 @@ export function VirtualTour360Modal({
 
   return (
     <div 
-      className="fixed inset-0 z-[100] flex flex-col bg-slate-950 text-white select-none overflow-hidden font-sans"
+      className="tour-modal-backdrop"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 10000,
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: '#030712',
+        color: '#ffffff',
+        overflow: 'hidden',
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+        fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
+      }}
       onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
     >
       {/* 3D WebGL Canvas Viewport */}
       <div 
         ref={mountRef}
-        className="relative flex-1 w-full h-full cursor-grab active:cursor-grabbing touch-none"
+        className="tour-viewport"
+        style={{
+          position: 'relative',
+          flex: 1,
+          width: '100%',
+          height: '100%',
+          minWidth: '100vw',
+          minHeight: '100vh',
+          cursor: 'grab',
+          touchAction: 'none'
+        }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onWheel={handleWheel}
       />
 
       {/* Interactive 2D Screen-Projected 3D Hotspots */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div 
+        className="tour-hotspots-layer"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          overflow: 'hidden',
+          zIndex: 15
+        }}
+      >
         {projectedHotspots.map((hs) => (
           <div
             key={hs.id}
             style={{
-              transform: `translate3d(${hs.screenX}px, ${hs.screenY}px, 0) translate(-50%, -50%)`,
+              position: 'absolute',
+              left: `${hs.screenX}px`,
+              top: `${hs.screenY}px`,
+              transform: 'translate(-50%, -50%)',
               opacity: isTransitioning ? 0 : 1,
-              transition: 'opacity 0.3s ease'
+              pointerEvents: 'auto',
+              cursor: 'pointer',
+              zIndex: 16
             }}
-            className="absolute pointer-events-auto group cursor-pointer"
+            className="tour-hotspot-item group"
             onClick={(e) => {
               e.stopPropagation();
               if (hs.targetSceneId) switchScene(hs.targetSceneId);
@@ -577,79 +679,126 @@ export function VirtualTour360Modal({
             onMouseLeave={() => setHoveredHotspot(null)}
           >
             {/* Animated Pulsing Beacon Marker */}
-            <div className="relative flex items-center justify-center">
-              <span className="absolute w-12 h-12 rounded-full bg-cyan-400/25 animate-ping" />
-              <span className="absolute w-8 h-8 rounded-full bg-amber-400/35 animate-pulse" />
-              <div className="relative z-10 w-9 h-9 rounded-full bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-200 text-slate-950 flex items-center justify-center shadow-lg shadow-amber-500/50 border border-white/60 transition-transform duration-200 group-hover:scale-125">
+            <div className="tour-hotspot-beacon">
+              <span className="tour-hotspot-pulse-ring" />
+              <span className="tour-hotspot-glow-ring" />
+              <div className="tour-hotspot-disc">
                 {hs.iconType === 'bed' ? (
-                  <Bed size={16} className="text-slate-900" />
+                  <Bed size={16} color="#030712" />
                 ) : hs.iconType === 'crown' ? (
-                  <Sparkles size={16} className="text-slate-900" />
+                  <Sparkles size={16} color="#030712" />
                 ) : hs.iconType === 'elevator' ? (
-                  <Layers size={16} className="text-slate-900" />
+                  <Layers size={16} color="#030712" />
                 ) : (
-                  <ChevronRight size={18} className="text-slate-950 font-bold" />
+                  <ChevronRight size={18} color="#030712" strokeWidth={2.5} />
                 )}
               </div>
             </div>
 
             {/* Tooltip Card */}
-            <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 hidden group-hover:flex flex-col items-center pointer-events-none w-56 transition-all duration-200">
-              <div className="bg-slate-900/95 backdrop-blur-md border border-amber-400/40 rounded-xl p-3 shadow-2xl text-center">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-amber-400 flex items-center justify-center gap-1">
-                  <MapPin size={10} /> {hs.tier || 'Interactive Point'}
-                </span>
-                <p className="text-sm font-bold text-white mt-0.5 leading-snug">{hs.title}</p>
-                {hs.tariff && (
-                  <p className="text-xs text-emerald-400 font-semibold mt-1">₹{hs.tariff.toLocaleString('en-IN')} / night</p>
-                )}
-                {hs.description && (
-                  <p className="text-[11px] text-slate-300 mt-1 line-clamp-2 leading-tight">{hs.description}</p>
-                )}
-                <span className="text-[10px] text-cyan-300 font-medium mt-1.5 flex items-center justify-center gap-1">
-                  Click to Explore <ChevronRight size={11} />
-                </span>
-              </div>
-              <div className="w-2.5 h-2.5 bg-slate-900/95 border-r border-b border-amber-400/40 rotate-45 -mt-1.5" />
+            <div className="tour-hotspot-tooltip">
+              <span style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#fbbf24', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                <MapPin size={10} /> {hs.tier || 'Interactive Viewpoint'}
+              </span>
+              <p style={{ fontSize: '13px', fontWeight: 700, color: '#ffffff', margin: '3px 0 0 0', lineHeight: 1.3 }}>
+                {hs.title}
+              </p>
+              {hs.tariff && (
+                <p style={{ fontSize: '12px', color: '#34d399', fontWeight: 700, margin: '4px 0 0 0' }}>
+                  ₹{hs.tariff.toLocaleString('en-IN')} / night
+                </p>
+              )}
+              {hs.description && (
+                <p style={{ fontSize: '11px', color: '#cbd5e1', margin: '4px 0 0 0', lineHeight: 1.25 }}>
+                  {hs.description}
+                </p>
+              )}
+              <span style={{ fontSize: '10px', color: '#38bdf8', fontWeight: 600, marginTop: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                Click to Step Inside <ChevronRight size={11} />
+              </span>
             </div>
           </div>
         ))}
       </div>
 
       {/* Top Floating Glass Navigation Header */}
-      <div className="absolute top-0 inset-x-0 p-4 flex items-center justify-between pointer-events-none z-20 bg-gradient-to-b from-slate-950/80 via-slate-950/40 to-transparent">
+      <div 
+        className="tour-header-glass"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          padding: '14px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          pointerEvents: 'none',
+          zIndex: 25,
+          background: 'linear-gradient(180deg, rgba(3, 7, 18, 0.92) 0%, rgba(3, 7, 18, 0.6) 65%, transparent 100%)'
+        }}
+      >
         {/* Left: Branding & Current Scene Info */}
-        <div className="flex items-center gap-3 pointer-events-auto">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/40 backdrop-blur-md flex items-center justify-center text-amber-400 shadow-lg">
+        <div className="tour-header-left" style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '12px',
+            background: 'rgba(245, 158, 11, 0.18)',
+            border: '1px solid rgba(245, 158, 11, 0.4)',
+            backdropFilter: 'blur(12px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#fbbf24',
+            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.4)'
+          }}>
             <Building2 size={20} />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-wider">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                padding: '2px 8px',
+                borderRadius: '9999px',
+                fontSize: '10px',
+                fontWeight: 800,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                background: 'rgba(245, 158, 11, 0.2)',
+                color: '#fde047',
+                border: '1px solid rgba(245, 158, 11, 0.35)'
+              }}>
                 360° Virtual Tour
               </span>
-              <span className="text-[11px] text-slate-300 hidden sm:inline flex items-center gap-1">
-                <Compass size={11} className="text-cyan-400" /> {headingDegrees}° Heading
+              <span 
+                ref={headingDisplayRef}
+                style={{ fontSize: '11px', color: '#94a3b8', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+              >
+                <Compass size={11} color="#38bdf8" /> 0° Heading
               </span>
             </div>
-            <h1 className="text-base sm:text-lg font-bold text-white tracking-tight drop-shadow-md">
+            <h1 style={{ fontSize: '16px', fontWeight: 800, color: '#ffffff', margin: '2px 0 0 0', textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}>
               {currentScene.name}
             </h1>
           </div>
         </div>
 
         {/* Right: Quick Action Controls */}
-        <div className="flex items-center gap-2 pointer-events-auto">
+        <div className="tour-header-right" style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
           {/* Street View Standalone Link */}
           <a
             href="/hotel_360_viewer.html"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-cyan-400/30 text-cyan-300 text-xs font-semibold backdrop-blur-md transition-all shadow-lg"
+            className="tour-btn"
+            style={{ color: '#38bdf8', borderColor: 'rgba(56, 189, 248, 0.35)' }}
             title="Open Google Street View Single-Track Campus Walkthrough"
           >
             <MapPin size={13} />
-            <span>Street View</span>
+            <span style={{ display: 'inline' }}>Street View</span>
           </a>
 
           {/* 3D Floor Explorer Companion Switch */}
@@ -659,11 +808,11 @@ export function VirtualTour360Modal({
                 onClose();
                 onOpen3DExplorer();
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-cyan-600/80 to-blue-600/80 hover:from-cyan-500 hover:to-blue-500 border border-cyan-300/40 text-white text-xs font-semibold backdrop-blur-md transition-all shadow-lg shadow-cyan-500/20"
+              className="tour-btn tour-btn-cyan"
               title="Switch to 3D Floor & Building Explorer"
             >
               <Layers size={13} />
-              <span className="hidden sm:inline">3D Building</span>
+              <span>3D Building</span>
             </button>
           )}
 
@@ -674,7 +823,7 @@ export function VirtualTour360Modal({
                 onClose();
                 onBookRoom(currentScene.tier, currentScene.roomNumber);
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 text-xs font-bold transition-all shadow-lg shadow-amber-500/30"
+              className="tour-btn tour-btn-gold"
             >
               <CalendarCheck size={13} />
               <span>Book #{currentScene.roomNumber}</span>
@@ -684,95 +833,97 @@ export function VirtualTour360Modal({
           {/* Gyroscope Toggle */}
           <button
             onClick={toggleGyroscope}
-            className={`p-2 rounded-xl border backdrop-blur-md transition-all ${
-              gyroEnabled 
-                ? 'bg-cyan-500 text-slate-950 border-cyan-300 shadow-cyan-500/40 shadow-lg' 
-                : 'bg-slate-900/80 text-slate-300 border-white/10 hover:bg-slate-800'
-            }`}
+            className={`tour-btn ${gyroEnabled ? 'tour-btn-active' : ''}`}
             title="Toggle Device Gyroscope / Motion"
           >
-            <Smartphone size={16} />
+            <Smartphone size={15} />
           </button>
 
           {/* Audio Ambience Toggle */}
           <button
             onClick={() => setIsMuted(!isMuted)}
-            className={`p-2 rounded-xl border backdrop-blur-md transition-all ${
-              !isMuted 
-                ? 'bg-amber-500/20 text-amber-300 border-amber-400/40' 
-                : 'bg-slate-900/80 text-slate-400 border-white/10 hover:bg-slate-800'
-            }`}
+            className={`tour-btn ${!isMuted ? 'tour-btn-active' : ''}`}
             title={isMuted ? 'Turn on Ambient Soundscape' : 'Mute Audio'}
           >
-            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+            {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
           </button>
 
           {/* Auto-Rotate Toggle */}
           <button
             onClick={() => setAutoRotate(!autoRotate)}
-            className={`p-2 rounded-xl border backdrop-blur-md transition-all ${
-              autoRotate 
-                ? 'bg-blue-500/20 text-cyan-300 border-cyan-400/40' 
-                : 'bg-slate-900/80 text-slate-400 border-white/10 hover:bg-slate-800'
-            }`}
+            className={`tour-btn ${autoRotate ? 'tour-btn-active' : ''}`}
             title="Toggle Auto Rotation"
           >
-            <RotateCw size={16} className={autoRotate ? 'animate-spin' : ''} style={{ animationDuration: '8s' }} />
+            <RotateCw size={15} className={autoRotate ? 'animate-spin' : ''} style={{ animationDuration: '8s' }} />
           </button>
 
           {/* Share */}
           <button
             onClick={handleShare}
-            className="p-2 rounded-xl bg-slate-900/80 text-slate-300 border border-white/10 hover:bg-slate-800 backdrop-blur-md transition-all"
+            className="tour-btn"
             title="Share Panorama Link"
           >
-            <Share2 size={16} />
+            <Share2 size={15} />
           </button>
 
           {/* Fullscreen */}
           <button
             onClick={toggleFullscreen}
-            className="hidden sm:block p-2 rounded-xl bg-slate-900/80 text-slate-300 border border-white/10 hover:bg-slate-800 backdrop-blur-md transition-all"
+            className="tour-btn"
             title="Toggle Fullscreen"
           >
-            {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+            {isFullscreen ? <Minimize2 size={15} /> : <Maximize2 size={15} />}
           </button>
 
           {/* Close Modal */}
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-400/40 backdrop-blur-md transition-all ml-1"
+            className="tour-btn tour-btn-close"
             title="Exit 360 Tour"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
       </div>
 
       {/* Right Floating Vertical Control Dock */}
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-20 pointer-events-auto">
+      <div 
+        className="tour-dock-right"
+        style={{
+          position: 'absolute',
+          right: '18px',
+          top: '50%',
+          transform: 'translateY(-50%)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          zIndex: 25,
+          pointerEvents: 'auto'
+        }}
+      >
         <button
           onClick={handleZoomIn}
-          className="p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-white border border-white/15 backdrop-blur-md shadow-lg transition-transform active:scale-95"
+          className="tour-dock-btn"
           title="Zoom In"
         >
           <ZoomIn size={18} />
         </button>
         <button
           onClick={handleZoomOut}
-          className="p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-white border border-white/15 backdrop-blur-md shadow-lg transition-transform active:scale-95"
+          className="tour-dock-btn"
           title="Zoom Out"
         >
           <ZoomOut size={18} />
         </button>
-        <div className="w-full h-px bg-white/10 my-1" />
+        <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255, 255, 255, 0.15)', margin: '2px 0' }} />
         <button
           onClick={() => {
             targetLonRef.current = 0;
             targetLatRef.current = 0;
             targetFovRef.current = 75;
           }}
-          className="p-2.5 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-amber-400 border border-amber-400/30 backdrop-blur-md shadow-lg transition-transform active:scale-95"
+          className="tour-dock-btn"
+          style={{ color: '#fbbf24' }}
           title="Reset Horizon View"
         >
           <Compass size={18} />
@@ -781,37 +932,87 @@ export function VirtualTour360Modal({
 
       {/* Floating Notification Toast */}
       {toastMessage && (
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 z-30 px-4 py-2 rounded-full bg-slate-900/90 text-amber-300 text-xs font-semibold border border-amber-400/40 shadow-2xl backdrop-blur-md animate-fade-in pointer-events-none">
+        <div 
+          style={{
+            position: 'absolute',
+            top: '80px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 35,
+            padding: '8px 18px',
+            borderRadius: '9999px',
+            background: 'rgba(15, 23, 42, 0.94)',
+            color: '#fbbf24',
+            fontSize: '12px',
+            fontWeight: 600,
+            border: '1px solid rgba(245, 158, 11, 0.45)',
+            boxShadow: '0 12px 32px rgba(0, 0, 0, 0.6)',
+            backdropFilter: 'blur(16px)',
+            pointerEvents: 'none'
+          }}
+        >
           {toastMessage}
         </div>
       )}
 
       {/* Transition Spinner Indicator */}
       {isTransitioning && (
-        <div className="absolute inset-0 pointer-events-none z-30 flex items-center justify-center bg-slate-950/30 backdrop-blur-[2px] transition-opacity duration-300">
-          <div className="flex flex-col items-center gap-2 bg-slate-900/90 border border-amber-400/40 px-5 py-3 rounded-2xl shadow-2xl">
-            <RotateCw size={24} className="text-amber-400 animate-spin" />
-            <span className="text-xs font-semibold text-white">Loading 360° Panorama...</span>
+        <div 
+          style={{
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            zIndex: 30,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(3, 7, 18, 0.45)',
+            backdropFilter: 'blur(3px)'
+          }}
+        >
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '8px',
+            background: 'rgba(15, 23, 42, 0.95)',
+            border: '1px solid rgba(245, 158, 11, 0.45)',
+            padding: '14px 22px',
+            borderRadius: '16px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.6)'
+          }}>
+            <RotateCw size={24} color="#fbbf24" className="animate-spin" />
+            <span style={{ fontSize: '12px', fontWeight: 700, color: '#ffffff' }}>Loading 360° Panorama...</span>
           </div>
         </div>
       )}
 
       {/* Bottom Scene Thumbnail Carousel & Category Filter Drawer */}
-      <div className={`absolute bottom-0 inset-x-0 z-20 transition-all duration-300 pointer-events-auto bg-gradient-to-t from-slate-950 via-slate-950/85 to-transparent pt-6 pb-4 px-4 ${drawerOpen ? 'translate-y-0' : 'translate-y-28'}`}>
-        <div className="max-w-6xl mx-auto flex flex-col gap-2">
+      <div 
+        className={`tour-drawer-bottom ${drawerOpen ? '' : 'collapsed'}`}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 25,
+          pointerEvents: 'auto',
+          background: 'linear-gradient(0deg, rgba(3, 7, 18, 0.98) 0%, rgba(3, 7, 18, 0.88) 75%, transparent 100%)',
+          padding: '20px 20px 14px',
+          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          transform: drawerOpen ? 'translateY(0)' : 'translateY(calc(100% - 38px))'
+        }}
+      >
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {/* Drawer Handle & Floor Filters */}
-          <div className="flex items-center justify-between">
+          <div className="tour-filter-bar">
             {/* Category / Floor Filter Pills */}
-            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+            <div className="tour-pills-row">
               {HOTEL_360_FLOORS.map((f) => (
                 <button
                   key={f.id}
                   onClick={() => setActiveFloorFilter(f.id)}
-                  className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
-                    activeFloorFilter === f.id
-                      ? 'bg-amber-400 text-slate-950 font-bold shadow-md shadow-amber-400/30'
-                      : 'bg-slate-900/80 text-slate-300 hover:bg-slate-800 border border-white/10'
-                  }`}
+                  className={`tour-pill-btn ${activeFloorFilter === f.id ? 'active' : ''}`}
                 >
                   {f.label}
                 </button>
@@ -821,37 +1022,33 @@ export function VirtualTour360Modal({
             {/* Toggle Drawer Button */}
             <button
               onClick={() => setDrawerOpen(!drawerOpen)}
-              className="px-2.5 py-1 rounded-lg bg-slate-900/80 hover:bg-slate-800 text-slate-300 text-xs border border-white/10 flex items-center gap-1 ml-2"
+              className="tour-btn"
+              style={{ fontSize: '11px', padding: '4px 10px' }}
             >
               <span>{drawerOpen ? 'Hide Scenes' : 'Show Scenes'}</span>
             </button>
           </div>
 
           {/* Horizontal Scene Card Strip */}
-          <div className="flex items-center gap-3 overflow-x-auto pb-1 pt-1 no-scrollbar">
+          <div className="tour-scenes-carousel">
             {filteredScenes.map((scene) => {
               const isSelected = scene.id === currentSceneId;
               return (
                 <div
                   key={scene.id}
                   onClick={() => switchScene(scene.id)}
-                  className={`group relative flex-shrink-0 w-36 h-20 rounded-xl overflow-hidden cursor-pointer border transition-all duration-200 ${
-                    isSelected
-                      ? 'border-amber-400 ring-2 ring-amber-400/40 scale-105 shadow-xl shadow-amber-500/20'
-                      : 'border-white/15 hover:border-cyan-400/60 opacity-80 hover:opacity-100'
-                  }`}
+                  className={`tour-scene-card ${isSelected ? 'selected' : ''}`}
                 >
                   <img
                     src={scene.panoramaUrl}
                     alt={scene.name}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-2">
-                    <span className="text-[11px] font-bold text-white line-clamp-1 leading-tight group-hover:text-amber-300">
+                  <div className="tour-scene-card-overlay">
+                    <span className="tour-scene-card-name">
                       {scene.shortName || scene.name}
                     </span>
-                    <span className="text-[9px] text-slate-300 uppercase tracking-wider">
+                    <span className="tour-scene-card-floor">
                       {scene.floor === 0 ? 'Campus' : scene.floor === 'R' ? 'Rooftop' : `Floor ${scene.floor}`}
                     </span>
                   </div>

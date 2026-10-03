@@ -67,10 +67,14 @@ async function main() {
     // ---------------------------------------------------------------
     await runStep('Landing Page Loads with Hotel Branding & Zero Console Fatalities', async () => {
       await page.goto(TARGET_URL, { waitUntil: 'networkidle2' });
-      await waitForPredicate(page, () => document.body && document.body.innerText.includes('Hotel Sai International'));
+      await waitForPredicate(page, () => document.body && (
+        document.body.innerText.includes('Sai Vasudev') || 
+        document.body.innerText.includes('Sri Sai') || 
+        document.body.innerText.includes('Hotel Sai International')
+      ));
       
       const title = await page.title();
-      assert.ok(title.includes('Hotel Sai International') || title.includes('Rayagada'), `Unexpected page title: ${title}`);
+      assert.ok(title.includes('Sai Vasudev') || title.includes('Hotel Sai International') || title.includes('Rayagada'), `Unexpected page title: ${title}`);
     });
 
     // ---------------------------------------------------------------
