@@ -111,14 +111,14 @@ export default function ReceptionAdmin({
   const [checkoutRoom, setCheckoutRoom] = useState(null);
   const [recentSettlements, setRecentSettlements] = useState([
     {
-      roomNumber: '301',
+      roomNumber: '101',
       guestName: 'MR. P ASHOK',
       tier: 'Executive AC',
       totalAmount: 962.00,
       billTotal: 962.00,
       settlementTime: '12:45 PM',
       settlementDate: '22/09/2026',
-      billNo: 'FMBIL2627-00301',
+      billNo: 'FMBIL2627-00101',
       tendersSummary: ['Cash: ₹500', 'PhonePe (UPI): ₹462 [Ref: UPI-849102]'],
       tenders: { cash: 500, upi: 462, upiRef: 'UPI-849102', upiProvider: 'PhonePe', card: 0, btc: 0 }
     }
@@ -153,7 +153,7 @@ export default function ReceptionAdmin({
     },
     {
       id: 'LUG-2026-042',
-      roomNumber: '302',
+      roomNumber: '102',
       guestName: 'M. BALARAM PRASAD',
       phone: '+91 94372 10982',
       bagsCount: 1,
@@ -291,7 +291,7 @@ export default function ReceptionAdmin({
     },
     {
       bookingId: 'HSI-ARR-2026-003',
-      roomNumber: '304',
+      roomNumber: '104',
       tier: 'Executive AC',
       guestName: 'UTKARSH SRIVASTAVA',
       guestPhone: '+91 94370 88912',
@@ -422,7 +422,7 @@ export default function ReceptionAdmin({
     {
       id: 'TRF-903',
       guestName: 'UTKARSH SRIVASTAVA',
-      roomNumber: '302',
+      roomNumber: '102',
       phone: '+91 94370 88912',
       transferType: 'Station Drop (RGDA)',
       trainNumber: '20833 Vande Bharat Express',
@@ -491,8 +491,8 @@ export default function ReceptionAdmin({
   });
 
   const [wakeUpCalls, setWakeUpCalls] = useState([
-    { id: 'WUC-1', roomNumber: '302', guestName: 'UTKARSH SRIVASTAVA', time: '05:15 AM', train: 'Samaleswari Express (06:00 AM departure)', status: 'Active Scheduled', notes: 'Call desk phone + loud door knock' },
-    { id: 'WUC-2', roomNumber: '402', guestName: 'P. K. Mohapatra (JK Paper)', time: '06:00 AM', train: 'Plant Inspection Vehicle at 06:45 AM', status: 'Active Scheduled', notes: 'Pack fresh Satvik ginger tea in flask' },
+    { id: 'WUC-1', roomNumber: '202', guestName: 'UTKARSH SRIVASTAVA', time: '05:15 AM', train: 'Samaleswari Express (06:00 AM departure)', status: 'Active Scheduled', notes: 'Call desk phone + loud door knock' },
+    { id: 'WUC-2', roomNumber: '102', guestName: 'P. K. Mohapatra (JK Paper)', time: '06:00 AM', train: 'Plant Inspection Vehicle at 06:45 AM', status: 'Active Scheduled', notes: 'Pack fresh Satvik ginger tea in flask' },
     { id: 'WUC-3', roomNumber: '105', guestName: 'SUBHASH CHANDRA DAS', time: '06:30 AM', train: 'Maa Majhigouri Morning Darshan', status: 'Completed', notes: 'Guest awake and dispatched to temple' }
   ]);
   const [newWakeUpForm, setNewWakeUpForm] = useState({
@@ -507,9 +507,9 @@ export default function ReceptionAdmin({
   const [otaChannels, setOtaChannels] = useState([
     {
       id: 'direct',
-      name: 'Hotel Sai Direct Booking Engine',
-      type: 'Direct Brand (hotel-sai-international.pages.dev)',
-      allocatedRooms: 20,
+      name: 'Sri Sai Vasudev Direct Booking Engine',
+      type: 'Direct Brand (sai-vasudev-residency.pages.dev)',
+      allocatedRooms: 18,
       activeRate: 2199,
       commissionPct: 0,
       netRevPerRoom: 2199,
@@ -553,7 +553,7 @@ export default function ReceptionAdmin({
     {
       id: 'LF-2026-0041',
       dateFound: '24/09/2026',
-      roomNumber: '302',
+      roomNumber: '102',
       itemDescription: 'Samsung 45W Fast Charger + Fastrack Digital Watch (Black Strap)',
       category: 'Electronics',
       foundByStaff: 'Anita Majhi (Housekeeping)',
@@ -579,7 +579,7 @@ export default function ReceptionAdmin({
     {
       id: 'LF-2026-0040',
       dateFound: '22/09/2026',
-      roomNumber: '401',
+      roomNumber: '201',
       itemDescription: 'HP Wireless Mouse + Ray-Ban Aviator Sunglasses',
       category: 'Electronics',
       foundByStaff: 'Kailash Sabar',
@@ -619,7 +619,7 @@ export default function ReceptionAdmin({
     },
     {
       ticketId: 'MNT-8042',
-      roomNumber: '307',
+      roomNumber: '107',
       category: 'Plumbing & Geyser',
       severity: 'Medium',
       issueDescription: 'Geyser pilot element tripped. Thermostat replaced; final inspection pending.',
@@ -661,7 +661,7 @@ export default function ReceptionAdmin({
     },
     {
       orderId: 'KOT-8492',
-      roomNumber: '302',
+      roomNumber: '102',
       guestName: 'UTKARSH SRIVASTAVA',
       outlet: 'Cannon Kitchen',
       status: 'Received',
@@ -701,7 +701,7 @@ export default function ReceptionAdmin({
     },
     {
       requestId: 'REQ-1094',
-      roomNumber: '308',
+      roomNumber: '208',
       serviceType: 'Maintenance',
       description: 'Geyser pilot light checked, guest requested hot water verification',
       priority: 'High',
@@ -711,7 +711,7 @@ export default function ReceptionAdmin({
     },
     {
       requestId: 'REQ-1095',
-      roomNumber: '401',
+      roomNumber: '201',
       serviceType: 'Toiletries',
       description: 'VIP Suite: Extra Ayurvedic soap, shampoo kit and herbal dental set',
       priority: 'Urgent',
@@ -1333,7 +1333,7 @@ export default function ReceptionAdmin({
   const [workOrders, setWorkOrders] = useState([
     {
       id: 'WO-2026-081',
-      roomNumber: '307',
+      roomNumber: '107',
       issue: 'AC Cooling Coil Leaking & Remote Defective',
       category: 'HVAC / AC',
       priority: 'High',
@@ -1345,7 +1345,7 @@ export default function ReceptionAdmin({
     },
     {
       id: 'WO-2026-082',
-      roomNumber: '404',
+      roomNumber: '204',
       issue: 'Geyser thermostat tripping after 5 mins',
       category: 'Electrical',
       priority: 'Medium',
@@ -1399,6 +1399,34 @@ export default function ReceptionAdmin({
     };
     setTransitStays(prev => [newStay, ...prev]);
     onUpdateRoomStatus(transitForm.roomNumber, 'Occupied', transitForm.guestName, newStay.id);
+
+    // Sync transit stay to Cloudflare D1
+    const adminPin = localStorage.getItem('hsi_admin_pin') || '7650';
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': adminPin
+      },
+      body: JSON.stringify({
+        action: 'check_in_guest',
+        payload: {
+          bookingId: newStay.id,
+          roomNumber: transitForm.roomNumber,
+          guestName: transitForm.guestName,
+          guestPhone: transitForm.phone,
+          idProofType: transitForm.idType,
+          idProofNumber: transitForm.idNumber,
+          nights: 1,
+          tariffPerNight: Number(transitForm.tariff) || 899,
+          totalAmount: Number(transitForm.tariff) || 899,
+          advanceDeposit: Number(transitForm.depositPaid) || 1000,
+          paymentMode: transitForm.paymentMode,
+          purposeOfVisit: `Transit Stay (${transitForm.slotType}) - ${transitForm.purpose}`
+        }
+      })
+    }).catch(err => console.warn('Transit stay D1 sync error:', err));
+
     setIsTransitModalOpen(false);
     showToast(`✓ Transit Check-In complete for Room ${transitForm.roomNumber} (${transitForm.slotType} - ₹${transitForm.tariff}).`);
   };
@@ -1431,9 +1459,10 @@ export default function ReceptionAdmin({
     setIsTransferModalOpen(false);
 
     // Sync to Cloudflare D1 guest_transfers table
+    const adminPin = localStorage.getItem('hsi_admin_pin') || '7650';
     fetch('/api/sync', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminPin },
       body: JSON.stringify({
         action: 'save_guest_transfer',
         payload: {
@@ -1463,9 +1492,10 @@ export default function ReceptionAdmin({
     setStationTransfers(prev => prev.map(t => {
       if (t.id === trfId) {
         const updated = { ...t, dispatchStatus: newStatus };
+        const adminPin = localStorage.getItem('hsi_admin_pin') || '7650';
         fetch('/api/sync', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminPin },
           body: JSON.stringify({
             action: 'save_guest_transfer',
             payload: {
@@ -2022,6 +2052,35 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
     setHandoverLogs([newLog, ...handoverLogs]);
     setActiveHandoverForVoucher(newLog);
     setHandoverSuccess(true);
+
+    // Cloudflare D1 Cashier Shift Handover Sync
+    const adminPin = localStorage.getItem('hsi_admin_pin') || '7650';
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': adminPin
+      },
+      body: JSON.stringify({
+        action: 'record_shift_handover',
+        payload: {
+          shiftType: newLog.shift,
+          outgoingCashier: newLog.cashier,
+          incomingCashier: newLog.supervisor,
+          openingFloat: newLog.openingFloat,
+          cashCollected: newLog.cashCollected,
+          upiCollected: 0,
+          cardCollected: 0,
+          companyCredit: 0,
+          totalRevenue: newLog.cashCollected,
+          closingCashExpected: newLog.expected,
+          closingCashActual: newLog.actual,
+          varianceReason: newLog.notes,
+          notes: `Denominations: 500x${denominations[500] || 0}, 200x${denominations[200] || 0}, 100x${denominations[100] || 0}, 50x${denominations[50] || 0}`
+        }
+      })
+    }).catch(err => console.warn('Shift handover cloud sync error:', err));
+
     setTimeout(() => setHandoverSuccess(false), 4000);
   };
 
@@ -2119,9 +2178,10 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
     setPoliceDispatchSent(true);
     try {
       const interstateCount = (filteredBookings || []).filter(b => b.isInterstate || (b.stateOfOrigin && b.stateOfOrigin.toLowerCase() !== 'odisha')).length;
+      const adminPin = localStorage.getItem('hsi_admin_pin') || '7650';
       await fetch('/api/sync', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminPin },
         body: JSON.stringify({
           action: 'dispatch_police_register',
           payload: {
@@ -5972,13 +6032,13 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
           </div>
 
           {/* Part 3: Linen Par Stock & Room Asset Custody Embedded */}
-          <LinenRoomAssetsSection rooms={rooms} />
+          <LinenRoomAssetsSection rooms={rooms} onSaveLinenUpdate={(payload) => { const pin = localStorage.getItem('hsi_admin_pin') || '7650'; fetch('/api/sync', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': pin }, body: JSON.stringify({ action: 'update_linen_inventory', payload }) }).catch(() => {}); }} />
         </div>
       )}
 
       {/* TAB: LINEN & ROOM ASSETS (Part 3) */}
       {activeTab === 'linen-assets' && (
-        <LinenRoomAssetsSection rooms={rooms} />
+        <LinenRoomAssetsSection rooms={rooms} onSaveLinenUpdate={(payload) => { const pin = localStorage.getItem('hsi_admin_pin') || '7650'; fetch('/api/sync', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': pin }, body: JSON.stringify({ action: 'update_linen_inventory', payload }) }).catch(() => {}); }} />
       )}
 
       {/* TAB: STAFF ATTENDANCE & PAYROLL (Part 1) */}
@@ -7218,7 +7278,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
                 {filteredMaintenance.filter(t => t.blockType === 'OOS (Out of Service)' && t.status === 'In Progress').length} Room
               </div>
               <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>
-                Room 307 (Geyser Pilot Element)
+                Room 107 (Geyser Pilot Element)
               </div>
             </div>
 
@@ -9168,8 +9228,8 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
                     { room: '102', name: 'SUBHASH CHANDRA DAS', phone: '+91 94371 88291', idType: 'Driving Lic.', idNum: 'OD-18-XXXX-8291', state: 'Odisha (BBS)', from: 'Bhubaneswar', to: 'JK Paper Mills', vehicle: 'OD-02-AX-4412', purpose: 'Technical Inspection' },
                     { room: '204', name: 'K. RAMA MURTHY', phone: '+91 98480 33119', idType: 'Aadhaar (Masked)', idNum: 'XXXX-XXXX-3119', state: 'Andhra Pradesh', from: 'Srikakulam', to: 'Maa Majhighariani', vehicle: 'AP-30-T-8821', purpose: 'Pilgrimage Darshan' },
                     { room: '206', name: 'LAVAKANTA OJHA', phone: '+91 94371 44520', idType: 'Passport', idNum: 'Z-XXXX-4520', state: 'Odisha', from: 'Cuttack', to: 'Akchem Rayagada', vehicle: 'OD-05-M-1029', purpose: 'Business Conference' },
-                    { room: '301', name: 'UTKARSH SRIVASTAVA', phone: '+91 94370 88912', idType: 'Aadhaar (Masked)', idNum: 'XXXX-XXXX-8912', state: 'Uttar Pradesh', from: 'Varanasi', to: 'Koraput Tourism', vehicle: 'Train 18447', purpose: 'Travel & Tourism' },
-                    { room: '304', name: 'BIJAY PASWAN', phone: '+91 98610 33812', idType: 'Voter ID', idNum: 'JH-XXXX-3812', state: 'Jharkhand', from: 'Ranchi', to: 'PRADAN Field Office', vehicle: 'Train 18105', purpose: 'NGO Field Survey' }
+                    { room: '101', name: 'UTKARSH SRIVASTAVA', phone: '+91 94370 88912', idType: 'Aadhaar (Masked)', idNum: 'XXXX-XXXX-8912', state: 'Uttar Pradesh', from: 'Varanasi', to: 'Koraput Tourism', vehicle: 'Train 18447', purpose: 'Travel & Tourism' },
+                    { room: '104', name: 'BIJAY PASWAN', phone: '+91 98610 33812', idType: 'Voter ID', idNum: 'JH-XXXX-3812', state: 'Jharkhand', from: 'Ranchi', to: 'PRADAN Field Office', vehicle: 'Train 18105', purpose: 'NGO Field Survey' }
                   ].map((row, idx) => (
                     <tr key={idx} style={{ borderBottom: '1px solid #e2e8f0' }}>
                       <td style={{ border: '1px solid #cbd5e1', padding: '0.35rem', textAlign: 'center' }}>{idx + 1}</td>

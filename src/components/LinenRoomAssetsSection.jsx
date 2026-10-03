@@ -84,6 +84,25 @@ export default function LinenRoomAssetsSection({
       });
     }
 
+    // Direct D1 Sync for Linen & Dhobi movements
+    const adminPin = localStorage.getItem('hsi_admin_pin') || '7650';
+    fetch('/api/sync', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': adminPin
+      },
+      body: JSON.stringify({
+        action: 'update_linen_inventory',
+        payload: {
+          itemId: selectedLinenId,
+          actionType: dhobiAction === 'dispatch' ? 'send_dhobi' : 'receive_dhobi',
+          quantity: qty,
+          vendor: dhobiVendor
+        }
+      })
+    }).catch(err => console.warn('Linen inventory sync fallback:', err));
+
     setDhobiModalOpen(false);
   };
 

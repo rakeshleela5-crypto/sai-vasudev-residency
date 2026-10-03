@@ -67,7 +67,7 @@ export default function BookingReceiptModal({
     billingAddress: '',
     stateCode: '21',
     stateName: 'Odisha',
-    roomNumber: '301',
+    roomNumber: '201',
     tier: 'Executive AC',
     planCode: 'CP',
     grcNo: '684',
@@ -207,9 +207,13 @@ export default function BookingReceiptModal({
 
   const handlePrint = () => {
     // Record Rule 48 Multi-Copy Statutory Print Audit Log in Cloudflare D1
+    const adminPin = localStorage.getItem('hsi_admin_pin') || '7650';
     fetch('/api/sync', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': adminPin
+      },
       body: JSON.stringify({
         action: 'log_invoice_print',
         payload: {

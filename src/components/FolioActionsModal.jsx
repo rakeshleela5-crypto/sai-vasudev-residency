@@ -23,7 +23,7 @@ export default function FolioActionsModal({
   onOpenMasterFolio
 }) {
   // Safe room fallback so hooks initialize deterministically even when modal is closed
-  const safePropRoom = propRoom || (rooms && rooms[0]) || { roomNumber: '402', tier: 'Executive Room' };
+  const safePropRoom = propRoom || (rooms && rooms[0]) || { roomNumber: '201', tier: 'Executive Room' };
   const [activeRoomState, setActiveRoomState] = useState(safePropRoom);
   React.useEffect(() => {
     if (propRoom) {

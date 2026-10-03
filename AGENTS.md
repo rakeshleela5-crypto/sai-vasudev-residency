@@ -15,7 +15,7 @@ Whenever any changes, bug fixes, UI updates, schema modifications, or features a
 
 3. **Cloudflare D1 Remote Database Sync**:
    - If SQL migrations, table definitions, or seed scripts are altered or added, apply them directly to the remote Cloudflare D1 database:
-     `npx wrangler d1 execute hotel-sai-international-db --remote --file=<migration_file>`
+     `npx wrangler d1 execute sai-vasudev-residency-db --remote --file=<migration_file>`
 
 4. **Response Requirement**:
    - Do NOT ask the user for permission to push or deploy.

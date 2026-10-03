@@ -643,6 +643,66 @@ export async function onRequestPost({ request, env }) {
       return jsonResponse({ success: true, requestId: reqId });
     }
 
+    
+    // 20. ERP PUBLIC: Corporate B2B Account Onboarding Application & Lead Capture
+    if (action === 'apply_corporate_account') {
+      const p = payload;
+      const corpId = p.corporateId || `CORP-${Date.now().toString().slice(-4)}`;
+      const inqId = `INQ-${Date.now().toString().slice(-4)}`;
+
+      // 1. Register corporate partner in pending status
+      await db.prepare(`
+        INSERT OR IGNORE INTO corporate_partners (
+          corporate_id, company_name, gstin, location, contact_person,
+          contact_email, contact_phone, contracted_discount_percent, preferred_tier,
+          credit_days, credit_limit, opening_balance, status
+        ) VALUES (?, ?, ?, 'Rayagada Industrial Area', ?, ?, ?, 10, 'Executive Room', 30, 200000, 0, 'Pending Verification')
+      `).bind(
+        corpId, p.companyName, p.gstin, p.contactPerson || 'Logistics Lead',
+        p.contactEmail || '', p.contactPhone || ''
+      ).run().catch(e => console.warn("Corporate partner application insert error:", e));
+
+      // 2. Also log to corporate_inquiries table for sales CRM
+      await db.prepare(`
+        INSERT INTO corporate_inquiries (
+          inquiry_id, company_name, gstin, contact_person, contact_email,
+          phone, estimated_monthly_rooms, status, notes, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending Review', 'Submitted via B2B Corporate Portal', datetime('now'))
+      `).bind(
+        inqId, p.companyName, p.gstin || '', p.contactPerson || '',
+        p.contactEmail || '', p.contactPhone || '', p.estimatedRooms || '5-10 rooms/month'
+      ).run().catch(e => console.warn("Corporate inquiry insert error:", e));
+
+      return jsonResponse({ success: true, corporateId: corpId, inquiryId: inqId });
+    }
+
+    // 41. CORPORATE PORTAL: Record Corporate Advance Quotation
+    if (action === 'record_corporate_advance_quotation') {
+      const q = payload || {};
+      const quotationId = q.quotationNo || `HSI-QUO-${Date.now()}`;
+      const partnerId = q.partnerId || null;
+      const companyName = q.companyName || 'Corporate Client';
+      const grandTotal = Number(q.grandTotal || 0);
+      const quotedRate = Number(q.quotedRate || 2200);
+
+      await db.prepare(`
+        INSERT INTO corporate_quotations (
+          quotation_id, corporate_id, company_name, contact_person, contact_email, contact_phone,
+          room_tier, rooms_count, nights, quoted_rate, estimated_total, tds_applicable, valid_until, status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DATE('now', '+30 days'), ?)
+        ON CONFLICT(quotation_id) DO UPDATE SET
+          estimated_total = excluded.estimated_total,
+          status = excluded.status
+      `).bind(
+        quotationId, partnerId, companyName, q.contactPerson || 'Authorized Representative',
+        q.contactEmail || 'corporate@partner.com', q.contactPhone || '+91 94370 00000',
+        q.roomTier || 'Executive Room', Number(q.roomCount || 1), Number(q.nightCount || 1),
+        quotedRate, grandTotal, '194C (2%)', q.status || 'Advance Confirmed'
+      ).run().catch(() => {});
+
+      return jsonResponse({ success: true, quotationId, companyName, grandTotal, status: q.status || 'Advance Confirmed' });
+    }
+
     // --- PROTECTED ADMINISTRATIVE ACTIONS ---
     // Strict authentication required for all back-office mutations
     const isAuthorized = await verifyAdminAuth(request, env, db);
@@ -729,7 +789,7 @@ export async function onRequestPost({ request, env }) {
           room_revenue, pos_fnb_revenue, other_revenue, total_revenue,
           cash_collected, upi_collected, card_collected, corporate_billed,
           discrepancy_amount, auditor_name, notes, created_at
-        ) VALUES (?, date('now'), 40, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+        ) VALUES (?, date('now'), 18, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
         ON CONFLICT(audit_date) DO UPDATE SET
           occupied_rooms = excluded.occupied_rooms,
           occupancy_rate = excluded.occupancy_rate,
@@ -796,6 +856,19 @@ export async function onRequestPost({ request, env }) {
         parseFloat(t.taxableBase) || 0, parseFloat(t.gstRate) || 0, parseFloat(t.cgst) || 0, parseFloat(t.sgst) || 0,
         t.sacCode || '996311', t.invoiceId || null, t.createdBy || 'Front Desk'
       ).run();
+
+      const netDelta = (parseFloat(t.debitAmount) || 0) - (parseFloat(t.creditAmount) || 0);
+      if (netDelta !== 0 && t.roomNumber) {
+        await db.prepare(`
+          UPDATE rooms SET outstanding_balance = outstanding_balance + ? WHERE room_number = ?
+        `).bind(netDelta, t.roomNumber).run().catch(() => {});
+
+        await db.prepare(`
+          UPDATE bookings 
+          SET balance_due = balance_due + ?, updated_at = datetime('now')
+          WHERE room_number = ? AND booking_status NOT IN ('Cancelled', 'Checked Out')
+        `).bind(netDelta, t.roomNumber).run().catch(() => {});
+      }
 
       return jsonResponse({ success: true, transactionId: txnId });
     }
@@ -904,11 +977,35 @@ export async function onRequestPost({ request, env }) {
         ).run().catch(() => {});
       }
 
-      // Update room to Cleaning (Vacant Dirty)
+      // 1. Update room to Cleaning (Vacant Dirty) and zero out outstanding balance
       await db.prepare(`
-        UPDATE rooms SET status = 'Cleaning', current_guest_name = NULL, current_booking_id = NULL
+        UPDATE rooms 
+        SET status = 'Cleaning', current_guest_name = NULL, current_booking_id = NULL, outstanding_balance = 0
         WHERE room_number = ?
       `).bind(roomNumber).run();
+
+      // 2. Mark booking as Checked Out and zero out balance due
+      await db.prepare(`
+        UPDATE bookings 
+        SET booking_status = 'Checked Out', balance_due = 0, payment_status = 'Paid', updated_at = datetime('now')
+        WHERE (booking_id = ? OR (room_number = ? AND booking_status = 'Checked In'))
+      `).bind(payload.bookingId || null, roomNumber).run().catch(e => console.warn('Booking checkout update error:', e));
+
+      // 3. Save housekeeping turnover ticket if provided
+      if (payload.housekeepingTicket) {
+        const hk = payload.housekeepingTicket;
+        await db.prepare(`
+          INSERT INTO room_service_requests (
+            request_id, room_number, service_type, description, priority, status, created_at
+          ) VALUES (?, ?, ?, ?, ?, 'Pending', datetime('now'))
+        `).bind(
+          hk.requestId || `HK-TURNOVER-${roomNumber}-${Date.now().toString().slice(-4)}`,
+          roomNumber,
+          hk.serviceType || 'Turnover Sanitization & Deep Clean',
+          hk.description || `Automated Checkout Turnover: Room ${roomNumber}`,
+          hk.priority || 'Urgent'
+        ).run().catch(() => {});
+      }
 
       return jsonResponse({ success: true, settledRoom: roomNumber, tendersCount: (tenderRows || []).length });
     }
@@ -927,7 +1024,7 @@ export async function onRequestPost({ request, env }) {
           card_collected, company_billed, cash_opening_float, cash_expected,
           cash_physical_drawer, cash_variance, is_locked, auditor_name, notes
         ) VALUES (
-          ?, ?, datetime('now'), 40, ?,
+          ?, ?, datetime('now'), 18, ?,
           ?, ?, ?, ?, ?,
           ?, ?, ?, ?,
           ?, ?, ?, ?,
@@ -1107,37 +1204,7 @@ export async function onRequestPost({ request, env }) {
       return jsonResponse({ success: true, mode });
     }
 
-    // 20. ERP PUBLIC: Corporate B2B Account Onboarding Application & Lead Capture
-    if (action === 'apply_corporate_account') {
-      const p = payload;
-      const corpId = p.corporateId || `CORP-${Date.now().toString().slice(-4)}`;
-      const inqId = `INQ-${Date.now().toString().slice(-4)}`;
-
-      // 1. Register corporate partner in pending status
-      await db.prepare(`
-        INSERT OR IGNORE INTO corporate_partners (
-          corporate_id, company_name, gstin, location, contact_person,
-          contact_email, contact_phone, contracted_discount_percent, preferred_tier,
-          credit_days, credit_limit, opening_balance, status
-        ) VALUES (?, ?, ?, 'Rayagada Industrial Area', ?, ?, ?, 10, 'Executive Room', 30, 200000, 0, 'Pending Verification')
-      `).bind(
-        corpId, p.companyName, p.gstin, p.contactPerson || 'Logistics Lead',
-        p.contactEmail || '', p.contactPhone || ''
-      ).run().catch(e => console.warn("Corporate partner application insert error:", e));
-
-      // 2. Also log to corporate_inquiries table for sales CRM
-      await db.prepare(`
-        INSERT INTO corporate_inquiries (
-          inquiry_id, company_name, gstin, contact_person, contact_email,
-          phone, estimated_monthly_rooms, status, notes, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending Review', 'Submitted via B2B Corporate Portal', datetime('now'))
-      `).bind(
-        inqId, p.companyName, p.gstin || '', p.contactPerson || '',
-        p.contactEmail || '', p.contactPhone || '', p.estimatedRooms || '5-10 rooms/month'
-      ).run().catch(e => console.warn("Corporate inquiry insert error:", e));
-
-      return jsonResponse({ success: true, corporateId: corpId, inquiryId: inqId });
-    }
+    // (apply_corporate_account moved to public actions section)
 
     // 21. POS RESTAURANT: Anti-Theft KOT Item Void Audit Log
     if (action === 'log_kot_void') {
@@ -1402,8 +1469,12 @@ export async function onRequestPost({ request, env }) {
           WHERE booking_id = ?
         `).bind(guestName || null, guestPhone || null, newCheckoutDate, totalAdded, totalAdded, notes || '', activeBooking.booking_id).run().catch(() => {});
 
+        await db.prepare(`
+          UPDATE rooms SET outstanding_balance = outstanding_balance + ? WHERE room_number = ?
+        `).bind(totalAdded, roomNumber).run().catch(() => {});
+
         // Post extra bed transaction if requested
-        if (addExtraBed) {
+        if (isExtraBed) {
           const bedTxId = `TXN-BED-${roomNumber}-${Date.now().toString().slice(-4)}`;
           await db.prepare(`
             INSERT INTO folio_transactions (
@@ -1533,26 +1604,165 @@ export async function onRequestPost({ request, env }) {
 
     // 38. THE WILD OASIS: Front-Desk In-Person Check-In Guest & Room Allocation
     if (action === 'check_in_guest') {
-      const { bookingId, roomNumber, guestName, tier, nights, addons, payment } = payload;
-
-      // Update room status to Occupied
-      await db.prepare(`
-        UPDATE rooms
-        SET status = 'Occupied', current_guest_name = ?, current_booking_id = ?
-        WHERE room_number = ?
-      `).bind(guestName, bookingId || null, roomNumber).run().catch(() => {});
-
-      // Update booking status if booking exists
-      if (bookingId) {
-        await db.prepare(`
-          UPDATE bookings
-          SET booking_status = 'Checked In',
-              total_amount = COALESCE(?, total_amount)
-          WHERE booking_id = ? OR room_number = ?
-        `).bind(payment?.totalStayAmount || null, bookingId, roomNumber).run().catch(() => {});
+      const p = payload || {};
+      const roomNumber = p.roomNumber;
+      if (!roomNumber) {
+        return jsonResponse({ error: "roomNumber is required" }, 400);
       }
 
-      return jsonResponse({ success: true, roomNumber, guestName, status: 'Occupied' });
+      const bookingId = p.bookingId || `BOOK-${roomNumber}-${Date.now().toString().slice(-4)}`;
+      const guestName = p.guestName || `Room ${roomNumber} Guest`;
+      const guestPhone = p.guestPhone || p.phone || null;
+      const guestEmail = p.guestEmail || p.email || null;
+      const idProofType = p.idProofType || 'Aadhaar (Masked)';
+      const idProofNumber = p.idProofNumber || p.idNumber || null;
+      const tier = p.tier || (Number(roomNumber) < 200 ? 'Standard Non-AC Room' : 'Deluxe Room');
+      const nights = Number(p.nights || 1);
+      const checkInDate = p.checkInDate || new Date().toISOString().slice(0, 10);
+      let checkOutDate = p.checkOutDate;
+      if (!checkOutDate) {
+        const d = new Date(checkInDate);
+        d.setDate(d.getDate() + nights);
+        checkOutDate = d.toISOString().slice(0, 10);
+      }
+
+      const tariffPerNight = Number(p.tariffPerNight || p.tariff || (p.payment?.totalStayAmount ? Math.round(p.payment.totalStayAmount / nights / 1.12) : 2200));
+      const totalAmount = Number(p.totalAmount || p.payment?.totalStayAmount || (tariffPerNight * nights * 1.12));
+      const baseAmount = Number(p.baseAmount || Math.round(totalAmount / 1.12));
+      const taxAmount = Number(p.taxAmount || (totalAmount - baseAmount));
+      const advanceDeposit = Number(p.advanceDeposit !== undefined ? p.advanceDeposit : (p.payment?.advancePaid || 0));
+      const balanceDue = Number(p.balanceDue !== undefined ? p.balanceDue : (totalAmount - advanceDeposit));
+      const paymentMode = p.paymentMode || p.payment?.mode || 'Cash';
+      const paymentStatus = balanceDue <= 0 ? 'Paid' : (advanceDeposit > 0 ? 'Partial' : 'Pending');
+      const isInterstate = p.isInterstate ? 1 : 0;
+      const stateOfOrigin = p.stateOfOrigin || 'Odisha';
+      const vehicleNumber = p.vehicleNumber || null;
+      const purposeOfVisit = p.purposeOfVisit || 'Personal / Tourism';
+      const specialRequests = p.specialRequests || p.notes || null;
+
+      // 1. Insert or update booking in D1
+      await db.prepare(`
+        INSERT INTO bookings (
+          booking_id, room_number, guest_name, guest_phone, guest_email,
+          id_proof_type, id_proof_number, check_in_date, check_out_date, nights,
+          tier, tariff_per_night, base_amount, tax_amount, total_amount,
+          advance_deposit, balance_due, payment_mode, payment_status, booking_status,
+          is_interstate, state_of_origin, vehicle_number, purpose_of_visit,
+          special_requests, source, created_at, updated_at
+        ) VALUES (
+          ?, ?, ?, ?, ?,
+          ?, ?, ?, ?, ?,
+          ?, ?, ?, ?, ?,
+          ?, ?, ?, ?, 'Checked In',
+          ?, ?, ?, ?,
+          ?, 'Front Desk Walk-In', datetime('now'), datetime('now')
+        )
+        ON CONFLICT(booking_id) DO UPDATE SET
+          room_number = excluded.room_number,
+          guest_name = excluded.guest_name,
+          guest_phone = COALESCE(excluded.guest_phone, bookings.guest_phone),
+          guest_email = COALESCE(excluded.guest_email, bookings.guest_email),
+          id_proof_type = COALESCE(excluded.id_proof_type, bookings.id_proof_type),
+          id_proof_number = COALESCE(excluded.id_proof_number, bookings.id_proof_number),
+          check_in_date = COALESCE(excluded.check_in_date, bookings.check_in_date),
+          check_out_date = COALESCE(excluded.check_out_date, bookings.check_out_date),
+          nights = COALESCE(excluded.nights, bookings.nights),
+          tier = COALESCE(excluded.tier, bookings.tier),
+          tariff_per_night = COALESCE(excluded.tariff_per_night, bookings.tariff_per_night),
+          total_amount = COALESCE(excluded.total_amount, bookings.total_amount),
+          advance_deposit = COALESCE(excluded.advance_deposit, bookings.advance_deposit),
+          balance_due = COALESCE(excluded.balance_due, bookings.balance_due),
+          payment_status = COALESCE(excluded.payment_status, bookings.payment_status),
+          booking_status = 'Checked In',
+          vehicle_number = COALESCE(excluded.vehicle_number, bookings.vehicle_number),
+          updated_at = datetime('now')
+      `).bind(
+        bookingId, roomNumber, guestName, guestPhone, guestEmail,
+        idProofType, idProofNumber, checkInDate, checkOutDate, nights,
+        tier, tariffPerNight, baseAmount, taxAmount, totalAmount,
+        advanceDeposit, balanceDue, paymentMode, paymentStatus,
+        isInterstate, stateOfOrigin, vehicleNumber, purposeOfVisit,
+        specialRequests
+      ).run();
+
+      // 2. Update room status to Occupied and set outstanding balance
+      await db.prepare(`
+        UPDATE rooms
+        SET status = 'Occupied', current_guest_name = ?, current_booking_id = ?, outstanding_balance = ?
+        WHERE room_number = ?
+      `).bind(guestName, bookingId, balanceDue, roomNumber).run();
+
+      // 3. Post Room Tariff to master folio
+      const roomTxId = `TXN-ROOM-${roomNumber}-${Date.now().toString().slice(-4)}`;
+      await db.prepare(`
+        INSERT INTO folio_transactions (
+          transaction_id, folio_id, booking_id, room_number, transaction_type,
+          outlet, item_code, description, debit_amount, credit_amount,
+          taxable_base, gst_rate, cgst, sgst, sac_code, is_locked, created_by, created_at
+        ) VALUES (
+          ?, ?, ?, ?, 'Room Charge',
+          'Front Desk', 'ROOM-TARIFF', ?, ?, 0,
+          ?, 12, ?, ?, '996311', 0, 'Front Desk Reception', datetime('now')
+        )
+      `).bind(
+        roomTxId, `FOLIO-${roomNumber}`, bookingId, roomNumber,
+        `Room Tariff: ${tier} (${nights} Night${nights > 1 ? 's' : ''})`, totalAmount,
+        baseAmount, taxAmount / 2, taxAmount / 2
+      ).run().catch(() => {});
+
+      // 4. If advance deposit paid, record credit transaction
+      if (advanceDeposit > 0) {
+        const advTxId = `TXN-ADV-${roomNumber}-${Date.now().toString().slice(-4)}`;
+        await db.prepare(`
+          INSERT INTO folio_transactions (
+            transaction_id, folio_id, booking_id, room_number, transaction_type,
+            outlet, item_code, description, debit_amount, credit_amount,
+            taxable_base, gst_rate, cgst, sgst, sac_code, is_locked, created_by, created_at
+          ) VALUES (
+            ?, ?, ?, ?, 'Payment',
+            'Front Desk', 'ADVANCE', ?, 0, ?,
+            0, 0, 0, 0, '996311', 0, 'Front Desk Cashier', datetime('now')
+          )
+        `).bind(
+          advTxId, `FOLIO-${roomNumber}`, bookingId, roomNumber,
+          `Check-In Advance Deposit (${paymentMode})`, advanceDeposit
+        ).run().catch(() => {});
+      }
+
+      // 5. Update guest profile in CRM
+      if (guestPhone) {
+        await db.prepare(`
+          INSERT INTO guest_profiles (
+            guest_id, phone, name, email, id_proof_type, id_proof_number,
+            state_of_origin, vehicle_number, total_stays, total_spent, last_visit, created_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, datetime('now'), datetime('now'))
+          ON CONFLICT(phone) DO UPDATE SET
+            name = excluded.name,
+            email = COALESCE(excluded.email, guest_profiles.email),
+            id_proof_type = COALESCE(excluded.id_proof_type, guest_profiles.id_proof_type),
+            id_proof_number = COALESCE(excluded.id_proof_number, guest_profiles.id_proof_number),
+            total_stays = guest_profiles.total_stays + 1,
+            total_spent = guest_profiles.total_spent + excluded.total_spent,
+            last_visit = datetime('now')
+        `).bind(
+          `GST-${Date.now().toString().slice(-5)}`, guestPhone, guestName, guestEmail || '',
+          idProofType, idProofNumber || '', stateOfOrigin, vehicleNumber || '', totalAmount
+        ).run().catch(() => {});
+      }
+
+      // 6. Police Register Entry (Sarai Act)
+      await db.prepare(`
+        INSERT OR REPLACE INTO police_guest_entries (
+          entry_id, booking_id, guest_name, phone, id_proof_type, id_proof_number,
+          state_of_origin, room_number, check_in_time, purpose_of_visit, vehicle_number, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, ?, datetime('now'))
+      `).bind(
+        `POLICE-${bookingId}`, bookingId, guestName, guestPhone || '',
+        idProofType, idProofNumber || '', stateOfOrigin, roomNumber,
+        purposeOfVisit, vehicleNumber || ''
+      ).run().catch(() => {});
+
+      return jsonResponse({ success: true, bookingId, roomNumber, guestName, status: 'Occupied', balanceDue });
     }
 
     // 39. THE WILD OASIS: Central Operations & Policy Settings Sync
@@ -1629,32 +1839,7 @@ export async function onRequestPost({ request, env }) {
       return jsonResponse({ success: true, settlementId, tableNumber, totalAmount, paymentMode });
     }
 
-    // 41. CORPORATE PORTAL: Record Corporate Advance Quotation
-    if (action === 'record_corporate_advance_quotation') {
-      const q = payload || {};
-      const quotationId = q.quotationNo || `HSI-QUO-${Date.now()}`;
-      const partnerId = q.partnerId || null;
-      const companyName = q.companyName || 'Corporate Client';
-      const grandTotal = Number(q.grandTotal || 0);
-      const quotedRate = Number(q.quotedRate || 2200);
-
-      await db.prepare(`
-        INSERT INTO corporate_quotations (
-          quotation_id, corporate_id, company_name, contact_person, contact_email, contact_phone,
-          room_tier, rooms_count, nights, quoted_rate, estimated_total, tds_applicable, valid_until, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DATE('now', '+30 days'), ?)
-        ON CONFLICT(quotation_id) DO UPDATE SET
-          estimated_total = excluded.estimated_total,
-          status = excluded.status
-      `).bind(
-        quotationId, partnerId, companyName, q.contactPerson || 'Authorized Representative',
-        q.contactEmail || 'corporate@partner.com', q.contactPhone || '+91 94370 00000',
-        q.roomTier || 'Executive Room', Number(q.roomCount || 1), Number(q.nightCount || 1),
-        quotedRate, grandTotal, '194C (2%)', q.status || 'Advance Confirmed'
-      ).run().catch(() => {});
-
-      return jsonResponse({ success: true, quotationId, companyName, grandTotal, status: q.status || 'Advance Confirmed' });
-    }
+    // (record_corporate_advance_quotation moved to public actions section)
 
     // 42. FRONT DESK / RECEPTION: Bill Direct Service / Transfer / Laundry to Room Folio
     if (action === 'bill_to_room') {
@@ -1683,6 +1868,12 @@ export async function onRequestPost({ request, env }) {
 
       await db.prepare(`
         UPDATE rooms SET outstanding_balance = outstanding_balance + ? WHERE room_number = ?
+      `).bind(amount, roomNumber).run().catch(() => {});
+
+      await db.prepare(`
+        UPDATE bookings 
+        SET balance_due = balance_due + ?, updated_at = datetime('now')
+        WHERE room_number = ? AND booking_status NOT IN ('Cancelled', 'Checked Out')
       `).bind(amount, roomNumber).run().catch(() => {});
 
       return jsonResponse({ success: true, txnId, roomNumber, amount });
@@ -1953,6 +2144,34 @@ export async function onRequestPost({ request, env }) {
       ).run().catch(err => console.warn("Police entry insert error:", err));
 
       return jsonResponse({ success: true, entryId });
+    }
+
+    
+    // 52. HOUSEKEEPING: Update Linen Inventory & Dhobi Dispatch
+    if (action === 'update_linen_inventory') {
+      const { itemId, actionType, quantity, inStore, atDhobi, damaged } = payload || {};
+      if (itemId) {
+        if (inStore !== undefined && atDhobi !== undefined) {
+          await db.prepare(`
+            UPDATE linen_inventory 
+            SET in_store = ?, at_dhobi = ?, damaged = COALESCE(?, damaged), last_audited = datetime('now')
+            WHERE id = ?
+          `).bind(inStore, atDhobi, damaged || 0, itemId).run().catch(() => {});
+        } else if (actionType === 'send_dhobi') {
+          await db.prepare(`
+            UPDATE linen_inventory 
+            SET in_store = MAX(0, in_store - ?), at_dhobi = at_dhobi + ?, last_audited = datetime('now')
+            WHERE id = ?
+          `).bind(quantity || 0, quantity || 0, itemId).run().catch(() => {});
+        } else if (actionType === 'receive_dhobi') {
+          await db.prepare(`
+            UPDATE linen_inventory 
+            SET at_dhobi = MAX(0, at_dhobi - ?), in_store = in_store + ?, last_audited = datetime('now')
+            WHERE id = ?
+          `).bind(quantity || 0, quantity || 0, itemId).run().catch(() => {});
+        }
+      }
+      return jsonResponse({ success: true, itemId });
     }
 
     return jsonResponse({ error: `Unknown action: ${action}` }, 400);

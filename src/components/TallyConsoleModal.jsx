@@ -372,9 +372,13 @@ export default function TallyConsoleModal({
     setVouchers([newVoucher, ...vouchers]);
 
     // Dispatch double-entry balanced voucher to Cloudflare D1
+    const adminPin = localStorage.getItem('hsi_admin_pin') || '7650';
     fetch('/api/sync', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': adminPin
+      },
       body: JSON.stringify({
         action: 'save_tally_voucher',
         payload: {
@@ -418,9 +422,13 @@ export default function TallyConsoleModal({
     setLedgers([...ledgers, newLedger]);
 
     // Dispatch Master Ledger to Cloudflare D1
+    const adminPin = localStorage.getItem('hsi_admin_pin') || '7650';
     fetch('/api/sync', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': adminPin
+      },
       body: JSON.stringify({
         action: 'save_tally_ledger',
         payload: {

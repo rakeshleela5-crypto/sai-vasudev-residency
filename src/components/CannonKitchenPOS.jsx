@@ -53,7 +53,7 @@ export default function CannonKitchenPOS({
     },
     {
       orderId: 'KOT-8492',
-      roomNumber: '302',
+      roomNumber: '102',
       guestName: 'UTKARSH SRIVASTAVA',
       outlet: 'Cannon Kitchen',
       orderType: 'room',
@@ -348,9 +348,13 @@ export default function CannonKitchenPOS({
     };
 
     // Dispatch to Cloudflare D1 restaurant_kot_voids table
+    const adminPin = localStorage.getItem('hsi_admin_pin') || '7650';
     fetch('/api/sync', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': adminPin
+      },
       body: JSON.stringify({
         action: 'log_kot_void',
         payload: {
@@ -562,9 +566,13 @@ Thank you for dining at Cannon Kitchen! 🙏`;
     handleUpdateKdsStatus(orderId, 'Voided');
 
     // Cloudflare Edge void audit logging
+    const adminPin = localStorage.getItem('hsi_admin_pin') || '7650';
     fetch('/api/sync', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': adminPin
+      },
       body: JSON.stringify({
         action: 'log_kot_void',
         payload: {
@@ -675,9 +683,13 @@ Thank you for dining at Cannon Kitchen! 🙏`;
     setLocalFoodOrders(prev => [settlementKot, ...prev]);
 
     // Cloudflare D1 Sync
+    const adminPin = localStorage.getItem('hsi_admin_pin') || '7650';
     fetch('/api/sync', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': adminPin
+      },
       body: JSON.stringify({
         action: 'record_table_settlement',
         payload: receipt

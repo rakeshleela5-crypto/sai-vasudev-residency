@@ -241,11 +241,11 @@ export default function AccountsLedgerModal({
       { roomNumber: '201', guestName: 'Ashok Leyland Site Engg', phone: '+91 98101 22345', totalCharges: 8940, advanceDeposit: 2500, todayCharges: 2980, todayOutstanding: 1480, cumulativeOutstanding: 6440, status: 'Due Today' },
       { roomNumber: '204', guestName: 'Dr. Debabrata Mohanty', phone: '+91 94370 55123', totalCharges: 4850, advanceDeposit: 2000, todayCharges: 1650, todayOutstanding: 650, cumulativeOutstanding: 2850, status: 'Due Today' },
       { roomNumber: '208', guestName: 'Rajesh Agrawal & Family', phone: '+91 98610 88291', totalCharges: 11200, advanceDeposit: 6000, todayCharges: 3400, todayOutstanding: 1400, cumulativeOutstanding: 5200, status: 'Due Today' },
-      { roomNumber: '301', guestName: 'Vikram Singhania (JK Paper)', phone: '+91 98101 55667', totalCharges: 7650, advanceDeposit: 7650, todayCharges: 850, todayOutstanding: 0, cumulativeOutstanding: 0, status: 'Covered by A.D.' },
-      { roomNumber: '304', guestName: 'Subrat Tripathy', phone: '+91 99372 11984', totalCharges: 6100, advanceDeposit: 3000, todayCharges: 1950, todayOutstanding: 950, cumulativeOutstanding: 3100, status: 'Due Today' },
-      { roomNumber: '309', guestName: 'Pravat Kumar Jena', phone: '+91 94373 66410', totalCharges: 5400, advanceDeposit: 2000, todayCharges: 1800, todayOutstanding: 800, cumulativeOutstanding: 3400, status: 'Due Today' },
-      { roomNumber: '401', guestName: 'IMFA Executive Guest', phone: '+91 98112 44321', totalCharges: 9800, advanceDeposit: 5000, todayCharges: 3200, todayOutstanding: 1200, cumulativeOutstanding: 4800, status: 'Due Today' },
-      { roomNumber: '405', guestName: 'Manoj Dash', phone: '+91 97761 33289', totalCharges: 3200, advanceDeposit: 3200, todayCharges: 0, todayOutstanding: 0, cumulativeOutstanding: 0, status: 'Settled' }
+      { roomNumber: '105', guestName: 'Vikram Singhania (JK Paper)', phone: '+91 98101 55667', totalCharges: 7650, advanceDeposit: 7650, todayCharges: 850, todayOutstanding: 0, cumulativeOutstanding: 0, status: 'Covered by A.D.' },
+      { roomNumber: '106', guestName: 'Subrat Tripathy', phone: '+91 99372 11984', totalCharges: 6100, advanceDeposit: 3000, todayCharges: 1950, todayOutstanding: 950, cumulativeOutstanding: 3100, status: 'Due Today' },
+      { roomNumber: '107', guestName: 'Pravat Kumar Jena', phone: '+91 94373 66410', totalCharges: 5400, advanceDeposit: 2000, todayCharges: 1800, todayOutstanding: 800, cumulativeOutstanding: 3400, status: 'Due Today' },
+      { roomNumber: '209', guestName: 'IMFA Executive Guest', phone: '+91 98112 44321', totalCharges: 9800, advanceDeposit: 5000, todayCharges: 3200, todayOutstanding: 1200, cumulativeOutstanding: 4800, status: 'Due Today' },
+      { roomNumber: '211', guestName: 'Manoj Dash', phone: '+91 97761 33289', totalCharges: 3200, advanceDeposit: 3200, todayCharges: 0, todayOutstanding: 0, cumulativeOutstanding: 0, status: 'Settled' }
     ];
   })();
 
@@ -891,7 +891,7 @@ export default function AccountsLedgerModal({
     },
     {
       billNo: 'FMBIL2627-01498',
-      room: '410',
+      room: '210',
       guest: 'BIJAY PASWAN',
       company: 'PRADAN',
       plan: 'CP',
@@ -906,7 +906,7 @@ export default function AccountsLedgerModal({
     },
     {
       billNo: 'FMBIL2627-01499',
-      room: '402',
+      room: '202',
       guest: 'PASHOK',
       company: 'Individual',
       plan: 'EP',
@@ -1179,9 +1179,13 @@ export default function AccountsLedgerModal({
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
     // Sync GSTR-1 return filing metadata and payload to Cloudflare D1
+    const adminPin = localStorage.getItem('hsi_admin_pin') || '7650';
     fetch('/api/sync', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Admin-Key': adminPin
+      },
       body: JSON.stringify({
         action: 'save_gstr1_filing',
         payload: {
@@ -1228,10 +1232,14 @@ export default function AccountsLedgerModal({
 
         // Sync matched rows to Cloudflare D1 gstr2b_inward_supplies
         if (Array.isArray(res.results.matched)) {
+          const adminPin = localStorage.getItem('hsi_admin_pin') || '7650';
           res.results.matched.forEach((item, idx) => {
             fetch('/api/sync', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Admin-Key': adminPin
+              },
               body: JSON.stringify({
                 action: 'save_gstr2b_recon',
                 payload: {

@@ -2425,13 +2425,13 @@ export const AUTONOMOUS_BOT_FLEET = [
 
 export const INITIAL_FOLIO_TRANSACTIONS = [
   // -------------------------------------------------------------
-  // ROOM 402: THE EXACT ₹13,588 CORPORATE STAY (GAIL / CORPORATE GUEST)
+  // ROOM 202: THE EXACT ₹13,588 CORPORATE STAY (GAIL / CORPORATE GUEST)
   // -------------------------------------------------------------
   {
-    transactionId: "TXN-402-001",
-    folioId: "FOLIO-402",
+    transactionId: "TXN-202-001",
+    folioId: "FOLIO-202",
     bookingId: "HSI-202609-0004",
-    roomNumber: "402",
+    roomNumber: "202",
     transactionType: "Room Charge",
     outlet: "Front Desk",
     itemCode: "ROOM-T4",
@@ -2448,10 +2448,10 @@ export const INITIAL_FOLIO_TRANSACTIONS = [
     createdAt: "2026-09-20 23:59:00"
   },
   {
-    transactionId: "TXN-402-002",
-    folioId: "FOLIO-402",
+    transactionId: "TXN-202-002",
+    folioId: "FOLIO-202",
     bookingId: "HSI-202609-0004",
-    roomNumber: "402",
+    roomNumber: "202",
     transactionType: "Room Charge",
     outlet: "Front Desk",
     itemCode: "ROOM-T4",
@@ -2468,10 +2468,10 @@ export const INITIAL_FOLIO_TRANSACTIONS = [
     createdAt: "2026-09-21 23:59:00"
   },
   {
-    transactionId: "TXN-402-003",
-    folioId: "FOLIO-402",
+    transactionId: "TXN-202-003",
+    folioId: "FOLIO-202",
     bookingId: "HSI-202609-0004",
-    roomNumber: "402",
+    roomNumber: "202",
     transactionType: "Food & Beverage",
     outlet: "Cannon Kitchen",
     itemCode: "CK-KOT-1048",
@@ -2488,10 +2488,10 @@ export const INITIAL_FOLIO_TRANSACTIONS = [
     createdAt: "2026-09-21 21:15:00"
   },
   {
-    transactionId: "TXN-402-004",
-    folioId: "FOLIO-402",
+    transactionId: "TXN-202-004",
+    folioId: "FOLIO-202",
     bookingId: "HSI-202609-0004",
-    roomNumber: "402",
+    roomNumber: "202",
     transactionType: "Room Service",
     outlet: "Room Service",
     itemCode: "RS-KOT-2011",
@@ -2508,10 +2508,10 @@ export const INITIAL_FOLIO_TRANSACTIONS = [
     createdAt: "2026-09-22 08:30:00"
   },
   {
-    transactionId: "TXN-402-005",
-    folioId: "FOLIO-402",
+    transactionId: "TXN-202-005",
+    folioId: "FOLIO-202",
     bookingId: "HSI-202609-0004",
-    roomNumber: "402",
+    roomNumber: "202",
     transactionType: "Laundry",
     outlet: "Laundry Dept",
     itemCode: "LAUND-01",
@@ -2528,10 +2528,10 @@ export const INITIAL_FOLIO_TRANSACTIONS = [
     createdAt: "2026-09-21 16:45:00"
   },
   {
-    transactionId: "TXN-402-006",
-    folioId: "FOLIO-402",
+    transactionId: "TXN-202-006",
+    folioId: "FOLIO-202",
     bookingId: "HSI-202609-0004",
-    roomNumber: "402",
+    roomNumber: "202",
     transactionType: "Payment",
     outlet: "Front Desk",
     itemCode: "ADV-DEP",
@@ -2549,13 +2549,13 @@ export const INITIAL_FOLIO_TRANSACTIONS = [
   },
 
   // -------------------------------------------------------------
-  // ROOM 301: JK PAPER MILLS CORPORATE GUEST (VIKRAM SINGHANIA)
+  // ROOM 101: JK PAPER MILLS CORPORATE GUEST (VIKRAM SINGHANIA)
   // -------------------------------------------------------------
   {
-    transactionId: "TXN-301-001",
-    folioId: "FOLIO-301",
+    transactionId: "TXN-101-001",
+    folioId: "FOLIO-101",
     bookingId: "HSI-202609-0002",
-    roomNumber: "301",
+    roomNumber: "101",
     transactionType: "Room Charge",
     outlet: "Front Desk",
     itemCode: "ROOM-T3",
@@ -2572,10 +2572,10 @@ export const INITIAL_FOLIO_TRANSACTIONS = [
     createdAt: "2026-09-21 23:59:00"
   },
   {
-    transactionId: "TXN-301-002",
-    folioId: "FOLIO-301",
+    transactionId: "TXN-101-002",
+    folioId: "FOLIO-101",
     bookingId: "HSI-202609-0002",
-    roomNumber: "301",
+    roomNumber: "101",
     transactionType: "Food & Beverage",
     outlet: "Cannon Kitchen",
     itemCode: "CK-KOT-1049",
