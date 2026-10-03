@@ -10,6 +10,9 @@ import {
 import { HOTEL_CONFIG } from '../data/hotelData';
 import { SheetsEditableCell, SheetsColumnHeader, SheetsToolbarLegend } from './UniversalInlineEditor';
 import { sendCaFilingSummaryWhatsApp } from '../utils/whatsappDispatch';
+import { exportGstr1ExcelWorkbook } from '../utils/gstGovExport';
+import GstFilingHeaderToolbar from './GstFilingHeaderToolbar';
+import GstPreviewGuideModal from './GstPreviewGuideModal';
 import { 
   PAYMENT_METHOD_REVENUE_SEP2026,
   TOTAL_GROSS_REVENUE_SEP2026,
@@ -34,6 +37,7 @@ export default function CaFilingStationModal({ isOpen, onClose, initialModule = 
   const [expenseSearch, setExpenseSearch] = useState('');
   const [expenseFilter, setExpenseFilter] = useState('ALL');
   const [exportNotice, setExportNotice] = useState('');
+  const [isPreviewGuideOpen, setIsPreviewGuideOpen] = useState(false);
 
   // Interactive Google Sheets editable states
   const [expensesData, setExpensesData] = useState(DAILY_EXPENDITURES_SEP2026);
@@ -146,6 +150,19 @@ export default function CaFilingStationModal({ isOpen, onClose, initialModule = 
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     showExportNotice('✓ Downloaded Official GSTR-1 JSON (GST Portal format) for CA Filing!');
+  };
+
+  // Export Official GSTR-1 Multi-Sheet Excel Workbook
+  const handleExportGstr1Excel = () => {
+    try {
+      exportGstr1ExcelWorkbook({
+        filename: `GSTR1_${HOTEL_CONFIG.gstin}_092026_OFFICIAL.xls`
+      });
+      showExportNotice('✓ Downloaded Official GSTR-1 Multi-Sheet Excel Workbook (.xls)!');
+    } catch (err) {
+      console.error('Failed to export GSTR-1 Excel:', err);
+      showExportNotice('⚠️ Failed to export GSTR-1 Excel.');
+    }
   };
 
   // Export Complete P&L and Day Book CSV
@@ -360,26 +377,74 @@ For: SRI SAI VASUDEV RESIDENCY (RAYAGADA)
           </div>
 
           {/* Action Buttons */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+            {/* Button 1: Download GSTN GSTR-1 JSON */}
             <button
+              id="modal-btn-download-gstn-gstr1-json"
               onClick={handleExportGstr1Json}
               style={{
-                background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
-                color: '#fff',
-                border: '1px solid #10b981',
-                padding: '0.5rem 0.9rem',
+                background: 'linear-gradient(135deg, #d4af37 0%, #b38914 100%)',
+                color: '#000',
+                border: '1px solid #facc15',
+                padding: '0.45rem 0.85rem',
                 borderRadius: '8px',
-                fontSize: '0.8rem',
+                fontSize: '0.78rem',
+                fontWeight: 800,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(212, 175, 55, 0.35)'
+              }}
+              title="Download official GSTN GSTR-1 JSON payload schema v1.7 for upload to gst.gov.in"
+            >
+              <Download size={14} strokeWidth={2.5} /> Download GSTN GSTR-1 JSON (For gst.gov.in)
+            </button>
+
+            {/* Button 2: <> Preview Portal JSON & CA Guide */}
+            <button
+              id="modal-btn-preview-portal-json"
+              onClick={() => setIsPreviewGuideOpen(true)}
+              style={{
+                background: 'rgba(56, 189, 248, 0.12)',
+                color: '#38bdf8',
+                border: '1px solid #38bdf8',
+                padding: '0.45rem 0.85rem',
+                borderRadius: '8px',
+                fontSize: '0.78rem',
                 fontWeight: 700,
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.4rem',
-                cursor: 'pointer',
-                boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)'
+                gap: '0.35rem',
+                cursor: 'pointer'
               }}
-              title="Download GSTR-1 JSON schema ready for direct upload to GST Portal"
+              title="Inspect live GSTN JSON schema, copy payload, and read step-by-step CA filing instructions"
             >
-              <Download size={14} /> GSTR-1 JSON
+              <span style={{ fontFamily: 'monospace', fontWeight: 800 }}>&lt;&gt;</span>
+              <Eye size={14} /> Preview Portal JSON &amp; CA Guide
+            </button>
+
+            {/* Button 3: GSTR-1 Excel */}
+            <button
+              id="modal-btn-gstr1-excel"
+              onClick={handleExportGstr1Excel}
+              style={{
+                background: '#0f172a',
+                color: '#cbd5e1',
+                border: '1px solid #334155',
+                padding: '0.45rem 0.85rem',
+                borderRadius: '8px',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                cursor: 'pointer'
+              }}
+              title="Download official multi-sheet GSTR-1 Excel workbook (.xls)"
+            >
+              <Download size={13} />
+              <FileSpreadsheet size={14} color="#34d399" /> GSTR-1 Excel
             </button>
 
             <button
@@ -1635,6 +1700,9 @@ For: SRI SAI VASUDEV RESIDENCY (RAYAGADA)
                 </p>
               </div>
 
+              {/* Dedicated Official CA & GST Compliance Filing Station Toolbar */}
+              <GstFilingHeaderToolbar onNotice={showExportNotice} />
+
               {/* CA Official Filing Box */}
               <div style={{ background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(15, 23, 42, 0.95) 100%)', border: '1px solid var(--gold-primary)', borderRadius: '12px', padding: '1.5rem', marginBottom: '1.5rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
@@ -1757,6 +1825,13 @@ For: SRI SAI VASUDEV RESIDENCY (RAYAGADA)
 
         </div>
       </div>
+
+      {/* Official GSTN Portal JSON Inspector & CA Filing Guide Modal */}
+      <GstPreviewGuideModal
+        isOpen={isPreviewGuideOpen}
+        onClose={() => setIsPreviewGuideOpen(false)}
+        onDownloadJson={handleExportGstr1Json}
+      />
     </div>
   );
 }

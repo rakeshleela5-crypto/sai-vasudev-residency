@@ -26,6 +26,7 @@ import {
 } from '../data/caFilingData';
 import CaFilingStationModal from './CaFilingStationModal';
 import { SheetsEditableCell, SheetsColumnHeader, SheetsToolbarLegend } from './UniversalInlineEditor';
+import GstFilingHeaderToolbar from './GstFilingHeaderToolbar';
 
 export default function FinancialAnalytics({ bookings = [] }) {
   const [activeTab, setActiveTab] = useState('tri-period');
@@ -118,83 +119,33 @@ export default function FinancialAnalytics({ bookings = [] }) {
 
   return (
     <div id="ca-filing-station" className="glass-panel" style={{ padding: '2rem', maxWidth: 1400, margin: '2.5rem auto' }}>
-      {/* Top Header */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: '1rem',
-        marginBottom: '1.5rem',
-        borderBottom: '1px solid rgba(212, 175, 55, 0.25)',
-        paddingBottom: '1.25rem'
-      }}>
-        <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-            <span style={{
-              background: 'rgba(212, 175, 55, 0.2)',
-              color: 'var(--gold-glow)',
-              fontSize: '0.72rem',
-              fontWeight: 800,
-              padding: '0.15rem 0.5rem',
-              borderRadius: '4px',
-              border: '1px solid rgba(212, 175, 55, 0.4)'
-            }}>
-              SYSTEM #36: CA FILING STATION
-            </span>
-            <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
-              Financial Intelligence & Government Tax Ledger
-            </span>
-          </div>
-          <h2 style={{ fontSize: '2rem', fontWeight: 900, margin: '0.2rem 0', color: '#fff' }}>
-            {HOTEL_CONFIG.tradeName} — Financial Intelligence & GST Compliance Engine
-          </h2>
-          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'flex', gap: '1.25rem', flexWrap: 'wrap' }}>
-            <span>Proprietor: <strong style={{ color: '#fff' }}>{CA_FILING_STATION_METADATA.proprietorship.legalName}</strong></span>
-            <span>GSTIN: <strong style={{ color: '#34d399', fontFamily: 'monospace' }}>{HOTEL_CONFIG.gstin}</strong></span>
-            <span>PAN: <strong style={{ color: '#38bdf8', fontFamily: 'monospace' }}>{HOTEL_CONFIG.pan}</strong></span>
-            <span>Capacity: <strong style={{ color: 'var(--gold-glow)' }}>18 Rooms (Ground & 1st Floor)</strong></span>
-            <span>Address: <strong style={{ color: '#cbd5e1' }}>Near Andhra Bank, New Colony, Rayagada</strong></span>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center', flexWrap: 'wrap' }}>
+      {/* Official CA & GST Filing Station Header Toolbar */}
+      <div style={{ position: 'relative' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.5rem' }}>
           <button
             onClick={() => setIsModalOpen(true)}
             style={{
-              background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.3) 0%, rgba(212, 175, 55, 0.1) 100%)',
+              background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(212, 175, 55, 0.1) 100%)',
               color: 'var(--gold-glow)',
               border: '1px solid var(--gold-primary)',
-              padding: '0.55rem 1rem',
+              padding: '0.45rem 0.9rem',
               borderRadius: '8px',
-              fontSize: '0.82rem',
+              fontSize: '0.8rem',
               fontWeight: 700,
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.4rem',
               cursor: 'pointer',
-              boxShadow: '0 0 15px rgba(212, 175, 55, 0.2)'
+              boxShadow: '0 2px 10px rgba(212, 175, 55, 0.2)'
             }}
           >
-            <Maximize2 size={15} /> Launch Full-Screen Station
-          </button>
-
-          <button
-            onClick={handleExportGstr1Json}
-            className="btn-secondary-sapphire"
-            style={{ padding: '0.55rem 1rem', fontSize: '0.82rem', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-          >
-            <Download size={14} /> GSTR-1 JSON
-          </button>
-
-          <button
-            onClick={handleExportCsv}
-            className="btn-primary-gold"
-            style={{ padding: '0.55rem 1.1rem', fontSize: '0.82rem', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-          >
-            <FileSpreadsheet size={14} /> P&L CSV
+            <Maximize2 size={14} /> Launch Full-Screen Station &amp; All 10 Modules
           </button>
         </div>
+
+        <GstFilingHeaderToolbar
+          onNotice={triggerNotice}
+        />
       </div>
 
       {notification && (

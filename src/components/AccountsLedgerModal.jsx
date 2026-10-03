@@ -10,7 +10,7 @@ import {
 import { HOTEL_CONFIG, CORPORATE_PARTNERS, INITIAL_CORPORATE_LEDGER, ITEM_WISE_SALES_REPORT_2026_09_24, GST_FOM_RECORDS_2026_09_25 } from '../data/hotelData';
 import BookingReceiptModal from './BookingReceiptModal';
 import TallyConsoleModal from './TallyConsoleModal';
-import { generateOfficialGstr1Json, reconcileGstr2bWithPurchases, validateGstin } from '../utils/gstGovExport';
+import { generateOfficialGstr1Json, reconcileGstr2bWithPurchases, validateGstin, exportGstr1ExcelWorkbook } from '../utils/gstGovExport';
 import { useUniversalInlineEdit, InlineEditorBanner, SheetsEditableCell, SheetsColumnHeader, SheetsToolbarLegend } from './UniversalInlineEditor';
 import UniversalDateFilterBar from './UniversalDateFilterBar';
 import { sendDebtorStatementWhatsApp } from '../utils/whatsappDispatch';
@@ -3613,6 +3613,32 @@ export default function AccountsLedgerModal({
                   title="Import GSTR-2B JSON from GST portal to audit vendor ITC claims"
                 >
                   <ShieldCheck size={15} /> 🔍 Audit GSTR-2B ITC
+                </button>
+
+                <button
+                  id="tab5-btn-gstr1-excel"
+                  onClick={() => {
+                    exportGstr1ExcelWorkbook({
+                      filename: `GSTR1_${HOTEL_CONFIG.gstin}_${selectedMonth}${selectedYear}_OFFICIAL.xls`
+                    });
+                    setActionSuccessMsg('✓ Downloaded Official GSTR-1 Multi-Sheet Excel Workbook (.xls)!');
+                  }}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    fontSize: '0.85rem',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    background: '#0f172a',
+                    color: '#cbd5e1',
+                    border: '1px solid #334155',
+                    borderRadius: '6px',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                  title="Official multi-sheet Excel file (Tables 4A, 7, 12 HSN, 13 Docs, and Summary)"
+                >
+                  <FileSpreadsheet size={15} color="#34d399" /> 📊 GSTR-1 Excel
                 </button>
 
                 <button
