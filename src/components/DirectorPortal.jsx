@@ -420,7 +420,7 @@ export default function DirectorPortal({
 
                 <div style={{ marginTop: '0.5rem', paddingTop: '0.75rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '0.25rem' }}>
-                    <span style={{ color: 'var(--text-muted)' }}>Room Revenue (40 Keys):</span>
+                    <span style={{ color: 'var(--text-muted)' }}>Room Revenue (18 Keys):</span>
                     <span style={{ fontWeight: 700, color: '#fff' }}>₹{todayRoomRevenue.toLocaleString('en-IN')} (59%)</span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>

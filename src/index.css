@@ -1051,6 +1051,41 @@ button:focus-visible, .btn:focus-visible {
   color: #38bdf8;
 }
 
+/* Google Sheets Quick Copy & Row Indicator */
+.sheets-copy-btn {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.sheets-copy-btn:hover {
+  background: rgba(16, 185, 129, 0.28);
+  border-color: #34d399;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+  transform: translateY(-1px);
+}
+
+.sheets-row-num {
+  text-align: center !important;
+  color: #64748b !important;
+  font-size: 0.72rem !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  width: 38px !important;
+  user-select: none;
+  font-family: 'SF Mono', monospace;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
 /* Global Gridline rules for all tables in PMS container & Reception Admin (Google Sheets Style) */
 .pms-data-sheet-table,
 .pms-table-container table,

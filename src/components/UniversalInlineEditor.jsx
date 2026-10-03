@@ -481,7 +481,8 @@ export function SheetsColumnHeader({
 export function SheetsToolbarLegend({
   tableName = 'Live Spreadsheet Matrix',
   subtitle  = 'Interactive Google Sheets Mode',
-  style     = {}
+  style     = {},
+  children
 }) {
   return (
     <div
@@ -494,12 +495,13 @@ export function SheetsToolbarLegend({
         fontSize:'0.74rem', color:'#e2e8f0', ...style
       }}
     >
-      <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
+      <div style={{ display:'flex', alignItems:'center', gap:'8px', flexWrap:'wrap' }}>
         <span style={{ width:'7px', height:'7px', borderRadius:'50%', background:'#10b981', boxShadow:'0 0 6px #10b981' }} />
         <strong style={{ color:'#fff', fontSize:'0.78rem' }}>{tableName}</strong>
         <span style={{ color:'var(--text-muted,#94a3b8)', borderLeft:'1px solid rgba(255,255,255,0.15)', paddingLeft:'8px' }}>
           {subtitle}
         </span>
+        {children && <div style={{ marginLeft:'6px', display:'inline-flex', alignItems:'center' }}>{children}</div>}
       </div>
 
       <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>

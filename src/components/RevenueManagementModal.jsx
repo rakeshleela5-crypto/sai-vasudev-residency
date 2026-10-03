@@ -186,8 +186,8 @@ export default function RevenueManagementModal({
   // 2. Calculate Unconstrained Demand & Wash
   const unconstrainedData = useMemo(() => {
     return calculateUnconstrainedDemandAndWash({
-      physicalCapacity: 40,
-      currentOnTheBooks: Math.round((simOccupancy / 100) * 40),
+      physicalCapacity: 18,
+      currentOnTheBooks: Math.round((simOccupancy / 100) * 18),
       daysToArrival: simDta,
       pickupPace: simVelocity,
       isFestival: isFestivalSurge
@@ -239,7 +239,7 @@ export default function RevenueManagementModal({
       (liveMicroRates['executive-room'].recommendedRate * 0.20) +
       (liveMicroRates['premium-suite'].recommendedRate * 0.15)
     );
-    const roomsSold = Math.round((simOccupancy / 100) * 40);
+    const roomsSold = Math.round((simOccupancy / 100) * 18);
     return calculateChannelNetRevPAR(avgADR, roomsSold);
   }, [liveMicroRates, simOccupancy]);
 
@@ -435,7 +435,7 @@ export default function RevenueManagementModal({
           <div>
             <span style={{ color: '#64748b' }}>Simulated Occupancy:</span>
             <div style={{ color: '#38bdf8', fontWeight: 800, fontSize: '1rem' }}>
-              {simOccupancy}% <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>({Math.round((simOccupancy / 100) * 40)}/40 Rms)</span>
+              {simOccupancy}% <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>({Math.round((simOccupancy / 100) * 18)}/18 Rms)</span>
             </div>
           </div>
           <div>
@@ -1773,13 +1773,13 @@ export default function RevenueManagementModal({
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '0.5rem' }}>
                       <span style={{ fontWeight: 700, color: '#f8fafc' }}>Rooms Taken Offline for Renovation:</span>
-                      <span style={{ color: '#38bdf8', fontWeight: 800 }}>{sandboxOfflineRooms} Rooms ({40 - sandboxOfflineRooms} Active Sellable)</span>
+                      <span style={{ color: '#38bdf8', fontWeight: 800 }}>{sandboxOfflineRooms} Rooms ({18 - sandboxOfflineRooms} Active Sellable)</span>
                     </div>
                     <input
                       type="range"
-                      min="2"
-                      max="16"
-                      step="2"
+                      min="1"
+                      max="9"
+                      step="1"
                       value={sandboxOfflineRooms}
                       onChange={(e) => setSandboxOfflineRooms(Number(e.target.value))}
                       style={{ width: '100%', accentColor: '#38bdf8' }}

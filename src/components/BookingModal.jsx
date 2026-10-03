@@ -447,7 +447,7 @@ export default function BookingModal({
               {/* Specific Room Selection */}
               <div className="form-group">
                 <label className="form-label">
-                  <Lock size={14} color="var(--gold-glow)" /> Select 40-Inventory Key ({selectedTier.roomsRange})
+                  <Lock size={14} color="var(--gold-glow)" /> Select 18-Inventory Key ({selectedTier.roomsRange})
                 </label>
                 <select
                   className="form-select"

@@ -88,7 +88,7 @@ export default function Hero({
               color: 'var(--gold-glow)'
             }}
           >
-            <ShieldCheck size={14} /> Rayagada's Premier <span style={{ color: '#fff', margin: '0 3px' }}><NumberTicker value={40} /></span>-Room Hospitality Landmark
+            <ShieldCheck size={14} /> Rayagada's Premier <span style={{ color: '#fff', margin: '0 3px' }}><NumberTicker value={18} /></span>-Room Hospitality Landmark
           </div>
 
           <div style={{

@@ -25,15 +25,30 @@ import {
   CA_FILING_STATION_METADATA
 } from '../data/caFilingData';
 import CaFilingStationModal from './CaFilingStationModal';
+import { SheetsEditableCell, SheetsColumnHeader, SheetsToolbarLegend } from './UniversalInlineEditor';
 
 export default function FinancialAnalytics({ bookings = [] }) {
   const [activeTab, setActiveTab] = useState('tri-period');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [notification, setNotification] = useState('');
+  const [expensesPreview, setExpensesPreview] = useState(DAILY_EXPENDITURES_SEP2026.slice(-8));
 
   const triggerNotice = (msg) => {
     setNotification(msg);
     setTimeout(() => setNotification(''), 4000);
+  };
+
+  const copyTableToSheets = (headers, dataRows, title = 'Data') => {
+    try {
+      const tsv = [
+        headers.join('\t'),
+        ...dataRows.map(r => r.map(c => String(c ?? '').replace(/\t/g, ' ')).join('\t'))
+      ].join('\n');
+      navigator.clipboard.writeText(tsv);
+      triggerNotice(`📋 Copied "${title}" to clipboard! Paste directly into Google Sheets or Excel (Ctrl+V)`);
+    } catch (_) {
+      triggerNotice('❌ Clipboard access restricted.');
+    }
   };
 
   const handleExportGstr1Json = () => {
@@ -330,38 +345,78 @@ export default function FinancialAnalytics({ bookings = [] }) {
         </div>
       )}
 
-      {/* MODULE 2: DAILY EXPENDITURES PREVIEW */}
+      {/* MODULE 2: DAILY EXPENDITURES PREVIEW (Google Sheets Grid) */}
       {activeTab === 'expenditures' && (
-        <div>
-          <div style={{ background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '10px', padding: '1rem', marginBottom: '1rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-              <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>Recent Daily Vouchers (Full Month Total: ₹{TOTAL_MONTHLY_EXPENDITURES_SEP2026.toLocaleString('en-IN')})</div>
-              <button onClick={() => setIsModalOpen(true)} style={{ color: 'var(--gold-glow)', fontSize: '0.75rem', background: 'transparent', border: 'none', cursor: 'pointer', fontWeight: 700 }}>
-                View All 30 Days →
-              </button>
-            </div>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
-              <thead>
-                <tr style={{ color: '#94a3b8', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', textAlign: 'left' }}>
-                  <th style={{ padding: '0.4rem' }}>Date</th>
-                  <th style={{ padding: '0.4rem' }}>Voucher</th>
-                  <th style={{ padding: '0.4rem' }}>Head of Expenditure</th>
-                  <th style={{ padding: '0.4rem', textAlign: 'right' }}>Amount</th>
-                  <th style={{ padding: '0.4rem', textAlign: 'center' }}>Mode</th>
-                </tr>
-              </thead>
-              <tbody>
-                {DAILY_EXPENDITURES_SEP2026.slice(-6).map(e => (
-                  <tr key={e.voucher} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                    <td style={{ padding: '0.4rem', color: '#cbd5e1' }}>{e.date}</td>
-                    <td style={{ padding: '0.4rem', color: '#38bdf8', fontFamily: 'monospace' }}>{e.voucher}</td>
-                    <td style={{ padding: '0.4rem', color: '#fff' }}>{e.head}</td>
-                    <td style={{ padding: '0.4rem', textAlign: 'right', fontWeight: 700, color: '#f87171' }}>₹{e.amount.toLocaleString('en-IN')}</td>
-                    <td style={{ padding: '0.4rem', textAlign: 'center' }}>{e.mode}</td>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <div style={{ borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.25)', overflow: 'hidden' }}>
+            <SheetsToolbarLegend
+              tableName="Recent Daily Vouchers (Full Month Total: ₹4,01,300)"
+              subtitle="Direct Keyboard Editable Snapshot"
+            >
+              <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+                <button
+                  onClick={() => copyTableToSheets(
+                    ['#', 'Date', 'Voucher', 'Head of Expenditure', 'Amount (INR)', 'Mode'],
+                    expensesPreview.map((e, idx) => [idx + 1, e.date, e.voucher, e.head, e.amount, e.mode]),
+                    'Recent Vouchers'
+                  )}
+                  className="sheets-copy-btn"
+                >
+                  📋 Copy for Google Sheets
+                </button>
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  style={{ color: 'var(--gold-glow)', fontSize: '0.72rem', background: 'rgba(212, 175, 55, 0.1)', border: '1px solid rgba(212, 175, 55, 0.3)', padding: '2px 8px', borderRadius: '4px', cursor: 'pointer', fontWeight: 700 }}
+                >
+                  All 30 Days in Station →
+                </button>
+              </div>
+            </SheetsToolbarLegend>
+            <div style={{ overflowX: 'auto' }}>
+              <table className="sheets-grid-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+                <thead>
+                  <tr style={{ background: '#0e1726', color: '#fbbf24', borderBottom: '2px solid rgba(212, 175, 55, 0.6)' }}>
+                    <SheetsColumnHeader title="#" badge="locked" style={{ width: '38px', textAlign: 'center' }} />
+                    <SheetsColumnHeader title="Date" badge="locked" />
+                    <SheetsColumnHeader title="Voucher" badge="locked" />
+                    <SheetsColumnHeader title="Head of Expenditure" badge="editable" />
+                    <SheetsColumnHeader title="Amount (INR)" badge="editable" align="right" />
+                    <SheetsColumnHeader title="Mode" badge="editable" align="center" />
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {expensesPreview.map((e, idx) => (
+                    <tr key={e.voucher} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)', background: idx % 2 === 0 ? 'transparent' : 'rgba(255, 255, 255, 0.015)' }}>
+                      <td className="sheets-row-num">{idx + 1}</td>
+                      <td style={{ padding: '0.5rem', color: '#cbd5e1', whiteSpace: 'nowrap' }}>{e.date}</td>
+                      <td style={{ padding: '0.5rem', color: '#38bdf8', fontFamily: 'monospace' }}>{e.voucher}</td>
+                      <SheetsEditableCell
+                        value={e.head}
+                        type="text"
+                        cellStyle={{ padding: '0.5rem', color: '#fff', fontWeight: 600 }}
+                        onSave={(newVal) => setExpensesPreview(prev => prev.map(x => x.voucher === e.voucher ? { ...x, head: newVal } : x))}
+                      />
+                      <SheetsEditableCell
+                        value={e.amount}
+                        type="currency"
+                        align="right"
+                        min={0}
+                        cellStyle={{ padding: '0.5rem', fontWeight: 700, color: '#f87171' }}
+                        onSave={(newVal) => setExpensesPreview(prev => prev.map(x => x.voucher === e.voucher ? { ...x, amount: Number(newVal) } : x))}
+                      />
+                      <SheetsEditableCell
+                        value={e.mode}
+                        type="select"
+                        options={['UPI', 'Cash', 'Bank Transfer', 'NEFT', 'Card']}
+                        align="center"
+                        cellStyle={{ padding: '0.5rem' }}
+                        onSave={(newVal) => setExpensesPreview(prev => prev.map(x => x.voucher === e.voucher ? { ...x, mode: newVal } : x))}
+                      />
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

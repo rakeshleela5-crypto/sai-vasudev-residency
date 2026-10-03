@@ -19,7 +19,7 @@ export default function NightAuditModal({
   const [auditorName, setAuditorName] = useState('Sudhakar Reddy (Front Office Lead)');
   const [managerPin, setManagerPin] = useState('');
   const [physicalDrawerCash, setPhysicalDrawerCash] = useState('33500');
-  const [auditNotes, setAuditNotes] = useState('All 32 in-house rooms verified. Night room charges posted.');
+  const [auditNotes, setAuditNotes] = useState('All 18 property rooms verified. Night room charges posted.');
   const [auditCompleted, setAuditCompleted] = useState(false);
   const [isSealing, setIsSealing] = useState(false);
   const [sealProgress, setSealProgress] = useState(0);

@@ -1062,7 +1062,7 @@ Thank you for dining at Cannon Kitchen! 🙏`;
                       )}
                     </div>
                     <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                      Chef Station • 40 In-Room Dining &amp; 12 Dine-In Tables KOT Turnaround Monitor
+                      Chef Station • 18 In-Room Dining &amp; 12 Dine-In Tables KOT Turnaround Monitor
                     </div>
                   </div>
                 </div>

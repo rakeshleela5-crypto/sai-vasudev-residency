@@ -70,13 +70,13 @@ export default function RoomCatalog({ onSelectTier, onOpen3DExplorer, rooms = []
               letterSpacing: '0.08em',
               marginBottom: '0.5rem'
             }}>
-              <Sparkles size={14} /> 40 Curated Inventory Rooms
+              <Sparkles size={14} /> 18 Curated Inventory Rooms
             </div>
             <h2 style={{ fontSize: '2.4rem' }}>
-              4 Luxury Tiers Across <span className="gold-gradient-text">4 Dedicated Floors</span>
+              4 Accommodation Categories Across <span className="gold-gradient-text">2 Dedicated Floors</span>
             </h2>
             <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '0.5rem', maxWidth: 650 }}>
-              Engineered with soundproof glazing, high-speed 5G Wi-Fi, 24-hr hot water, and authentic Odia hospitality. Each floor features 10 dedicated private keys.
+              Engineered with soundproof glazing, high-speed 5G Wi-Fi, 24-hr hot water, and authentic Odia hospitality. Featuring 7 rooms on the Ground Floor and 11 rooms on the 1st Floor.
             </p>
           </div>
 

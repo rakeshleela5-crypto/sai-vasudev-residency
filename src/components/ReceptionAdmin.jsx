@@ -9252,12 +9252,12 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
                 <div style={{ background: '#faf5ff', border: '1px solid #d8b4fe', padding: '0.4rem', borderRadius: '4px' }}>
                   <div style={{ fontSize: '0.7rem', color: '#6b21a8', fontWeight: 700 }}>OCCUPANCY %</div>
                   <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#7e22ce' }}>
-                    {Math.round((rooms.filter(r => r.status === 'Occupied').length / (rooms.length || 39)) * 100)}%
+                    {Math.round((rooms.filter(r => r.status === 'Occupied').length / (rooms.length || 18)) * 100)}%
                   </div>
                 </div>
               </div>
 
-              {/* 39 Rooms Detailed Grid */}
+              {/* 18 Rooms Detailed Grid */}
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.72rem', marginBottom: '1.25rem' }}>
                 <thead>
                   <tr style={{ background: '#f8fafc', borderBottom: '2px solid #0f172a', textAlign: 'left' }}>
@@ -9272,7 +9272,7 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
                   </tr>
                 </thead>
                 <tbody>
-                  {rooms.slice(0, 39).map((room, idx) => {
+                  {rooms.slice(0, 18).map((room, idx) => {
                     const booking = bookings.find(b => (b.roomNumber === room.roomNumber || b.room_number === room.roomNumber) && (b.bookingStatus === 'Checked In' || b.status === 'Checked In'));
                     return (
                       <tr key={idx} style={{ borderBottom: '1px solid #e2e8f0', background: idx % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
@@ -9399,10 +9399,10 @@ Enjoy your stay! For 24/7 front desk support or housekeeping, dial 0 or message 
                   </tr>
                 </thead>
                 <tbody>
-                  {rooms.slice(0, 39).map((room, idx) => (
+                  {rooms.slice(0, 18).map((room, idx) => (
                     <tr key={idx} style={{ borderBottom: '1px solid #e2e8f0', background: idx % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
                       <td style={{ padding: '0.28rem', border: '1px solid #cbd5e1', fontWeight: 700 }}>{room.roomNumber}</td>
-                      <td style={{ padding: '0.28rem', border: '1px solid #cbd5e1' }}>Floor {room.floor || '2'}</td>
+                      <td style={{ padding: '0.28rem', border: '1px solid #cbd5e1' }}>{room.floor || (String(room.roomNumber).startsWith('1') ? 'Ground Floor' : '1st Floor')}</td>
                       <td style={{ padding: '0.28rem', border: '1px solid #cbd5e1', fontWeight: 600 }}>{room.status}</td>
                       <td style={{ padding: '0.28rem', border: '1px solid #cbd5e1' }}>
                         {room.status === 'Occupied' ? 'Stayover Service' : room.status === 'Vacant Dirty' ? 'Departure Turnover' : 'Touch-Up / Dusting'}

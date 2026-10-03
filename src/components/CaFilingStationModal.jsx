@@ -8,6 +8,7 @@ import {
   Award, Eye, BarChart2, Table, ChevronDown, CheckCheck
 } from 'lucide-react';
 import { HOTEL_CONFIG } from '../data/hotelData';
+import { SheetsEditableCell, SheetsColumnHeader, SheetsToolbarLegend } from './UniversalInlineEditor';
 import { 
   PAYMENT_METHOD_REVENUE_SEP2026,
   TOTAL_GROSS_REVENUE_SEP2026,
@@ -33,6 +34,28 @@ export default function CaFilingStationModal({ isOpen, onClose, initialModule = 
   const [expenseFilter, setExpenseFilter] = useState('ALL');
   const [exportNotice, setExportNotice] = useState('');
 
+  // Interactive Google Sheets editable states
+  const [expensesData, setExpensesData] = useState(DAILY_EXPENDITURES_SEP2026);
+  const [roomMatrixData, setRoomMatrixData] = useState(ROOM_TYPE_REVENUE_MATRIX_SEP2026);
+  const [allRoomsData, setAllRoomsData] = useState(ALL_18_ROOMS_REVENUE_SEP2026);
+
+  const totalMonthlyExpensesLive = useMemo(() => {
+    return expensesData.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  }, [expensesData]);
+
+  const copyTableToSheets = (headers, dataRows, tableName = 'Data') => {
+    try {
+      const tsvContent = [
+        headers.join('\t'),
+        ...dataRows.map(row => row.map(val => String(val ?? '').replace(/\t/g, ' ')).join('\t'))
+      ].join('\n');
+      navigator.clipboard.writeText(tsvContent);
+      showExportNotice(`📋 Copied "${tableName}" to clipboard! Paste directly into Google Sheets or Excel (Ctrl+V)`);
+    } catch (_) {
+      showExportNotice('❌ Clipboard access restricted. Please allow clipboard permissions.');
+    }
+  };
+
   const showExportNotice = (msg) => {
     setExportNotice(msg);
     setTimeout(() => setExportNotice(''), 4000);
@@ -40,7 +63,7 @@ export default function CaFilingStationModal({ isOpen, onClose, initialModule = 
 
   // Filtered Daily Expenditures
   const filteredExpenses = useMemo(() => {
-    return DAILY_EXPENDITURES_SEP2026.filter(item => {
+    return expensesData.filter(item => {
       const matchSearch = expenseSearch === '' || 
         item.head.toLowerCase().includes(expenseSearch.toLowerCase()) ||
         item.vendor.toLowerCase().includes(expenseSearch.toLowerCase()) ||
@@ -614,96 +637,70 @@ For: SRI SAI VASUDEV RESIDENCY (RAYAGADA)
                 ))}
               </div>
 
-              {/* Comprehensive Tri-Period Comparison Matrix */}
-              <div style={{ background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', overflow: 'hidden' }}>
-                <div style={{ padding: '0.85rem 1.25rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', background: 'rgba(255, 255, 255, 0.02)', fontWeight: 700, fontSize: '0.9rem' }}>
-                  📊 Detailed Side-by-Side Accounting Breakdown
-                </div>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
-                  <thead>
-                    <tr style={{ background: 'rgba(255, 255, 255, 0.04)', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', color: '#94a3b8', textAlign: 'left' }}>
-                      <th style={{ padding: '0.75rem 1rem' }}>Financial Metric & KPI</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Today (24-Hour Live)</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Mid-Month (1–15 Sep)</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right', color: 'var(--gold-glow)' }}>Full Month (1–30 Sep Final)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                      <td style={{ padding: '0.65rem 1rem', color: '#cbd5e1' }}>Total Inventory Capacity</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right' }}>18 Keys</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right' }}>18 Keys (270 Nights)</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', color: 'var(--gold-glow)', fontWeight: 700 }}>18 Keys (540 Nights)</td>
-                    </tr>
-                    <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                      <td style={{ padding: '0.65rem 1rem', color: '#cbd5e1' }}>Room Nights Sold</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right' }}>14 Nights</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right' }}>220 Nights</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', color: '#38bdf8', fontWeight: 700 }}>432 Nights</td>
-                    </tr>
-                    <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                      <td style={{ padding: '0.65rem 1rem', color: '#cbd5e1' }}>Average Occupancy %</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right' }}>77.8%</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right' }}>81.5%</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', color: '#34d399', fontWeight: 700 }}>80.0%</td>
-                    </tr>
-                    <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                      <td style={{ padding: '0.65rem 1rem', color: '#cbd5e1' }}>Room Stay Turnover (SAC 996311)</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right' }}>₹32,500.00</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right' }}>₹5,01,600.00</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', fontWeight: 700 }}>₹9,84,960.00</td>
-                    </tr>
-                    <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                      <td style={{ padding: '0.65rem 1rem', color: '#cbd5e1' }}>In-Room Dining & Kitchen Sales (SAC 996331)</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right' }}>₹10,850.00</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right' }}>₹1,58,200.00</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', fontWeight: 700 }}>₹3,24,500.00</td>
-                    </tr>
-                    <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                      <td style={{ padding: '0.65rem 1rem', color: '#cbd5e1' }}>Auxiliary Guest Services (SAC 996337)</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right' }}>₹1,500.00</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right' }}>₹22,400.00</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', fontWeight: 700 }}>₹48,200.00</td>
-                    </tr>
-                    <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', background: 'rgba(212, 175, 55, 0.08)' }}>
-                      <td style={{ padding: '0.65rem 1rem', fontWeight: 800, color: 'var(--gold-glow)' }}>TOTAL GROSS TURNOVER</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', fontWeight: 800, color: 'var(--gold-glow)' }}>₹44,850.00</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', fontWeight: 800, color: 'var(--gold-glow)' }}>₹6,82,200.00</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', fontWeight: 800, color: 'var(--gold-glow)' }}>₹13,57,660.00</td>
-                    </tr>
-                    <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                      <td style={{ padding: '0.65rem 1rem', color: '#cbd5e1' }}>Output GST (5.0% - 2.5% CGST + 2.5% SGST)</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', color: '#fbbf24' }}>₹2,135.71</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', color: '#fbbf24' }}>₹32,485.71</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', color: '#fbbf24', fontWeight: 700 }}>₹64,650.48</td>
-                    </tr>
-                    <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                      <td style={{ padding: '0.65rem 1rem', color: '#cbd5e1' }}>Input Tax Credit (ITC Claims)</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', color: '#34d399' }}>₹450.00</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', color: '#34d399' }}>₹7,200.00</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', color: '#34d399', fontWeight: 700 }}>₹14,820.00</td>
-                    </tr>
-                    <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                      <td style={{ padding: '0.65rem 1rem', color: '#cbd5e1' }}>Net Cash GST Payable to Govt (Odisha)</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right' }}>₹1,685.71</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right' }}>₹25,285.71</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', fontWeight: 700 }}>₹49,830.48</td>
-                    </tr>
-                    <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                      <td style={{ padding: '0.65rem 1rem', color: '#f87171' }}>Operating Hotel Expenditures</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', color: '#f87171' }}>₹12,800.00</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', color: '#f87171' }}>₹1,98,400.00</td>
-                      <td style={{ padding: '0.65rem 1rem', textAlign: 'right', color: '#f87171', fontWeight: 700 }}>₹4,01,300.00</td>
-                    </tr>
-                    <tr style={{ background: 'rgba(16, 185, 129, 0.15)' }}>
-                      <td style={{ padding: '0.85rem 1rem', fontWeight: 800, color: '#34d399' }}>NET OPERATING PROFIT (EBITDA)</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right', fontWeight: 800, color: '#34d399' }}>₹29,914.29</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right', fontWeight: 800, color: '#34d399' }}>₹4,51,314.29</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right', fontWeight: 800, color: '#34d399', fontSize: '1rem' }}>₹8,91,709.52</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              {/* Comprehensive Tri-Period Comparison Matrix (Google Sheets Grid) */}
+              <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(56, 189, 248, 0.25)', marginBottom: '1.5rem' }}>
+                <SheetsToolbarLegend tableName="Tri-Period P&L Comparative Matrix" subtitle="Today vs Mid-Month vs Full Month P&L Ledger">
+                  <button
+                    onClick={() => copyTableToSheets(
+                      ['#', 'Financial Metric & KPI', 'Today (24-Hour Live)', 'Mid-Month (1-15 Sep)', 'Full Month (1-30 Sep Final)'],
+                      [
+                        [1, 'Total Inventory Capacity', '18 Keys', '18 Keys (270 Nights)', '18 Keys (540 Nights)'],
+                        [2, 'Room Nights Sold', '14 Nights', '220 Nights', '432 Nights'],
+                        [3, 'Average Occupancy %', '77.8%', '81.5%', '80.0%'],
+                        [4, 'Room Stay Turnover (SAC 996311)', '₹32,500.00', '₹5,01,600.00', '₹9,84,960.00'],
+                        [5, 'In-Room Dining Sales (SAC 996331)', '₹10,850.00', '₹1,58,200.00', '₹3,24,500.00'],
+                        [6, 'Auxiliary Guest Services (SAC 996337)', '₹1,500.00', '₹22,400.00', '₹48,200.00'],
+                        [7, 'TOTAL GROSS TURNOVER', '₹44,850.00', '₹6,82,200.00', '₹13,57,660.00'],
+                        [8, 'Output GST (5% - 2.5% CGST + 2.5% SGST)', '₹2,135.71', '₹32,485.71', '₹64,650.48'],
+                        [9, 'Input Tax Credit (ITC Claims)', '₹450.00', '₹7,200.00', '₹14,820.00'],
+                        [10, 'Net Cash GST Payable to Govt', '₹1,685.71', '₹25,285.71', '₹49,830.48'],
+                        [11, 'Operating Hotel Expenditures', '₹12,800.00', '₹1,98,400.00', `₹${totalMonthlyExpensesLive.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`],
+                        [12, 'NET OPERATING PROFIT (EBITDA)', '₹29,914.29', '₹4,51,314.29', `₹${(1357660 - 64650.48 + 14820 - totalMonthlyExpensesLive).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`]
+                      ],
+                      'Tri-Period P&L Comparison'
+                    )}
+                    className="sheets-copy-btn"
+                  >
+                    📋 Copy for Google Sheets
+                  </button>
+                </SheetsToolbarLegend>
+                <div style={{ overflowX: 'auto' }}>
+                  <table className="sheets-grid-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
+                    <thead>
+                      <tr style={{ background: '#0e1726', color: '#fbbf24', borderBottom: '2px solid rgba(212, 175, 55, 0.6)' }}>
+                        <SheetsColumnHeader title="#" badge="locked" style={{ width: '38px', textAlign: 'center' }} />
+                        <SheetsColumnHeader title="Financial Metric & KPI" badge="locked" />
+                        <SheetsColumnHeader title="Today (24-Hour Live)" badge="formula" align="right" />
+                        <SheetsColumnHeader title="Mid-Month (1–15 Sep)" badge="formula" align="right" />
+                        <SheetsColumnHeader title="Full Month (1–30 Sep Final)" badge="formula" align="right" />
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { kpi: 'Total Inventory Capacity', d1: '18 Keys', d2: '18 Keys (270 Nights)', d3: '18 Keys (540 Nights)', highlight: 'gold' },
+                        { kpi: 'Room Nights Sold', d1: '14 Nights', d2: '220 Nights', d3: '432 Nights', highlight: 'blue' },
+                        { kpi: 'Average Occupancy %', d1: '77.8%', d2: '81.5%', d3: '80.0%', highlight: 'green' },
+                        { kpi: 'Room Stay Turnover (SAC 996311)', d1: '₹32,500.00', d2: '₹5,01,600.00', d3: '₹9,84,960.00' },
+                        { kpi: 'In-Room Dining & Kitchen Sales (SAC 996331)', d1: '₹10,850.00', d2: '₹1,58,200.00', d3: '₹3,24,500.00' },
+                        { kpi: 'Auxiliary Guest Services (SAC 996337)', d1: '₹1,500.00', d2: '₹22,400.00', d3: '₹48,200.00' },
+                        { kpi: 'TOTAL GROSS TURNOVER', d1: '₹44,850.00', d2: '₹6,82,200.00', d3: '₹13,57,660.00', rowBg: 'rgba(212, 175, 55, 0.12)', bold: true },
+                        { kpi: 'Output GST (5.0% - 2.5% CGST + 2.5% SGST)', d1: '₹2,135.71', d2: '₹32,485.71', d3: '₹64,650.48', color: '#fbbf24' },
+                        { kpi: 'Input Tax Credit (ITC Claims)', d1: '₹450.00', d2: '₹7,200.00', d3: '₹14,820.00', color: '#34d399' },
+                        { kpi: 'Net Cash GST Payable to Govt (Odisha)', d1: '₹1,685.71', d2: '₹25,285.71', d3: '₹49,830.48' },
+                        { kpi: 'Operating Hotel Expenditures', d1: '₹12,800.00', d2: '₹1,98,400.00', d3: `₹${totalMonthlyExpensesLive.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, color: '#f87171' },
+                        { kpi: 'NET OPERATING PROFIT (EBITDA)', d1: '₹29,914.29', d2: '₹4,51,314.29', d3: `₹${(1357660 - 64650.48 + 14820 - totalMonthlyExpensesLive).toLocaleString('en-IN', { minimumFractionDigits: 2 })}`, rowBg: 'rgba(16, 185, 129, 0.15)', bold: true, color: '#34d399' }
+                      ].map((r, idx) => (
+                        <tr key={r.kpi} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', background: r.rowBg || (idx % 2 === 0 ? 'transparent' : 'rgba(255, 255, 255, 0.015)') }}>
+                          <td className="sheets-row-num">{idx + 1}</td>
+                          <td style={{ padding: '0.65rem 1rem', color: r.bold ? 'var(--gold-glow)' : '#cbd5e1', fontWeight: r.bold ? 800 : 500 }}>{r.kpi}</td>
+                          <td style={{ padding: '0.65rem 1rem', textAlign: 'right', fontWeight: r.bold ? 800 : 600, color: r.color || '#fff' }}>{r.d1}</td>
+                          <td style={{ padding: '0.65rem 1rem', textAlign: 'right', fontWeight: r.bold ? 800 : 600, color: r.color || '#fff' }}>{r.d2}</td>
+                          <td style={{ padding: '0.65rem 1rem', textAlign: 'right', fontWeight: r.bold ? 800 : 700, color: r.color || (r.highlight === 'gold' ? 'var(--gold-glow)' : r.highlight === 'blue' ? '#38bdf8' : r.highlight === 'green' ? '#34d399' : '#fff') }}>{r.d3}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>              </div>
             </div>
           )}
 
@@ -764,49 +761,66 @@ For: SRI SAI VASUDEV RESIDENCY (RAYAGADA)
                 </div>
               </div>
 
-              {/* Tabular Register */}
-              <div style={{ background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
-                  <thead>
-                    <tr style={{ background: 'rgba(255, 255, 255, 0.04)', color: '#94a3b8', textAlign: 'left', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                      <th style={{ padding: '0.75rem 1rem' }}>Payment Method & Channel</th>
-                      <th style={{ padding: '0.75rem 1rem' }}>Destination Account / Vault</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Vouchers</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Gross Collections (INR)</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Share %</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Audit Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {PAYMENT_METHOD_REVENUE_SEP2026.map(item => (
-                      <tr key={item.method} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                        <td style={{ padding: '0.75rem 1rem' }}>
-                          <div style={{ fontWeight: 700, color: '#fff' }}>{item.method}</div>
-                          <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>{item.channel}</div>
-                        </td>
-                        <td style={{ padding: '0.75rem 1rem', color: '#cbd5e1', fontFamily: 'monospace' }}>{item.account}</td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'center', color: '#cbd5e1' }}>{item.txnCount}</td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 700, color: item.color }}>
-                          ₹{item.grossAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                        </td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'center', fontWeight: 700 }}>{item.percentage}%</td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#34d399', fontSize: '0.75rem' }}>
-                          <CheckCircle2 size={13} style={{ display: 'inline', marginRight: 4 }} /> {item.status}
-                        </td>
+              {/* Tabular Register (Google Sheets Grid) */}
+              <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(56, 189, 248, 0.25)', marginBottom: '1.5rem' }}>
+                <SheetsToolbarLegend tableName="Payment Mode Reconciliation Matrix" subtitle="SBI Bank & Cash Drawer Settled Totals">
+                  <button
+                    onClick={() => copyTableToSheets(
+                      ['#', 'Payment Method & Channel', 'Destination Account', 'Vouchers', 'Gross Collections (INR)', 'Share %', 'Audit Status'],
+                      PAYMENT_METHOD_REVENUE_SEP2026.map((item, i) => [i + 1, item.method, item.account, item.txnCount, item.grossAmount, `${item.percentage}%`, item.status]),
+                      'Payment Mode Reconciliation'
+                    )}
+                    className="sheets-copy-btn"
+                  >
+                    📋 Copy for Google Sheets
+                  </button>
+                </SheetsToolbarLegend>
+                <div style={{ overflowX: 'auto' }}>
+                  <table className="sheets-grid-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
+                    <thead>
+                      <tr style={{ background: '#0e1726', color: '#fbbf24', borderBottom: '2px solid rgba(212, 175, 55, 0.6)' }}>
+                        <SheetsColumnHeader title="#" badge="locked" style={{ width: '38px', textAlign: 'center' }} />
+                        <SheetsColumnHeader title="Payment Method & Channel" badge="locked" />
+                        <SheetsColumnHeader title="Destination Account / Vault" badge="locked" />
+                        <SheetsColumnHeader title="Vouchers" badge="locked" align="center" />
+                        <SheetsColumnHeader title="Gross Collections (INR)" badge="formula" align="right" />
+                        <SheetsColumnHeader title="Share %" badge="formula" align="center" />
+                        <SheetsColumnHeader title="Audit Status" badge="locked" align="right" />
                       </tr>
-                    ))}
-                    <tr style={{ background: 'rgba(212, 175, 55, 0.1)', fontWeight: 800 }}>
-                      <td style={{ padding: '0.85rem 1rem', color: 'var(--gold-glow)' }}>TOTAL SETTLED COLLECTIONS</td>
-                      <td style={{ padding: '0.85rem 1rem', color: '#94a3b8' }}>State Bank of India & Desk Vault</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: '#fff' }}>552 Txns</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: 'var(--gold-glow)', fontSize: '0.95rem' }}>
-                        ₹{TOTAL_GROSS_REVENUE_SEP2026.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                      </td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: 'var(--gold-glow)' }}>100.0%</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#34d399' }}>Reconciled</td>
-                    </tr>
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {PAYMENT_METHOD_REVENUE_SEP2026.map((item, idx) => (
+                        <tr key={item.method} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', background: idx % 2 === 0 ? 'transparent' : 'rgba(255, 255, 255, 0.015)' }}>
+                          <td className="sheets-row-num">{idx + 1}</td>
+                          <td style={{ padding: '0.75rem 1rem' }}>
+                            <div style={{ fontWeight: 700, color: '#fff' }}>{item.method}</div>
+                            <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>{item.channel}</div>
+                          </td>
+                          <td style={{ padding: '0.75rem 1rem', color: '#cbd5e1', fontFamily: 'monospace' }}>{item.account}</td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'center', color: '#cbd5e1' }}>{item.txnCount}</td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 700, color: item.color }}>
+                            ₹{item.grossAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                          </td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'center', fontWeight: 700 }}>{item.percentage}%</td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#34d399', fontSize: '0.75rem' }}>
+                            <CheckCircle2 size={13} style={{ display: 'inline', marginRight: 4 }} /> {item.status}
+                          </td>
+                        </tr>
+                      ))}
+                      <tr style={{ background: 'rgba(212, 175, 55, 0.12)', fontWeight: 800 }}>
+                        <td className="sheets-row-num">Σ</td>
+                        <td style={{ padding: '0.85rem 1rem', color: 'var(--gold-glow)' }}>TOTAL SETTLED COLLECTIONS</td>
+                        <td style={{ padding: '0.85rem 1rem', color: '#94a3b8' }}>State Bank of India & Desk Vault</td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: '#fff' }}>552 Txns</td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: 'var(--gold-glow)', fontSize: '0.95rem' }}>
+                          ₹{TOTAL_GROSS_REVENUE_SEP2026.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                        </td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: 'var(--gold-glow)' }}>100.0%</td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#34d399' }}>Reconciled</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}
@@ -874,7 +888,7 @@ For: SRI SAI VASUDEV RESIDENCY (RAYAGADA)
                 <div>
                   <span style={{ fontSize: '0.75rem', color: '#fca5a5', textTransform: 'uppercase', fontWeight: 700 }}>Total Month-to-Date Cash Outflow</span>
                   <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#f87171' }}>
-                    ₹{TOTAL_MONTHLY_EXPENDITURES_SEP2026.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                    ₹{totalMonthlyExpensesLive.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                   </div>
                 </div>
                 <div style={{ fontSize: '0.8rem', color: '#94a3b8', textAlign: 'right' }}>
@@ -882,64 +896,88 @@ For: SRI SAI VASUDEV RESIDENCY (RAYAGADA)
                 </div>
               </div>
 
-              {/* Table */}
-              <div style={{ background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
-                  <thead>
-                    <tr style={{ background: 'rgba(255, 255, 255, 0.04)', color: '#94a3b8', textAlign: 'left', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                      <th style={{ padding: '0.65rem 0.85rem' }}>Day & Date</th>
-                      <th style={{ padding: '0.65rem 0.85rem' }}>Voucher #</th>
-                      <th style={{ padding: '0.65rem 0.85rem' }}>Head of Expenditure</th>
-                      <th style={{ padding: '0.65rem 0.85rem' }}>Vendor / Beneficiary</th>
-                      <th style={{ padding: '0.65rem 0.85rem', textAlign: 'right' }}>Amount (INR)</th>
-                      <th style={{ padding: '0.65rem 0.85rem', textAlign: 'center' }}>Mode</th>
-                      <th style={{ padding: '0.65rem 0.85rem' }}>Approver</th>
-                      <th style={{ padding: '0.65rem 0.85rem', textAlign: 'center' }}>ITC</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredExpenses.map(item => (
-                      <tr key={item.voucher} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                        <td style={{ padding: '0.55rem 0.85rem', color: '#cbd5e1' }}>
-                          Day {item.day} • {item.date}
-                        </td>
-                        <td style={{ padding: '0.55rem 0.85rem', fontFamily: 'monospace', color: '#38bdf8', fontWeight: 600 }}>
-                          {item.voucher}
-                        </td>
-                        <td style={{ padding: '0.55rem 0.85rem', color: '#fff', fontWeight: 600 }}>
-                          {item.head}
-                        </td>
-                        <td style={{ padding: '0.55rem 0.85rem', color: '#94a3b8' }}>
-                          {item.vendor}
-                        </td>
-                        <td style={{ padding: '0.55rem 0.85rem', textAlign: 'right', fontWeight: 700, color: '#f87171' }}>
-                          ₹{item.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                        </td>
-                        <td style={{ padding: '0.55rem 0.85rem', textAlign: 'center' }}>
-                          <span style={{
-                            padding: '0.15rem 0.45rem',
-                            borderRadius: '4px',
-                            fontSize: '0.7rem',
-                            background: item.mode === 'UPI' ? 'rgba(52, 211, 153, 0.2)' : item.mode === 'Cash' ? 'rgba(251, 191, 36, 0.2)' : 'rgba(167, 139, 250, 0.2)',
-                            color: item.mode === 'UPI' ? '#34d399' : item.mode === 'Cash' ? '#fbbf24' : '#c084fc'
-                          }}>
-                            {item.mode}
-                          </span>
-                        </td>
-                        <td style={{ padding: '0.55rem 0.85rem', color: '#cbd5e1', fontSize: '0.75rem' }}>
-                          {item.approvedBy}
-                        </td>
-                        <td style={{ padding: '0.55rem 0.85rem', textAlign: 'center' }}>
-                          {item.itcEligible ? (
-                            <span style={{ color: '#34d399', fontSize: '0.7rem', fontWeight: 700 }}>YES</span>
-                          ) : (
-                            <span style={{ color: '#64748b', fontSize: '0.7rem' }}>No</span>
-                          )}
-                        </td>
+              {/* Table (Google Sheets Grid with Direct Keyboard Inline Editing) */}
+              <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(56, 189, 248, 0.25)', marginBottom: '1.5rem' }}>
+                <SheetsToolbarLegend tableName="Daily Hotel Expenditures Register (30 Days)" subtitle="Audited Cash Outflow • Click Any Cell to Edit Directly">
+                  <button
+                    onClick={() => copyTableToSheets(
+                      ['#', 'Day & Date', 'Voucher #', 'Head of Expenditure', 'Vendor / Beneficiary', 'Amount (INR)', 'Mode', 'Approver', 'ITC'],
+                      filteredExpenses.map((item, idx) => [idx + 1, `Day ${item.day} • ${item.date}`, item.voucher, item.head, item.vendor, item.amount, item.mode, item.approvedBy, item.itcEligible ? 'Eligible' : 'Exempt']),
+                      'Daily Expenditures Register'
+                    )}
+                    className="sheets-copy-btn"
+                  >
+                    📋 Copy for Google Sheets
+                  </button>
+                </SheetsToolbarLegend>
+                <div style={{ overflowX: 'auto' }}>
+                  <table className="sheets-grid-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
+                    <thead>
+                      <tr style={{ background: '#0e1726', color: '#fbbf24', borderBottom: '2px solid rgba(212, 175, 55, 0.6)' }}>
+                        <SheetsColumnHeader title="#" badge="locked" style={{ width: '38px', textAlign: 'center' }} />
+                        <SheetsColumnHeader title="Day & Date" badge="locked" />
+                        <SheetsColumnHeader title="Voucher #" badge="locked" />
+                        <SheetsColumnHeader title="Head of Expenditure" badge="editable" />
+                        <SheetsColumnHeader title="Vendor / Beneficiary" badge="editable" />
+                        <SheetsColumnHeader title="Amount (INR)" badge="editable" align="right" />
+                        <SheetsColumnHeader title="Mode" badge="editable" align="center" />
+                        <SheetsColumnHeader title="Approver" badge="locked" />
+                        <SheetsColumnHeader title="ITC" badge="locked" align="center" />
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {filteredExpenses.map((item, idx) => (
+                        <tr key={item.voucher} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)', background: idx % 2 === 0 ? 'transparent' : 'rgba(255, 255, 255, 0.015)' }}>
+                          <td className="sheets-row-num">{idx + 1}</td>
+                          <td style={{ padding: '0.55rem 0.85rem', color: '#cbd5e1', whiteSpace: 'nowrap' }}>
+                            Day {item.day} • {item.date}
+                          </td>
+                          <td style={{ padding: '0.55rem 0.85rem', fontFamily: 'monospace', color: '#38bdf8', fontWeight: 600 }}>
+                            {item.voucher}
+                          </td>
+                          <SheetsEditableCell
+                            value={item.head}
+                            type="text"
+                            cellStyle={{ padding: '0.55rem 0.85rem', color: '#fff', fontWeight: 600 }}
+                            onSave={(newVal) => setExpensesData(prev => prev.map(x => x.voucher === item.voucher ? { ...x, head: newVal } : x))}
+                          />
+                          <SheetsEditableCell
+                            value={item.vendor}
+                            type="text"
+                            cellStyle={{ padding: '0.55rem 0.85rem', color: '#94a3b8' }}
+                            onSave={(newVal) => setExpensesData(prev => prev.map(x => x.voucher === item.voucher ? { ...x, vendor: newVal } : x))}
+                          />
+                          <SheetsEditableCell
+                            value={item.amount}
+                            type="currency"
+                            align="right"
+                            min={0}
+                            cellStyle={{ padding: '0.55rem 0.85rem', fontWeight: 700, color: '#f87171' }}
+                            onSave={(newVal) => setExpensesData(prev => prev.map(x => x.voucher === item.voucher ? { ...x, amount: Number(newVal) } : x))}
+                          />
+                          <SheetsEditableCell
+                            value={item.mode}
+                            type="select"
+                            options={['UPI', 'Cash', 'Bank Transfer', 'NEFT', 'Card']}
+                            align="center"
+                            cellStyle={{ padding: '0.55rem 0.85rem' }}
+                            onSave={(newVal) => setExpensesData(prev => prev.map(x => x.voucher === item.voucher ? { ...x, mode: newVal } : x))}
+                          />
+                          <td style={{ padding: '0.55rem 0.85rem', color: '#cbd5e1', fontSize: '0.75rem' }}>
+                            {item.approvedBy}
+                          </td>
+                          <td style={{ padding: '0.55rem 0.85rem', textAlign: 'center' }}>
+                            {item.itcEligible ? (
+                              <span style={{ color: '#34d399', fontSize: '0.7rem', fontWeight: 700 }}>YES</span>
+                            ) : (
+                              <span style={{ color: '#64748b', fontSize: '0.7rem' }}>No</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}
@@ -994,73 +1032,87 @@ For: SRI SAI VASUDEV RESIDENCY (RAYAGADA)
                 </div>
               </div>
 
-              {/* SAC Code Matrix */}
-              <div style={{ background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', overflow: 'hidden' }}>
-                <div style={{ padding: '0.85rem 1.25rem', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', fontWeight: 700, fontSize: '0.9rem' }}>
-                  🏛️ Service Accounting Code (SAC) Statutory Ledger
-                </div>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
-                  <thead>
-                    <tr style={{ background: 'rgba(255, 255, 255, 0.04)', color: '#94a3b8', textAlign: 'left', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                      <th style={{ padding: '0.75rem 1rem' }}>SAC Code & Service Description</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Gross Billed (INR)</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Taxable Base (INR)</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Rate</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>CGST 2.5%</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>SGST 2.5%</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Total GST (5%)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {GST_COMPLIANCE_LEDGER_SEP2026.categories.map(c => (
-                      <tr key={c.sacCode} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                        <td style={{ padding: '0.75rem 1rem' }}>
-                          <span style={{ fontFamily: 'monospace', fontWeight: 700, color: 'var(--gold-glow)', marginRight: 6 }}>
-                            SAC {c.sacCode}
-                          </span>
-                          <span style={{ color: '#fff' }}>{c.description}</span>
+              {/* SAC Code Matrix (Google Sheets Grid) */}
+              <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(56, 189, 248, 0.25)', marginBottom: '1.5rem' }}>
+                <SheetsToolbarLegend tableName="Service Accounting Code (SAC) Statutory Ledger" subtitle="5% GST (2.5% CGST + 2.5% SGST) Calculation Breakdown">
+                  <button
+                    onClick={() => copyTableToSheets(
+                      ['#', 'SAC Code', 'Service Description', 'Gross Billed (INR)', 'Taxable Base (INR)', 'Rate', 'CGST 2.5%', 'SGST 2.5%', 'Total GST 5%'],
+                      GST_COMPLIANCE_LEDGER_SEP2026.categories.map((c, i) => [i + 1, `SAC ${c.sacCode}`, c.description, c.grossTurnover, c.taxableBase, '5.0%', c.cgstAmount, c.sgstAmount, c.totalGst]),
+                      'SAC Statutory GST Ledger'
+                    )}
+                    className="sheets-copy-btn"
+                  >
+                    📋 Copy for Google Sheets
+                  </button>
+                </SheetsToolbarLegend>
+                <div style={{ overflowX: 'auto' }}>
+                  <table className="sheets-grid-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
+                    <thead>
+                      <tr style={{ background: '#0e1726', color: '#fbbf24', borderBottom: '2px solid rgba(212, 175, 55, 0.6)' }}>
+                        <SheetsColumnHeader title="#" badge="locked" style={{ width: '38px', textAlign: 'center' }} />
+                        <SheetsColumnHeader title="SAC Code & Service Description" badge="locked" />
+                        <SheetsColumnHeader title="Gross Billed (INR)" badge="formula" align="right" />
+                        <SheetsColumnHeader title="Taxable Base (INR)" badge="formula" align="right" />
+                        <SheetsColumnHeader title="Rate" badge="locked" align="center" />
+                        <SheetsColumnHeader title="CGST 2.5%" badge="formula" align="right" />
+                        <SheetsColumnHeader title="SGST 2.5%" badge="formula" align="right" />
+                        <SheetsColumnHeader title="Total GST (5%)" badge="formula" align="right" />
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {GST_COMPLIANCE_LEDGER_SEP2026.categories.map((c, idx) => (
+                        <tr key={c.sacCode} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', background: idx % 2 === 0 ? 'transparent' : 'rgba(255, 255, 255, 0.015)' }}>
+                          <td className="sheets-row-num">{idx + 1}</td>
+                          <td style={{ padding: '0.75rem 1rem' }}>
+                            <span style={{ fontFamily: 'monospace', fontWeight: 700, color: 'var(--gold-glow)', marginRight: 6 }}>
+                              SAC {c.sacCode}
+                            </span>
+                            <span style={{ color: '#fff' }}>{c.description}</span>
+                          </td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#cbd5e1' }}>
+                            ₹{c.grossTurnover.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                          </td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 600, color: '#38bdf8' }}>
+                            ₹{c.taxableBase.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                          </td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'center', fontWeight: 700, color: '#fbbf24' }}>
+                            5.0%
+                          </td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#f87171' }}>
+                            ₹{c.cgstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                          </td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#f87171' }}>
+                            ₹{c.sgstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                          </td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 800, color: 'var(--gold-glow)' }}>
+                            ₹{c.totalGst.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                          </td>
+                        </tr>
+                      ))}
+                      <tr style={{ background: 'rgba(212, 175, 55, 0.12)', fontWeight: 800 }}>
+                        <td className="sheets-row-num">Σ</td>
+                        <td style={{ padding: '0.85rem 1rem', color: 'var(--gold-glow)' }}>TOTAL GSTR-1 OUTWARD TAX</td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#fff' }}>
+                          ₹{GST_COMPLIANCE_LEDGER_SEP2026.summary.totalGrossTurnover.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#cbd5e1' }}>
-                          ₹{c.grossTurnover.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#38bdf8' }}>
+                          ₹{GST_COMPLIANCE_LEDGER_SEP2026.summary.totalTaxableBase.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 600, color: '#38bdf8' }}>
-                          ₹{c.taxableBase.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: '#fbbf24' }}>5.0%</td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#f87171' }}>
+                          ₹{GST_COMPLIANCE_LEDGER_SEP2026.summary.totalCgstOutput.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'center', fontWeight: 700, color: '#fbbf24' }}>
-                          5.0%
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#f87171' }}>
+                          ₹{GST_COMPLIANCE_LEDGER_SEP2026.summary.totalSgstOutput.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#f87171' }}>
-                          ₹{c.cgstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                        </td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#f87171' }}>
-                          ₹{c.sgstAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                        </td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 800, color: 'var(--gold-glow)' }}>
-                          ₹{c.totalGst.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: 'var(--gold-glow)', fontSize: '0.95rem' }}>
+                          ₹{GST_COMPLIANCE_LEDGER_SEP2026.summary.totalOutputGst.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </td>
                       </tr>
-                    ))}
-                    <tr style={{ background: 'rgba(212, 175, 55, 0.1)', fontWeight: 800 }}>
-                      <td style={{ padding: '0.85rem 1rem', color: 'var(--gold-glow)' }}>TOTAL GSTR-1 OUTWARD TAX</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#fff' }}>
-                        ₹{GST_COMPLIANCE_LEDGER_SEP2026.summary.totalGrossTurnover.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                      </td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#38bdf8' }}>
-                        ₹{GST_COMPLIANCE_LEDGER_SEP2026.summary.totalTaxableBase.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                      </td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: '#fbbf24' }}>5.0%</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#f87171' }}>
-                        ₹{GST_COMPLIANCE_LEDGER_SEP2026.summary.totalCgstOutput.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                      </td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#f87171' }}>
-                        ₹{GST_COMPLIANCE_LEDGER_SEP2026.summary.totalSgstOutput.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                      </td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: 'var(--gold-glow)', fontSize: '0.95rem' }}>
-                        ₹{GST_COMPLIANCE_LEDGER_SEP2026.summary.totalOutputGst.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}
@@ -1243,52 +1295,85 @@ For: SRI SAI VASUDEV RESIDENCY (RAYAGADA)
                 </p>
               </div>
 
-              {/* Matrix Table */}
-              <div style={{ background: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', overflow: 'hidden' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
-                  <thead>
-                    <tr style={{ background: 'rgba(255, 255, 255, 0.04)', color: '#94a3b8', textAlign: 'left', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                      <th style={{ padding: '0.75rem 1rem' }}>Room Category</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Keys</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Floor Location</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Tariff (INR)</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Sold / Avail</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Occ %</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>ADR (INR)</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>RevPAR (INR)</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Total Revenue (INR)</th>
-                      <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Room Share</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {ROOM_TYPE_REVENUE_MATRIX_SEP2026.map(r => (
-                      <tr key={r.tier} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                        <td style={{ padding: '0.75rem 1rem', fontWeight: 700, color: '#fff' }}>{r.tier}</td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'center', color: '#cbd5e1' }}>{r.keys}</td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'center', color: '#94a3b8', fontSize: '0.75rem' }}>{r.floors}</td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#cbd5e1' }}>₹{r.baseTariff.toLocaleString('en-IN')}</td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'center', color: '#38bdf8' }}>{r.soldNights} / {r.availableNights}</td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'center', fontWeight: 700, color: '#34d399' }}>{r.occupancyPct}%</td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 600, color: '#fbbf24' }}>₹{r.adr.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 600, color: '#38bdf8' }}>₹{r.revpar.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 800, color: '#fff' }}>₹{r.totalRevenue.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                        <td style={{ padding: '0.75rem 1rem', textAlign: 'center', fontWeight: 700, color: 'var(--gold-glow)' }}>{r.shareOfRoomRevenue}%</td>
+              {/* Matrix Table (Google Sheets Grid) */}
+              <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(56, 189, 248, 0.25)', marginBottom: '1.5rem' }}>
+                <SheetsToolbarLegend tableName="Room-Type Revenue & Yield Matrix" subtitle="ADR, RevPAR, and Key Portfolio Yield (Click Tariff or Nights to edit)">
+                  <button
+                    onClick={() => copyTableToSheets(
+                      ['#', 'Room Category', 'Keys', 'Floor Location', 'Tariff (INR)', 'Sold / Avail', 'Occ %', 'ADR (INR)', 'RevPAR (INR)', 'Total Revenue (INR)', 'Room Share'],
+                      roomMatrixData.map((r, i) => [i + 1, r.tier, r.keys, r.floors, r.baseTariff, `${r.soldNights} / ${r.availableNights}`, `${r.occupancyPct}%`, r.adr, r.revpar, r.totalRevenue, `${r.shareOfRoomRevenue}%`]),
+                      'Room-Type Revenue Matrix'
+                    )}
+                    className="sheets-copy-btn"
+                  >
+                    📋 Copy for Google Sheets
+                  </button>
+                </SheetsToolbarLegend>
+                <div style={{ overflowX: 'auto' }}>
+                  <table className="sheets-grid-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
+                    <thead>
+                      <tr style={{ background: '#0e1726', color: '#fbbf24', borderBottom: '2px solid rgba(212, 175, 55, 0.6)' }}>
+                        <SheetsColumnHeader title="#" badge="locked" style={{ width: '38px', textAlign: 'center' }} />
+                        <SheetsColumnHeader title="Room Category" badge="locked" />
+                        <SheetsColumnHeader title="Keys" badge="locked" align="center" />
+                        <SheetsColumnHeader title="Floor Location" badge="locked" align="center" />
+                        <SheetsColumnHeader title="Tariff (INR)" badge="editable" align="right" />
+                        <SheetsColumnHeader title="Sold / Avail" badge="editable" align="center" />
+                        <SheetsColumnHeader title="Occ %" badge="formula" align="center" />
+                        <SheetsColumnHeader title="ADR (INR)" badge="formula" align="right" />
+                        <SheetsColumnHeader title="RevPAR (INR)" badge="formula" align="right" />
+                        <SheetsColumnHeader title="Total Revenue (INR)" badge="formula" align="right" />
+                        <SheetsColumnHeader title="Room Share" badge="formula" align="center" />
                       </tr>
-                    ))}
-                    <tr style={{ background: 'rgba(212, 175, 55, 0.1)', fontWeight: 800 }}>
-                      <td style={{ padding: '0.85rem 1rem', color: 'var(--gold-glow)' }}>TOTAL 18-ROOM PORTFOLIO</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: '#fff' }}>18 Keys</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: '#94a3b8' }}>2 Floors</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#cbd5e1' }}>Blended</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: '#38bdf8' }}>432 / 540</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: '#34d399' }}>80.0%</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#fbbf24' }}>₹2,280.00</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#38bdf8' }}>₹1,824.00</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: 'var(--gold-glow)', fontSize: '0.95rem' }}>₹9,84,960.00</td>
-                      <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: 'var(--gold-glow)' }}>100.0%</td>
-                    </tr>
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {roomMatrixData.map((r, idx) => (
+                        <tr key={r.tier} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)', background: idx % 2 === 0 ? 'transparent' : 'rgba(255, 255, 255, 0.015)' }}>
+                          <td className="sheets-row-num">{idx + 1}</td>
+                          <td style={{ padding: '0.75rem 1rem', fontWeight: 700, color: '#fff' }}>{r.tier}</td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'center', color: '#cbd5e1' }}>{r.keys}</td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'center', color: '#94a3b8', fontSize: '0.75rem' }}>{r.floors}</td>
+                          <SheetsEditableCell
+                            value={r.baseTariff}
+                            type="currency"
+                            align="right"
+                            min={500}
+                            cellStyle={{ padding: '0.75rem 1rem', color: '#cbd5e1' }}
+                            onSave={(newVal) => setRoomMatrixData(prev => prev.map(x => x.tier === r.tier ? { ...x, baseTariff: Number(newVal), totalRevenue: Number(newVal) * x.soldNights, adr: Number(newVal) } : x))}
+                          />
+                          <SheetsEditableCell
+                            value={r.soldNights}
+                            type="number"
+                            align="center"
+                            min={0}
+                            max={r.availableNights}
+                            cellStyle={{ padding: '0.75rem 1rem', color: '#38bdf8' }}
+                            formatDisplay={(v) => `${v} / ${r.availableNights}`}
+                            onSave={(newVal) => setRoomMatrixData(prev => prev.map(x => x.tier === r.tier ? { ...x, soldNights: Number(newVal), occupancyPct: ((Number(newVal) / x.availableNights) * 100).toFixed(1), totalRevenue: x.baseTariff * Number(newVal), revpar: Math.round((x.baseTariff * Number(newVal)) / x.availableNights) } : x))}
+                          />
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'center', fontWeight: 700, color: '#34d399' }}>{r.occupancyPct}%</td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 600, color: '#fbbf24' }}>₹{r.adr.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 600, color: '#38bdf8' }}>₹{r.revpar.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 800, color: '#fff' }}>₹{r.totalRevenue.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                          <td style={{ padding: '0.75rem 1rem', textAlign: 'center', fontWeight: 700, color: 'var(--gold-glow)' }}>{r.shareOfRoomRevenue}%</td>
+                        </tr>
+                      ))}
+                      <tr style={{ background: 'rgba(212, 175, 55, 0.12)', fontWeight: 800 }}>
+                        <td className="sheets-row-num">Σ</td>
+                        <td style={{ padding: '0.85rem 1rem', color: 'var(--gold-glow)' }}>TOTAL 18-ROOM PORTFOLIO</td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: '#fff' }}>18 Keys</td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: '#94a3b8' }}>2 Floors</td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#cbd5e1' }}>Blended</td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: '#38bdf8' }}>{roomMatrixData.reduce((s, r) => s + Number(r.soldNights || 0), 0)} / 540</td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: '#34d399' }}>80.0%</td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#fbbf24' }}>₹2,280.00</td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: '#38bdf8' }}>₹1,824.00</td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'right', color: 'var(--gold-glow)', fontSize: '0.95rem' }}>₹{roomMatrixData.reduce((s, r) => s + Number(r.totalRevenue || 0), 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                        <td style={{ padding: '0.85rem 1rem', textAlign: 'center', color: 'var(--gold-glow)' }}>100.0%</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}
@@ -1308,86 +1393,136 @@ For: SRI SAI VASUDEV RESIDENCY (RAYAGADA)
                 </p>
               </div>
 
-              {/* Floor Grouped Tables */}
+              {/* Floor Grouped Tables (Google Sheets Grid) */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(480px, 1fr))', gap: '1.25rem' }}>
                 {/* Ground Floor (7 Keys) */}
-                <div style={{ background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '12px', padding: '1rem', overflow: 'hidden' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                    <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#38bdf8' }}>
-                      Ground Floor Inventory (7 Keys: 101 – 107)
-                    </div>
-                    <span style={{ fontSize: '0.72rem', background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
-                      7 Rooms
-                    </span>
-                  </div>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
-                    <thead>
-                      <tr style={{ background: 'rgba(255, 255, 255, 0.04)', color: '#94a3b8', textAlign: 'left', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                        <th style={{ padding: '0.5rem' }}>Room</th>
-                        <th style={{ padding: '0.5rem' }}>Tier</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'right' }}>Tariff</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'center' }}>Nights</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'center' }}>Occ %</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'right' }}>Room Rev</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'right' }}>F&B Rev</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'right', color: 'var(--gold-glow)' }}>Total Rev</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {ALL_18_ROOMS_REVENUE_SEP2026.filter(r => r.floor === 'Ground').map(r => (
-                        <tr key={r.room} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                          <td style={{ padding: '0.5rem', fontWeight: 800, color: '#fff' }}>Room {r.room}</td>
-                          <td style={{ padding: '0.5rem', color: '#cbd5e1' }}>{r.tier}</td>
-                          <td style={{ padding: '0.5rem', textAlign: 'right', color: '#94a3b8' }}>₹{r.tariff}</td>
-                          <td style={{ padding: '0.5rem', textAlign: 'center', color: '#38bdf8' }}>{r.nightsSold}</td>
-                          <td style={{ padding: '0.5rem', textAlign: 'center', color: '#34d399' }}>{r.occupancyPct}%</td>
-                          <td style={{ padding: '0.5rem', textAlign: 'right', color: '#cbd5e1' }}>₹{r.revenue.toLocaleString('en-IN')}</td>
-                          <td style={{ padding: '0.5rem', textAlign: 'right', color: '#f472b6' }}>₹{r.fnbRevenue.toLocaleString('en-IN')}</td>
-                          <td style={{ padding: '0.5rem', textAlign: 'right', fontWeight: 700, color: 'var(--gold-glow)' }}>₹{r.total.toLocaleString('en-IN')}</td>
+                <div style={{ borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.25)', overflow: 'hidden' }}>
+                  <SheetsToolbarLegend tableName="Ground Floor Inventory (101–107)" subtitle="7 Physical Keys Yield & Consumption">
+                    <button
+                      onClick={() => copyTableToSheets(
+                        ['#', 'Room', 'Tier', 'Tariff', 'Nights', 'Occ %', 'Room Rev', 'F&B Rev', 'Total Rev'],
+                        allRoomsData.filter(r => r.floor === 'Ground').map((r, i) => [i + 1, `Room ${r.room}`, r.tier, r.tariff, r.nightsSold, `${r.occupancyPct}%`, r.revenue, r.fnbRevenue, r.total]),
+                        'Ground Floor 7 Rooms'
+                      )}
+                      className="sheets-copy-btn"
+                    >
+                      📋 Copy for Google Sheets
+                    </button>
+                  </SheetsToolbarLegend>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table className="sheets-grid-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+                      <thead>
+                        <tr style={{ background: '#0e1726', color: '#fbbf24', borderBottom: '2px solid rgba(212, 175, 55, 0.6)' }}>
+                          <SheetsColumnHeader title="#" badge="locked" style={{ width: '34px', textAlign: 'center' }} />
+                          <SheetsColumnHeader title="Room" badge="locked" />
+                          <SheetsColumnHeader title="Tier" badge="locked" />
+                          <SheetsColumnHeader title="Tariff" badge="editable" align="right" />
+                          <SheetsColumnHeader title="Nights" badge="editable" align="center" />
+                          <SheetsColumnHeader title="Occ %" badge="formula" align="center" />
+                          <SheetsColumnHeader title="Room Rev" badge="formula" align="right" />
+                          <SheetsColumnHeader title="F&B Rev" badge="editable" align="right" />
+                          <SheetsColumnHeader title="Total Rev" badge="formula" align="right" />
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {allRoomsData.filter(r => r.floor === 'Ground').map((r, idx) => (
+                          <tr key={r.room} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)', background: idx % 2 === 0 ? 'transparent' : 'rgba(255, 255, 255, 0.015)' }}>
+                            <td className="sheets-row-num">{idx + 1}</td>
+                            <td style={{ padding: '0.5rem', fontWeight: 800, color: '#fff' }}>Room {r.room}</td>
+                            <td style={{ padding: '0.5rem', color: '#cbd5e1' }}>{r.tier}</td>
+                            <SheetsEditableCell
+                              value={r.tariff}
+                              type="currency"
+                              align="right"
+                              onSave={(newVal) => setAllRoomsData(prev => prev.map(x => x.room === r.room ? { ...x, tariff: Number(newVal), revenue: Number(newVal) * x.nightsSold, total: (Number(newVal) * x.nightsSold) + x.fnbRevenue } : x))}
+                            />
+                            <SheetsEditableCell
+                              value={r.nightsSold}
+                              type="number"
+                              align="center"
+                              min={0}
+                              max={30}
+                              onSave={(newVal) => setAllRoomsData(prev => prev.map(x => x.room === r.room ? { ...x, nightsSold: Number(newVal), occupancyPct: ((Number(newVal) / 30) * 100).toFixed(1), revenue: x.tariff * Number(newVal), total: (x.tariff * Number(newVal)) + x.fnbRevenue } : x))}
+                            />
+                            <td style={{ padding: '0.5rem', textAlign: 'center', color: '#34d399', fontWeight: 700 }}>{r.occupancyPct}%</td>
+                            <td style={{ padding: '0.5rem', textAlign: 'right', color: '#cbd5e1' }}>₹{r.revenue.toLocaleString('en-IN')}</td>
+                            <SheetsEditableCell
+                              value={r.fnbRevenue}
+                              type="currency"
+                              align="right"
+                              onSave={(newVal) => setAllRoomsData(prev => prev.map(x => x.room === r.room ? { ...x, fnbRevenue: Number(newVal), total: x.revenue + Number(newVal) } : x))}
+                            />
+                            <td style={{ padding: '0.5rem', textAlign: 'right', fontWeight: 700, color: 'var(--gold-glow)' }}>₹{r.total.toLocaleString('en-IN')}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
 
                 {/* First Floor (11 Keys) */}
-                <div style={{ background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '12px', padding: '1rem', overflow: 'hidden' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                    <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#c084fc' }}>
-                      First Floor Inventory (11 Keys: 201 – 211)
-                    </div>
-                    <span style={{ fontSize: '0.72rem', background: 'rgba(192, 132, 252, 0.15)', color: '#c084fc', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
-                      11 Rooms
-                    </span>
-                  </div>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
-                    <thead>
-                      <tr style={{ background: 'rgba(255, 255, 255, 0.04)', color: '#94a3b8', textAlign: 'left', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                        <th style={{ padding: '0.5rem' }}>Room</th>
-                        <th style={{ padding: '0.5rem' }}>Tier</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'right' }}>Tariff</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'center' }}>Nights</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'center' }}>Occ %</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'right' }}>Room Rev</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'right' }}>F&B Rev</th>
-                        <th style={{ padding: '0.5rem', textAlign: 'right', color: 'var(--gold-glow)' }}>Total Rev</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {ALL_18_ROOMS_REVENUE_SEP2026.filter(r => r.floor === '1st Floor').map(r => (
-                        <tr key={r.room} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                          <td style={{ padding: '0.5rem', fontWeight: 800, color: '#fff' }}>Room {r.room}</td>
-                          <td style={{ padding: '0.5rem', color: '#cbd5e1' }}>{r.tier}</td>
-                          <td style={{ padding: '0.5rem', textAlign: 'right', color: '#94a3b8' }}>₹{r.tariff}</td>
-                          <td style={{ padding: '0.5rem', textAlign: 'center', color: '#38bdf8' }}>{r.nightsSold}</td>
-                          <td style={{ padding: '0.5rem', textAlign: 'center', color: '#34d399' }}>{r.occupancyPct}%</td>
-                          <td style={{ padding: '0.5rem', textAlign: 'right', color: '#cbd5e1' }}>₹{r.revenue.toLocaleString('en-IN')}</td>
-                          <td style={{ padding: '0.5rem', textAlign: 'right', color: '#f472b6' }}>₹{r.fnbRevenue.toLocaleString('en-IN')}</td>
-                          <td style={{ padding: '0.5rem', textAlign: 'right', fontWeight: 700, color: 'var(--gold-glow)' }}>₹{r.total.toLocaleString('en-IN')}</td>
+                <div style={{ borderRadius: '12px', border: '1px solid rgba(192, 132, 252, 0.3)', overflow: 'hidden' }}>
+                  <SheetsToolbarLegend tableName="First Floor Inventory (201–211)" subtitle="11 Physical Keys Yield & Consumption">
+                    <button
+                      onClick={() => copyTableToSheets(
+                        ['#', 'Room', 'Tier', 'Tariff', 'Nights', 'Occ %', 'Room Rev', 'F&B Rev', 'Total Rev'],
+                        allRoomsData.filter(r => r.floor === '1st Floor').map((r, i) => [i + 1, `Room ${r.room}`, r.tier, r.tariff, r.nightsSold, `${r.occupancyPct}%`, r.revenue, r.fnbRevenue, r.total]),
+                        'First Floor 11 Rooms'
+                      )}
+                      className="sheets-copy-btn"
+                    >
+                      📋 Copy for Google Sheets
+                    </button>
+                  </SheetsToolbarLegend>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table className="sheets-grid-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+                      <thead>
+                        <tr style={{ background: '#0e1726', color: '#c084fc', borderBottom: '2px solid rgba(192, 132, 252, 0.6)' }}>
+                          <SheetsColumnHeader title="#" badge="locked" style={{ width: '34px', textAlign: 'center' }} />
+                          <SheetsColumnHeader title="Room" badge="locked" />
+                          <SheetsColumnHeader title="Tier" badge="locked" />
+                          <SheetsColumnHeader title="Tariff" badge="editable" align="right" />
+                          <SheetsColumnHeader title="Nights" badge="editable" align="center" />
+                          <SheetsColumnHeader title="Occ %" badge="formula" align="center" />
+                          <SheetsColumnHeader title="Room Rev" badge="formula" align="right" />
+                          <SheetsColumnHeader title="F&B Rev" badge="editable" align="right" />
+                          <SheetsColumnHeader title="Total Rev" badge="formula" align="right" />
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {allRoomsData.filter(r => r.floor === '1st Floor').map((r, idx) => (
+                          <tr key={r.room} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.04)', background: idx % 2 === 0 ? 'transparent' : 'rgba(255, 255, 255, 0.015)' }}>
+                            <td className="sheets-row-num">{idx + 1}</td>
+                            <td style={{ padding: '0.5rem', fontWeight: 800, color: '#fff' }}>Room {r.room}</td>
+                            <td style={{ padding: '0.5rem', color: '#cbd5e1' }}>{r.tier}</td>
+                            <SheetsEditableCell
+                              value={r.tariff}
+                              type="currency"
+                              align="right"
+                              onSave={(newVal) => setAllRoomsData(prev => prev.map(x => x.room === r.room ? { ...x, tariff: Number(newVal), revenue: Number(newVal) * x.nightsSold, total: (Number(newVal) * x.nightsSold) + x.fnbRevenue } : x))}
+                            />
+                            <SheetsEditableCell
+                              value={r.nightsSold}
+                              type="number"
+                              align="center"
+                              min={0}
+                              max={30}
+                              onSave={(newVal) => setAllRoomsData(prev => prev.map(x => x.room === r.room ? { ...x, nightsSold: Number(newVal), occupancyPct: ((Number(newVal) / 30) * 100).toFixed(1), revenue: x.tariff * Number(newVal), total: (x.tariff * Number(newVal)) + x.fnbRevenue } : x))}
+                            />
+                            <td style={{ padding: '0.5rem', textAlign: 'center', color: '#34d399', fontWeight: 700 }}>{r.occupancyPct}%</td>
+                            <td style={{ padding: '0.5rem', textAlign: 'right', color: '#cbd5e1' }}>₹{r.revenue.toLocaleString('en-IN')}</td>
+                            <SheetsEditableCell
+                              value={r.fnbRevenue}
+                              type="currency"
+                              align="right"
+                              onSave={(newVal) => setAllRoomsData(prev => prev.map(x => x.room === r.room ? { ...x, fnbRevenue: Number(newVal), total: x.revenue + Number(newVal) } : x))}
+                            />
+                            <td style={{ padding: '0.5rem', textAlign: 'right', fontWeight: 700, color: 'var(--gold-glow)' }}>₹{r.total.toLocaleString('en-IN')}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
