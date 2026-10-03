@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   Hotel, Layers, Users, Calendar, ShieldCheck, Clock, 
   DollarSign, CheckCircle2, AlertTriangle, Printer, Download, 
-  Search, RefreshCw, UserCheck, Phone, FileText, Sparkles, 
+  Search, RefreshCw, UserCheck, Phone, FileText, Sparkles, Scale, 
   Check, X, ChevronRight, Lock, Bed, Send, Ban, Wrench, Eye,
   Calculator, ClipboardList, Utensils, ShoppingBag, Receipt, Sparkle,
   ArrowRightLeft, Edit3, MessageCircle, TrendingUp, QrCode, Database,
