@@ -1612,11 +1612,11 @@ export async function onRequestPost({ request, env }) {
 
       const bookingId = p.bookingId || `BOOK-${roomNumber}-${Date.now().toString().slice(-4)}`;
       const guestName = p.guestName || `Room ${roomNumber} Guest`;
-      const guestPhone = p.guestPhone || p.phone || null;
-      const guestEmail = p.guestEmail || p.email || null;
-      const idProofType = p.idProofType || 'Aadhaar (Masked)';
-      const idProofNumber = p.idProofNumber || p.idNumber || null;
-      const tier = p.tier || (Number(roomNumber) < 200 ? 'Standard Non-AC Room' : 'Deluxe Room');
+      const guestPhone = p.guestPhone || p.phone || '+919999999999';
+      const guestEmail = p.guestEmail || p.email || '';
+      const idProofType = p.idProofType || 'Aadhaar';
+      const rawId = p.idProofNumber || p.idNumber || p.idProofMasked || 'XXXX-XXXX-9999';
+      const maskedId = rawId.length > 4 ? `XXXX-XXXX-${rawId.slice(-4)}` : rawId;
       const nights = Number(p.nights || 1);
       const checkInDate = p.checkInDate || new Date().toISOString().slice(0, 10);
       let checkOutDate = p.checkOutDate;
@@ -1626,63 +1626,67 @@ export async function onRequestPost({ request, env }) {
         checkOutDate = d.toISOString().slice(0, 10);
       }
 
-      const tariffPerNight = Number(p.tariffPerNight || p.tariff || (p.payment?.totalStayAmount ? Math.round(p.payment.totalStayAmount / nights / 1.12) : 2200));
+      const tariffPerNight = Number(p.tariffPerNight || p.tariff || (p.payment?.totalStayAmount ? Math.round(p.payment.totalStayAmount / nights / 1.12) : 1500));
       const totalAmount = Number(p.totalAmount || p.payment?.totalStayAmount || (tariffPerNight * nights * 1.12));
-      const baseAmount = Number(p.baseAmount || Math.round(totalAmount / 1.12));
-      const taxAmount = Number(p.taxAmount || (totalAmount - baseAmount));
+      const baseTotal = Number(p.baseTotal || p.baseAmount || Math.round(totalAmount / 1.12));
+      const taxAmount = Number(p.taxAmount || (totalAmount - baseTotal));
+      const cgst = Math.round(taxAmount / 2 * 100) / 100;
+      const sgst = Math.round(taxAmount / 2 * 100) / 100;
       const advanceDeposit = Number(p.advanceDeposit !== undefined ? p.advanceDeposit : (p.payment?.advancePaid || 0));
       const balanceDue = Number(p.balanceDue !== undefined ? p.balanceDue : (totalAmount - advanceDeposit));
       const paymentMode = p.paymentMode || p.payment?.mode || 'Cash';
-      const paymentStatus = balanceDue <= 0 ? 'Paid' : (advanceDeposit > 0 ? 'Partial' : 'Pending');
-      const isInterstate = p.isInterstate ? 1 : 0;
+      const paymentStatus = balanceDue <= 0 ? 'Paid at Check-In' : (advanceDeposit > 0 ? 'Partially Paid' : 'Pending Payment');
+      const isInterstate = (p.isInterstate || (p.stateOfOrigin && p.stateOfOrigin.toLowerCase() !== 'odisha')) ? 1 : 0;
       const stateOfOrigin = p.stateOfOrigin || 'Odisha';
-      const vehicleNumber = p.vehicleNumber || null;
       const purposeOfVisit = p.purposeOfVisit || 'Personal / Tourism';
-      const specialRequests = p.specialRequests || p.notes || null;
+      const specialRequests = p.specialRequests || p.notes || '';
+      const billNo = p.billNo || `FMBIL2627-${roomNumber}-${Date.now().toString().slice(-4)}`;
 
-      // 1. Insert or update booking in D1
+      // 1. Insert or update booking in D1 matching exact table schema
       await db.prepare(`
         INSERT INTO bookings (
           booking_id, room_number, guest_name, guest_phone, guest_email,
-          id_proof_type, id_proof_number, check_in_date, check_out_date, nights,
-          tier, tariff_per_night, base_amount, tax_amount, total_amount,
-          advance_deposit, balance_due, payment_mode, payment_status, booking_status,
-          is_interstate, state_of_origin, vehicle_number, purpose_of_visit,
-          special_requests, source, created_at, updated_at
+          id_proof_type, id_proof_masked, state_of_origin, is_interstate,
+          check_in_date, check_out_date, nights, adults, children,
+          tariff_per_night, base_total, cgst, sgst, total_amount,
+          advance_deposit, balance_due, payment_mode, payment_status,
+          booking_status, is_b2b, corporate_id, corporate_gstin,
+          company_name, bill_no,
+          consent_dpdp, special_requests, created_at, updated_at
         ) VALUES (
           ?, ?, ?, ?, ?,
-          ?, ?, ?, ?, ?,
-          ?, ?, ?, ?, ?,
-          ?, ?, ?, ?, 'Checked In',
           ?, ?, ?, ?,
-          ?, 'Front Desk Walk-In', datetime('now'), datetime('now')
+          ?, ?, ?, 1, 0,
+          ?, ?, ?, ?, ?,
+          ?, ?, ?, ?,
+          'Checked In', 0, '', '',
+          'Direct Guest', ?,
+          1, ?, datetime('now'), datetime('now')
         )
         ON CONFLICT(booking_id) DO UPDATE SET
           room_number = excluded.room_number,
           guest_name = excluded.guest_name,
-          guest_phone = COALESCE(excluded.guest_phone, bookings.guest_phone),
-          guest_email = COALESCE(excluded.guest_email, bookings.guest_email),
-          id_proof_type = COALESCE(excluded.id_proof_type, bookings.id_proof_type),
-          id_proof_number = COALESCE(excluded.id_proof_number, bookings.id_proof_number),
-          check_in_date = COALESCE(excluded.check_in_date, bookings.check_in_date),
-          check_out_date = COALESCE(excluded.check_out_date, bookings.check_out_date),
-          nights = COALESCE(excluded.nights, bookings.nights),
-          tier = COALESCE(excluded.tier, bookings.tier),
-          tariff_per_night = COALESCE(excluded.tariff_per_night, bookings.tariff_per_night),
-          total_amount = COALESCE(excluded.total_amount, bookings.total_amount),
-          advance_deposit = COALESCE(excluded.advance_deposit, bookings.advance_deposit),
-          balance_due = COALESCE(excluded.balance_due, bookings.balance_due),
-          payment_status = COALESCE(excluded.payment_status, bookings.payment_status),
+          guest_phone = excluded.guest_phone,
+          check_in_date = excluded.check_in_date,
+          check_out_date = excluded.check_out_date,
+          nights = excluded.nights,
+          tariff_per_night = excluded.tariff_per_night,
+          base_total = excluded.base_total,
+          cgst = excluded.cgst,
+          sgst = excluded.sgst,
+          total_amount = excluded.total_amount,
+          advance_deposit = excluded.advance_deposit,
+          balance_due = excluded.balance_due,
+          payment_status = excluded.payment_status,
           booking_status = 'Checked In',
-          vehicle_number = COALESCE(excluded.vehicle_number, bookings.vehicle_number),
           updated_at = datetime('now')
       `).bind(
         bookingId, roomNumber, guestName, guestPhone, guestEmail,
-        idProofType, idProofNumber, checkInDate, checkOutDate, nights,
-        tier, tariffPerNight, baseAmount, taxAmount, totalAmount,
+        idProofType, maskedId, stateOfOrigin, isInterstate,
+        checkInDate, checkOutDate, nights,
+        tariffPerNight, baseTotal, cgst, sgst, totalAmount,
         advanceDeposit, balanceDue, paymentMode, paymentStatus,
-        isInterstate, stateOfOrigin, vehicleNumber, purposeOfVisit,
-        specialRequests
+        billNo, specialRequests
       ).run();
 
       // 2. Update room status to Occupied and set outstanding balance
@@ -1706,8 +1710,8 @@ export async function onRequestPost({ request, env }) {
         )
       `).bind(
         roomTxId, `FOLIO-${roomNumber}`, bookingId, roomNumber,
-        `Room Tariff: ${tier} (${nights} Night${nights > 1 ? 's' : ''})`, totalAmount,
-        baseAmount, taxAmount / 2, taxAmount / 2
+        `Room Tariff - Room ${roomNumber} (${nights} Night${nights > 1 ? 's' : ''})`, totalAmount,
+        baseTotal, cgst, sgst
       ).run().catch(() => {});
 
       // 4. If advance deposit paid, record credit transaction
@@ -1733,33 +1737,31 @@ export async function onRequestPost({ request, env }) {
       if (guestPhone) {
         await db.prepare(`
           INSERT INTO guest_profiles (
-            guest_id, phone, name, email, id_proof_type, id_proof_number,
-            state_of_origin, vehicle_number, total_stays, total_spent, last_visit, created_at
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, datetime('now'), datetime('now'))
+            guest_id, phone, name, email, id_proof_type, id_proof_masked,
+            state_of_origin, total_visits, lifetime_spend, updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?, datetime('now'))
           ON CONFLICT(phone) DO UPDATE SET
             name = excluded.name,
-            email = COALESCE(excluded.email, guest_profiles.email),
-            id_proof_type = COALESCE(excluded.id_proof_type, guest_profiles.id_proof_type),
-            id_proof_number = COALESCE(excluded.id_proof_number, guest_profiles.id_proof_number),
-            total_stays = guest_profiles.total_stays + 1,
-            total_spent = guest_profiles.total_spent + excluded.total_spent,
-            last_visit = datetime('now')
+            email = CASE WHEN excluded.email != '' THEN excluded.email ELSE guest_profiles.email END,
+            total_visits = total_visits + 1,
+            lifetime_spend = lifetime_spend + excluded.lifetime_spend,
+            updated_at = datetime('now')
         `).bind(
-          `GST-${Date.now().toString().slice(-5)}`, guestPhone, guestName, guestEmail || '',
-          idProofType, idProofNumber || '', stateOfOrigin, vehicleNumber || '', totalAmount
+          `GUEST-${Date.now()}`, guestPhone, guestName, guestEmail,
+          idProofType, maskedId, stateOfOrigin, totalAmount
         ).run().catch(() => {});
       }
 
       // 6. Police Register Entry (Sarai Act)
       await db.prepare(`
         INSERT OR REPLACE INTO police_guest_entries (
-          entry_id, booking_id, guest_name, phone, id_proof_type, id_proof_number,
-          state_of_origin, room_number, check_in_time, purpose_of_visit, vehicle_number, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, ?, datetime('now'))
+          entry_id, booking_id, guest_name, phone, id_type,
+          id_number_masked, state_origin, arrival_time, departure_time,
+          purpose_of_visit, dispatch_status, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, ?, 'Pending', datetime('now'))
       `).bind(
-        `POLICE-${bookingId}`, bookingId, guestName, guestPhone || '',
-        idProofType, idProofNumber || '', stateOfOrigin, roomNumber,
-        purposeOfVisit, vehicleNumber || ''
+        `POL-${Date.now().toString().slice(-6)}`, bookingId, guestName, guestPhone,
+        idProofType, maskedId, stateOfOrigin, checkOutDate, purposeOfVisit
       ).run().catch(() => {});
 
       return jsonResponse({ success: true, bookingId, roomNumber, guestName, status: 'Occupied', balanceDue });
