@@ -352,17 +352,35 @@ export default function Hero({
 
             {/* Action Buttons */}
             <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <ShimmerButton 
+              <button 
+                id="hero-instant-reserve-btn"
                 onClick={() => onOpenBooking(ROOM_TIERS[0])}
-                shimmerColor="#fceec5"
-                background="linear-gradient(135deg, #d4af37 0%, #aa831b 100%)"
-                className="font-bold text-[#060e1a] shadow-[0_4px_25px_rgba(212,175,55,0.4)]"
-                style={{ flex: 1, padding: '0.75rem 1.25rem' }}
+                className="btn-primary-gold"
+                style={{ 
+                  flex: 1, 
+                  padding: '0.85rem 1.4rem',
+                  fontSize: '0.96rem',
+                  fontWeight: 800,
+                  color: '#060e1a',
+                  background: 'linear-gradient(135deg, #facc15 0%, #eab308 50%, #d4af37 100%)',
+                  border: '1px solid #fef08a',
+                  borderRadius: '10px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 25px rgba(234, 179, 8, 0.45), 0 0 15px rgba(250, 204, 21, 0.3)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.04em',
+                  transition: 'all 0.2s ease'
+                }}
               >
-                <span className="flex items-center gap-1.5 font-bold tracking-wide">
-                  Instant Reserve <ArrowRight size={16} />
+                <span style={{ color: '#060e1a', fontWeight: 800, letterSpacing: '0.03em' }}>
+                  Instant Reserve
                 </span>
-              </ShimmerButton>
+                <ArrowRight size={18} strokeWidth={2.5} color="#060e1a" />
+              </button>
               <button 
                 onClick={onOpen3DExplorer}
                 className="btn-secondary-sapphire"

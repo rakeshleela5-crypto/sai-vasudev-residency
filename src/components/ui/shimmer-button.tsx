@@ -22,9 +22,10 @@ export const ShimmerButton = React.forwardRef<
       shimmerSize = "0.1em",
       shimmerDuration = "2.5s",
       borderRadius = "10px",
-      background = "linear-gradient(135deg, #13223d 0%, #0c182b 100%)",
+      background = "linear-gradient(135deg, #facc15 0%, #d4af37 100%)",
       className,
       children,
+      style: propStyle,
       ...props
     },
     ref,
@@ -39,10 +40,13 @@ export const ShimmerButton = React.forwardRef<
             "--speed": shimmerDuration,
             "--cut": shimmerSize,
             "--bg": background,
+            background: background,
+            borderRadius: borderRadius,
+            ...(propStyle || {})
           } as CSSProperties
         }
         className={cn(
-          "group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap border border-[rgba(212,175,55,0.4)] px-6 py-3 text-white [background:var(--bg)] [border-radius:var(--radius)] transition-all duration-300 hover:scale-[1.02] hover:border-[rgba(212,175,55,0.8)] hover:shadow-[0_0_25px_rgba(212,175,55,0.35)] active:scale-[0.98]",
+          "group relative z-0 flex cursor-pointer items-center justify-center overflow-hidden whitespace-nowrap border border-[rgba(212,175,55,0.4)] px-6 py-3 font-bold transition-all duration-300 hover:scale-[1.02] hover:border-[rgba(212,175,55,0.8)] hover:shadow-[0_0_25px_rgba(212,175,55,0.45)] active:scale-[0.98]",
           className,
         )}
         ref={ref}
@@ -60,7 +64,11 @@ export const ShimmerButton = React.forwardRef<
             <div className="animate-spin-around absolute -inset-full w-auto rotate-0 [background:conic-gradient(from_calc(270deg-(var(--spread)*0.5)),transparent_0,var(--shimmer-color)_var(--spread),transparent_var(--spread))] [translate:0_0]" />
           </div>
         </div>
-        {children}
+        
+        {/* Child Content */}
+        <div className="relative z-10 flex items-center justify-center gap-1.5">
+          {children}
+        </div>
 
         {/* Highlight Backdrop */}
         <div
@@ -74,9 +82,12 @@ export const ShimmerButton = React.forwardRef<
 
         {/* Inner backdrop */}
         <div
+          style={{
+            background: background,
+            borderRadius: `calc(${borderRadius} - ${shimmerSize})`
+          }}
           className={cn(
             "absolute inset-[var(--cut)] -z-20",
-            "[background:var(--bg)] [border-radius:calc(var(--radius)-var(--cut))]",
           )}
         />
       </button>
